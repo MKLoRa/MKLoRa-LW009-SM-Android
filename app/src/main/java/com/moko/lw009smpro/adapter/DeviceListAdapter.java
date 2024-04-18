@@ -1,5 +1,6 @@
 package com.moko.lw009smpro.adapter;
 
+import android.annotation.SuppressLint;
 import android.text.TextUtils;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -13,6 +14,7 @@ public class DeviceListAdapter extends BaseQuickAdapter<AdvInfo, BaseViewHolder>
         super(R.layout.list_item_device);
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     protected void convert(BaseViewHolder helper, AdvInfo item) {
         final String rssi = String.format("%ddBm", item.rssi);
@@ -23,9 +25,8 @@ public class DeviceListAdapter extends BaseQuickAdapter<AdvInfo, BaseViewHolder>
 
         final String intervalTime = item.intervalTime == 0 ? "<->N/A" : String.format("<->%dms", item.intervalTime);
         helper.setText(R.id.tv_track_interval, intervalTime);
-        helper.setText(R.id.tv_battery_percent, item.powerPercent + "%");
-        helper.setText(R.id.tvBattery, MokoUtils.getDecimalFormat("#.###").format(item.batteryVoltage * 0.001)+"V");
-        helper.setText(R.id.tv_tx_power, String.format("Tx Power:%ddBm", item.txPower));
+        helper.setText(R.id.tv_battery_percent, item.lowPower ? "Low" : "Full");
+//        helper.setText(R.id.tv_tx_power, String.format("Tx Power:%ddBm", item.txPower));
         helper.setVisible(R.id.tv_connect, item.connectable);
         helper.addOnClickListener(R.id.tv_connect);
     }

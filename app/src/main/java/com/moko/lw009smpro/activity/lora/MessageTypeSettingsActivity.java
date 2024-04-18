@@ -16,7 +16,7 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw009smpro.activity.Lw006BaseActivity;
-import com.moko.lw009smpro.databinding.Lw006ActivityMsgTypeSettingsBinding;
+import com.moko.lw009smpro.databinding.ActivityMsgTypeSettingsBinding;
 import com.moko.lw009smpro.dialog.BottomDialog;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
@@ -29,31 +29,32 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * @author: jun.liu
- * @date: 2023/6/6 11:25
+ * @date: 2024/4/18 16:25
  * @des:
  */
 public class MessageTypeSettingsActivity extends Lw006BaseActivity {
-    private Lw006ActivityMsgTypeSettingsBinding mBind;
+    private ActivityMsgTypeSettingsBinding mBind;
     private boolean mReceiverTag = false;
     private static final String unconfirmed = "Unconfirmed";
     private static final String confirmed = "Confirmed";
-    private final ArrayList<String> payloadTypes = new ArrayList<>(4);
-    private final ArrayList<String> retransmissionTimes = new ArrayList<>(8);
-    private int deviceInfoFlag;
+    private final String[] payloadTypes = {unconfirmed, confirmed};
+    private final String[] retransmissionTimes = {"0", "1", "2", "3"};
+    private int parkingInfoFlag;
     private int heartbeatFlag;
-    private int lowPowerFlag;
+    private int beaconFlag;
     private int eventFlag;
-    private int gpsLimitFlag;
-    private int positioningFlag;
+    private int lowPowerFlag;
+    private int shutdownFlag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = Lw006ActivityMsgTypeSettingsBinding.inflate(getLayoutInflater());
+        mBind = ActivityMsgTypeSettingsBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
         // 注册广播接收器
@@ -62,75 +63,66 @@ public class MessageTypeSettingsActivity extends Lw006BaseActivity {
         registerReceiver(mReceiver, filter);
         mReceiverTag = true;
         showSyncingProgressDialog();
-        mBind.tvTitle.postDelayed(() -> {
-            List<OrderTask> orderTasks = new ArrayList<>(8);
-            orderTasks.add(OrderTaskAssembler.getDeviceInfoPayload());
-            orderTasks.add(OrderTaskAssembler.getHeartbeatPayload());
-            orderTasks.add(OrderTaskAssembler.getLowPowerPayload());
-            orderTasks.add(OrderTaskAssembler.getEventPayload());
-            orderTasks.add(OrderTaskAssembler.getGPSLimitPayload());
-            orderTasks.add(OrderTaskAssembler.getPositioningPayload());
-            MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-        }, 300);
-        payloadTypes.add(unconfirmed);
-        payloadTypes.add(confirmed);
-        retransmissionTimes.add("0");
-        retransmissionTimes.add("1");
-        retransmissionTimes.add("2");
-        retransmissionTimes.add("3");
+        List<OrderTask> orderTasks = new ArrayList<>(8);
+        orderTasks.add(OrderTaskAssembler.getParkingInfoPayload());
+        orderTasks.add(OrderTaskAssembler.getHeartbeatPayload());
+        orderTasks.add(OrderTaskAssembler.getBeaconPayload());
+        orderTasks.add(OrderTaskAssembler.getLowPowerPayload());
+        orderTasks.add(OrderTaskAssembler.getShutdownPayload());
+        orderTasks.add(OrderTaskAssembler.getEventPayload());
+        MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         setListener();
     }
 
     private void setListener() {
-        mBind.tvDeviceInfoPayloadType.setOnClickListener(v -> {
-            int index = unconfirmed.equals(mBind.tvDeviceInfoPayloadType.getText().toString().trim()) ? 0 : 1;
-            showBottomDialog(payloadTypes, index, mBind.tvDeviceInfoPayloadType, 1);
+        mBind.tvParkingInfoPayloadType.setOnClickListener(v -> {
+            int index = unconfirmed.equals(mBind.tvParkingInfoPayloadType.getText().toString().trim()) ? 0 : 1;
+            showBottomDialog(payloadTypes, index, mBind.tvParkingInfoPayloadType, 1);
         });
         mBind.tvHeartbeatPayloadType.setOnClickListener(v -> {
             int index = unconfirmed.equals(mBind.tvHeartbeatPayloadType.getText().toString().trim()) ? 0 : 1;
             showBottomDialog(payloadTypes, index, mBind.tvHeartbeatPayloadType, 2);
         });
+        mBind.tvBeaconPayloadType.setOnClickListener(v -> {
+            int index = unconfirmed.equals(mBind.tvBeaconPayloadType.getText().toString().trim()) ? 0 : 1;
+            showBottomDialog(payloadTypes, index, mBind.tvBeaconPayloadType, 3);
+        });
         mBind.tvLowPowerPayloadType.setOnClickListener(v -> {
             int index = unconfirmed.equals(mBind.tvLowPowerPayloadType.getText().toString().trim()) ? 0 : 1;
-            showBottomDialog(payloadTypes, index, mBind.tvLowPowerPayloadType, 3);
+            showBottomDialog(payloadTypes, index, mBind.tvLowPowerPayloadType, 4);
+        });
+        mBind.tvShutdownPayloadType.setOnClickListener(v -> {
+            int index = unconfirmed.equals(mBind.tvShutdownPayloadType.getText().toString().trim()) ? 0 : 1;
+            showBottomDialog(payloadTypes, index, mBind.tvShutdownPayloadType, 5);
         });
         mBind.tvEventPayloadType.setOnClickListener(v -> {
             int index = unconfirmed.equals(mBind.tvEventPayloadType.getText().toString().trim()) ? 0 : 1;
-            showBottomDialog(payloadTypes, index, mBind.tvEventPayloadType, 4);
-        });
-        mBind.tvGPSLimitPayloadType.setOnClickListener(v -> {
-            int index = unconfirmed.equals(mBind.tvGPSLimitPayloadType.getText().toString().trim()) ? 0 : 1;
-            showBottomDialog(payloadTypes, index, mBind.tvGPSLimitPayloadType, 5);
+            showBottomDialog(payloadTypes, index, mBind.tvEventPayloadType, 6);
         });
 
-        mBind.tvPositioningPayloadType.setOnClickListener(v -> {
-            int index = unconfirmed.equals(mBind.tvPositioningPayloadType.getText().toString().trim()) ? 0 : 1;
-            showBottomDialog(payloadTypes, index, mBind.tvPositioningPayloadType, 6);
-        });
-
-        mBind.tvDeviceInfoTimes.setOnClickListener(v -> {
-            int index = Integer.parseInt(mBind.tvDeviceInfoTimes.getText().toString().trim());
-            showBottomDialog(retransmissionTimes, index, mBind.tvDeviceInfoTimes, 0);
-        });
         mBind.tvHeartbeatTimes.setOnClickListener(v -> {
             int index = Integer.parseInt(mBind.tvHeartbeatTimes.getText().toString().trim());
             showBottomDialog(retransmissionTimes, index, mBind.tvHeartbeatTimes, 0);
+        });
+        mBind.tvParkingInfoTimes.setOnClickListener(v -> {
+            int index = Integer.parseInt(mBind.tvParkingInfoTimes.getText().toString().trim());
+            showBottomDialog(retransmissionTimes, index, mBind.tvParkingInfoTimes, 0);
+        });
+        mBind.tvBeaconTimes.setOnClickListener(v -> {
+            int index = Integer.parseInt(mBind.tvBeaconTimes.getText().toString().trim());
+            showBottomDialog(retransmissionTimes, index, mBind.tvBeaconTimes, 0);
         });
         mBind.tvLowPowerTimes.setOnClickListener(v -> {
             int index = Integer.parseInt(mBind.tvLowPowerTimes.getText().toString().trim());
             showBottomDialog(retransmissionTimes, index, mBind.tvLowPowerTimes, 0);
         });
+        mBind.tvShutdownTimes.setOnClickListener(v -> {
+            int index = Integer.parseInt(mBind.tvShutdownTimes.getText().toString().trim());
+            showBottomDialog(retransmissionTimes, index, mBind.tvShutdownTimes, 0);
+        });
         mBind.tvEventTimes.setOnClickListener(v -> {
             int index = Integer.parseInt(mBind.tvEventTimes.getText().toString().trim());
             showBottomDialog(retransmissionTimes, index, mBind.tvEventTimes, 0);
-        });
-        mBind.tvGPSLimitTimes.setOnClickListener(v -> {
-            int index = Integer.parseInt(mBind.tvGPSLimitTimes.getText().toString().trim());
-            showBottomDialog(retransmissionTimes, index, mBind.tvGPSLimitTimes, 0);
-        });
-        mBind.tvPositioningTimes.setOnClickListener(v -> {
-            int index = Integer.parseInt(mBind.tvPositioningTimes.getText().toString().trim());
-            showBottomDialog(retransmissionTimes, index, mBind.tvPositioningTimes, 0);
         });
     }
 
@@ -150,8 +142,6 @@ public class MessageTypeSettingsActivity extends Lw006BaseActivity {
         if (!MokoConstants.ACTION_CURRENT_DATA.equals(action))
             EventBus.getDefault().cancelEventDelivery(event);
         runOnUiThread(() -> {
-            if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
-            }
             if (MokoConstants.ACTION_ORDER_FINISH.equals(action)) {
                 dismissSyncProgressDialog();
             }
@@ -169,13 +159,13 @@ public class MessageTypeSettingsActivity extends Lw006BaseActivity {
                         int length = value[3] & 0xFF;
                         if (flag == 0) {
                             switch (configKeyEnum) {
-                                case KEY_DEVICE_INFO_PAYLOAD:
+                                case KEY_PARKING_INFO_PAYLOAD:
                                     if (length == 2) {
                                         int enable = value[4] & 0xff;
                                         int times = (value[5] & 0xff) - 1;
-                                        mBind.tvDeviceInfoPayloadType.setText(enable == 1 ? confirmed : unconfirmed);
-                                        mBind.tvDeviceInfoTimes.setText(String.valueOf(times));
-                                        setMaxTimes(enable, mBind.lineDeviceInfoTimes, mBind.layoutDeviceInfoTimes);
+                                        mBind.tvParkingInfoPayloadType.setText(enable == 1 ? confirmed : unconfirmed);
+                                        mBind.tvParkingInfoTimes.setText(String.valueOf(times));
+                                        setMaxTimes(enable, mBind.lineParkingInfoTimes, mBind.layoutParkingInfoTimes);
                                     }
                                     break;
 
@@ -189,13 +179,13 @@ public class MessageTypeSettingsActivity extends Lw006BaseActivity {
                                     }
                                     break;
 
-                                case KEY_LOW_POWER_PAYLOAD:
+                                case KEY_BEACON_PAYLOAD:
                                     if (length == 2) {
                                         int enable = value[4] & 0xff;
                                         int times = (value[5] & 0xff) - 1;
-                                        mBind.tvLowPowerPayloadType.setText(enable == 1 ? confirmed : unconfirmed);
-                                        mBind.tvLowPowerTimes.setText(String.valueOf(times));
-                                        setMaxTimes(enable, mBind.lineLowPowerTime, mBind.layoutLowPowerTime);
+                                        mBind.tvBeaconPayloadType.setText(enable == 1 ? confirmed : unconfirmed);
+                                        mBind.tvBeaconTimes.setText(String.valueOf(times));
+                                        setMaxTimes(enable, mBind.lineBeaconTimes, mBind.layoutBeaconTimes);
                                     }
                                     break;
 
@@ -209,52 +199,52 @@ public class MessageTypeSettingsActivity extends Lw006BaseActivity {
                                     }
                                     break;
 
-                                case KEY_GPS_LIMIT_PAYLOAD:
+                                case KEY_LOW_POWER_PAYLOAD:
                                     if (length == 2) {
                                         int enable = value[4] & 0xff;
                                         int times = (value[5] & 0xff) - 1;
-                                        mBind.tvGPSLimitPayloadType.setText(enable == 1 ? confirmed : unconfirmed);
-                                        mBind.tvGPSLimitTimes.setText(String.valueOf(times));
-                                        setMaxTimes(enable, mBind.lineGpsLimitTimes, mBind.layoutGpsLimitTimes);
+                                        mBind.tvLowPowerPayloadType.setText(enable == 1 ? confirmed : unconfirmed);
+                                        mBind.tvLowPowerTimes.setText(String.valueOf(times));
+                                        setMaxTimes(enable, mBind.lineLowPowerTime, mBind.layoutLowPowerTime);
                                     }
                                     break;
 
-                                case KEY_POSITIONING_PAYLOAD:
+                                case KEY_SHUTDOWN_PAYLOAD:
                                     if (length == 2) {
                                         int enable = value[4] & 0xff;
                                         int times = (value[5] & 0xff) - 1;
-                                        mBind.tvPositioningPayloadType.setText(enable == 1 ? confirmed : unconfirmed);
-                                        mBind.tvPositioningTimes.setText(String.valueOf(times));
-                                        setMaxTimes(enable, mBind.linePosTimes, mBind.layoutPosTimes);
+                                        mBind.tvShutdownPayloadType.setText(enable == 1 ? confirmed : unconfirmed);
+                                        mBind.tvShutdownTimes.setText(String.valueOf(times));
+                                        setMaxTimes(enable, mBind.lineShutdownTimes, mBind.layoutShutdownTimes);
                                     }
                                     break;
                             }
                         } else if (flag == 1) {
                             switch (configKeyEnum) {
-                                case KEY_DEVICE_INFO_PAYLOAD:
-                                    deviceInfoFlag = value[4] & 0xff;
+                                case KEY_PARKING_INFO_PAYLOAD:
+                                    parkingInfoFlag = value[4] & 0xff;
                                     break;
 
                                 case KEY_HEARTBEAT_PAYLOAD:
                                     heartbeatFlag = value[4] & 0xff;
                                     break;
 
+                                case KEY_BEACON_PAYLOAD:
+                                    beaconFlag = value[4] & 0xff;
+                                    break;
+
                                 case KEY_LOW_POWER_PAYLOAD:
                                     lowPowerFlag = value[4] & 0xff;
                                     break;
 
+                                case KEY_SHUTDOWN_PAYLOAD:
+                                    shutdownFlag = value[4] & 0xff;
+                                    break;
+
                                 case KEY_EVENT_PAYLOAD:
                                     eventFlag = value[4] & 0xff;
-                                    break;
-
-                                case KEY_GPS_LIMIT_PAYLOAD:
-                                    gpsLimitFlag = value[4] & 0xff;
-                                    break;
-
-                                case KEY_POSITIONING_PAYLOAD:
-                                    positioningFlag = value[4] & 0xff;
-                                    if (deviceInfoFlag == 1 && heartbeatFlag == 1 && lowPowerFlag == 1 && eventFlag == 1
-                                            && gpsLimitFlag == 1 && positioningFlag == 1) {
+                                    if (parkingInfoFlag == 1 && heartbeatFlag == 1 && beaconFlag == 1 && eventFlag == 1
+                                            && lowPowerFlag == 1 && shutdownFlag == 1) {
                                         ToastUtils.showToast(this, "Save Successfully！");
                                     } else {
                                         ToastUtils.showToast(this, "Opps！Save failed. Please check the input characters and try again.");
@@ -273,24 +263,24 @@ public class MessageTypeSettingsActivity extends Lw006BaseActivity {
         linearLayout.setVisibility(enable == 1 ? View.VISIBLE : View.GONE);
     }
 
-    private void showBottomDialog(ArrayList<String> mValues, int mSelected, TextView textView, int type) {
+    private void showBottomDialog(String[] mValues, int mSelected, TextView textView, int type) {
         if (isWindowLocked()) return;
         BottomDialog dialog = new BottomDialog();
-        dialog.setDatas(mValues, mSelected);
+        dialog.setDatas(new ArrayList<>(Arrays.asList(mValues)), mSelected);
         dialog.setListener(value -> {
-            textView.setText(mValues.get(value));
+            textView.setText(mValues[value]);
             if (type == 1) {
-                setMaxTimes(value, mBind.lineDeviceInfoTimes, mBind.layoutDeviceInfoTimes);
-            } else if (type == 2) {
                 setMaxTimes(value, mBind.lineHeartbeatTime, mBind.layoutHeartbeatTime);
+            } else if (type == 2) {
+                setMaxTimes(value, mBind.lineParkingInfoTimes, mBind.layoutParkingInfoTimes);
             } else if (type == 3) {
-                setMaxTimes(value, mBind.lineLowPowerTime, mBind.layoutLowPowerTime);
+                setMaxTimes(value, mBind.lineBeaconTimes, mBind.layoutBeaconTimes);
             } else if (type == 4) {
-                setMaxTimes(value, mBind.lineEventTimes, mBind.layoutEventTimes);
+                setMaxTimes(value, mBind.lineLowPowerTime, mBind.layoutLowPowerTime);
             } else if (type == 5) {
-                setMaxTimes(value, mBind.lineGpsLimitTimes, mBind.layoutGpsLimitTimes);
+                setMaxTimes(value, mBind.lineShutdownTimes, mBind.layoutShutdownTimes);
             } else if (type == 6) {
-                setMaxTimes(value, mBind.linePosTimes, mBind.layoutPosTimes);
+                setMaxTimes(value, mBind.lineEventTimes, mBind.layoutEventTimes);
             }
         });
         dialog.show(getSupportFragmentManager());
@@ -302,31 +292,31 @@ public class MessageTypeSettingsActivity extends Lw006BaseActivity {
 
     public void onSave(View view) {
         showSyncingProgressDialog();
-        deviceInfoFlag = 0;
+        parkingInfoFlag = 0;
         heartbeatFlag = 0;
-        lowPowerFlag = 0;
+        beaconFlag = 0;
         eventFlag = 0;
-        gpsLimitFlag = 0;
-        positioningFlag = 0;
-        int deviceInfoPayloadType = confirmed.equals(mBind.tvDeviceInfoPayloadType.getText().toString().trim()) ? 1 : 0;
-        int deviceInfoTime = Integer.parseInt(mBind.tvDeviceInfoTimes.getText().toString().trim()) + 1;
+        lowPowerFlag = 0;
+        shutdownFlag = 0;
+        int parkingInfoPayloadType = confirmed.equals(mBind.tvParkingInfoPayloadType.getText().toString().trim()) ? 1 : 0;
+        int parkingInfoTime = Integer.parseInt(mBind.tvParkingInfoTimes.getText().toString().trim()) + 1;
         int heartbeatPayloadType = confirmed.equals(mBind.tvHeartbeatPayloadType.getText().toString().trim()) ? 1 : 0;
         int heartbeatTime = Integer.parseInt(mBind.tvHeartbeatTimes.getText().toString().trim()) + 1;
         int lowPowerPayloadType = confirmed.equals(mBind.tvLowPowerPayloadType.getText().toString().trim()) ? 1 : 0;
         int lowPowerTime = Integer.parseInt(mBind.tvLowPowerTimes.getText().toString().trim()) + 1;
         int eventPayloadType = confirmed.equals(mBind.tvEventPayloadType.getText().toString().trim()) ? 1 : 0;
         int eventTime = Integer.parseInt(mBind.tvEventTimes.getText().toString().trim()) + 1;
-        int gpsLimitPayloadType = confirmed.equals(mBind.tvGPSLimitPayloadType.getText().toString().trim()) ? 1 : 0;
-        int gpsLimitTime = Integer.parseInt(mBind.tvGPSLimitTimes.getText().toString().trim()) + 1;
-        int positioningPayloadType = confirmed.equals(mBind.tvPositioningPayloadType.getText().toString().trim()) ? 1 : 0;
-        int positioningTime = Integer.parseInt(mBind.tvPositioningTimes.getText().toString().trim()) + 1;
+        int beaconPayloadType = confirmed.equals(mBind.tvBeaconPayloadType.getText().toString().trim()) ? 1 : 0;
+        int beaconTime = Integer.parseInt(mBind.tvBeaconTimes.getText().toString().trim()) + 1;
+        int shutdownPayloadType = confirmed.equals(mBind.tvShutdownPayloadType.getText().toString().trim()) ? 1 : 0;
+        int shutdownTime = Integer.parseInt(mBind.tvShutdownTimes.getText().toString().trim()) + 1;
         List<OrderTask> orderTasks = new ArrayList<>(8);
-        orderTasks.add(OrderTaskAssembler.setDeviceInfoPayload(deviceInfoPayloadType, deviceInfoTime));
         orderTasks.add(OrderTaskAssembler.setHeartbeatPayload(heartbeatPayloadType, heartbeatTime));
+        orderTasks.add(OrderTaskAssembler.setParkingInfoPayload(parkingInfoPayloadType, parkingInfoTime));
+        orderTasks.add(OrderTaskAssembler.setBeaconPayload(beaconPayloadType, beaconTime));
         orderTasks.add(OrderTaskAssembler.setLowPowerPayload(lowPowerPayloadType, lowPowerTime));
+        orderTasks.add(OrderTaskAssembler.setShutdownPayload(shutdownPayloadType, shutdownTime));
         orderTasks.add(OrderTaskAssembler.setEventPayload(eventPayloadType, eventTime));
-        orderTasks.add(OrderTaskAssembler.setGPSLimitPayload(gpsLimitPayloadType, gpsLimitTime));
-        orderTasks.add(OrderTaskAssembler.setPositioningPayload(positioningPayloadType, positioningTime));
         MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 

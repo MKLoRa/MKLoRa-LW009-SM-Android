@@ -20,7 +20,6 @@
             android:gravity="center_vertical"
             android:onClick="onBack"
             android:paddingLeft="16dp"
-            android:text=""
             android:textColor="@color/whiteFFFFFF"
             android:textSize="15sp" />
 
@@ -76,16 +75,16 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Device Information Payload Type"
+                        android:text="Heartbeat Payload Type"
                         android:textColor="@color/black_333333"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tvDeviceInfoPayloadType"
+                        android:id="@+id/tvHeartbeatPayloadType"
                         android:layout_width="wrap_content"
                         android:layout_height="35dp"
-                        android:background="@drawable/lw006_shape_radius_blue_btn_bg"
+                        android:background="@drawable/shape_radius_blue_btn_bg"
                         android:gravity="center"
                         android:minWidth="105dp"
                         android:textColor="@color/whiteFFFFFF"
@@ -94,21 +93,23 @@
                 </LinearLayout>
 
                 <View
-                    android:id="@+id/lineDeviceInfoTimes"
+                    android:id="@+id/lineHeartbeatTime"
                     style="@style/divider_line"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:visibility="visible" />
 
                 <LinearLayout
-                    android:id="@+id/layoutDeviceInfoTimes"
+                    android:id="@+id/layoutHeartbeatTime"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
                     <TextView
                         android:layout_width="0px"
@@ -121,17 +122,16 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tvDeviceInfoTimes"
+                        android:id="@+id/tvHeartbeatTimes"
                         android:layout_width="50dp"
                         android:layout_height="35dp"
-                        android:background="@drawable/lw006_shape_radius_blue_btn_bg"
+                        android:background="@drawable/shape_radius_blue_btn_bg"
                         android:gravity="center"
                         android:textColor="@color/whiteFFFFFF"
                         android:textSize="15sp"
                         tools:text="2" />
                 </LinearLayout>
             </LinearLayout>
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -155,16 +155,16 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Heartbeat Payload Type"
+                        android:text="Parking Information Payload Type"
                         android:textColor="@color/black_333333"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tvHeartbeatPayloadType"
+                        android:id="@+id/tvParkingInfoPayloadType"
                         android:layout_width="wrap_content"
                         android:layout_height="35dp"
-                        android:background="@drawable/lw006_shape_radius_blue_btn_bg"
+                        android:background="@drawable/shape_radius_blue_btn_bg"
                         android:gravity="center"
                         android:minWidth="105dp"
                         android:textColor="@color/whiteFFFFFF"
@@ -173,21 +173,23 @@
                 </LinearLayout>
 
                 <View
-                    android:id="@+id/lineHeartbeatTime"
+                    android:id="@+id/lineParkingInfoTimes"
                     style="@style/divider_line"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:visibility="visible" />
 
                 <LinearLayout
-                    android:id="@+id/layoutHeartbeatTime"
+                    android:id="@+id/layoutParkingInfoTimes"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
                     <TextView
                         android:layout_width="0px"
@@ -200,10 +202,90 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tvHeartbeatTimes"
+                        android:id="@+id/tvParkingInfoTimes"
                         android:layout_width="50dp"
                         android:layout_height="35dp"
-                        android:background="@drawable/lw006_shape_radius_blue_btn_bg"
+                        android:background="@drawable/shape_radius_blue_btn_bg"
+                        android:gravity="center"
+                        android:textColor="@color/whiteFFFFFF"
+                        android:textSize="15sp"
+                        tools:text="2" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@color/whiteFFFFFF"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp">
+
+                    <TextView
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Beacon Payload Type"
+                        android:textColor="@color/black_333333"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvBeaconPayloadType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:background="@drawable/shape_radius_blue_btn_bg"
+                        android:gravity="center"
+                        android:minWidth="105dp"
+                        android:textColor="@color/whiteFFFFFF"
+                        android:textSize="15sp"
+                        tools:text="Unconfirmed" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/lineBeaconTimes"
+                    style="@style/divider_line"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <LinearLayout
+                    android:id="@+id/layoutBeaconTimes"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Max Retransmission Times"
+                        android:textColor="@color/black_333333"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvBeaconTimes"
+                        android:layout_width="50dp"
+                        android:layout_height="35dp"
+                        android:background="@drawable/shape_radius_blue_btn_bg"
                         android:gravity="center"
                         android:textColor="@color/whiteFFFFFF"
                         android:textSize="15sp"
@@ -242,7 +324,7 @@
                         android:id="@+id/tvLowPowerPayloadType"
                         android:layout_width="wrap_content"
                         android:layout_height="35dp"
-                        android:background="@drawable/lw006_shape_radius_blue_btn_bg"
+                        android:background="@drawable/shape_radius_blue_btn_bg"
                         android:gravity="center"
                         android:minWidth="105dp"
                         android:textColor="@color/whiteFFFFFF"
@@ -255,7 +337,8 @@
                     style="@style/divider_line"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:visibility="visible" />
 
                 <LinearLayout
                     android:id="@+id/layoutLowPowerTime"
@@ -265,7 +348,8 @@
                     android:orientation="horizontal"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
                     <TextView
                         android:layout_width="0px"
@@ -281,7 +365,7 @@
                         android:id="@+id/tvLowPowerTimes"
                         android:layout_width="50dp"
                         android:layout_height="35dp"
-                        android:background="@drawable/lw006_shape_radius_blue_btn_bg"
+                        android:background="@drawable/shape_radius_blue_btn_bg"
                         android:gravity="center"
                         android:textColor="@color/whiteFFFFFF"
                         android:textSize="15sp"
@@ -289,6 +373,85 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@color/whiteFFFFFF"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp">
+
+                    <TextView
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Shut-Down Payload Type"
+                        android:textColor="@color/black_333333"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvShutdownPayloadType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:background="@drawable/shape_radius_blue_btn_bg"
+                        android:gravity="center"
+                        android:minWidth="105dp"
+                        android:textColor="@color/whiteFFFFFF"
+                        android:textSize="15sp"
+                        tools:text="Unconfirmed" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/lineShutdownTimes"
+                    style="@style/divider_line"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <LinearLayout
+                    android:id="@+id/layoutShutdownTimes"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Max Retransmission Times"
+                        android:textColor="@color/black_333333"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvShutdownTimes"
+                        android:layout_width="50dp"
+                        android:layout_height="35dp"
+                        android:background="@drawable/shape_radius_blue_btn_bg"
+                        android:gravity="center"
+                        android:textColor="@color/whiteFFFFFF"
+                        android:textSize="15sp"
+                        tools:text="2" />
+                </LinearLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -321,7 +484,7 @@
                         android:id="@+id/tvEventPayloadType"
                         android:layout_width="wrap_content"
                         android:layout_height="35dp"
-                        android:background="@drawable/lw006_shape_radius_blue_btn_bg"
+                        android:background="@drawable/shape_radius_blue_btn_bg"
                         android:gravity="center"
                         android:minWidth="105dp"
                         android:textColor="@color/whiteFFFFFF"
@@ -334,7 +497,8 @@
                     style="@style/divider_line"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:visibility="visible" />
 
                 <LinearLayout
                     android:id="@+id/layoutEventTimes"
@@ -344,7 +508,8 @@
                     android:orientation="horizontal"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
                     <TextView
                         android:layout_width="0px"
@@ -360,163 +525,7 @@
                         android:id="@+id/tvEventTimes"
                         android:layout_width="50dp"
                         android:layout_height="35dp"
-                        android:background="@drawable/lw006_shape_radius_blue_btn_bg"
-                        android:gravity="center"
-                        android:textColor="@color/whiteFFFFFF"
-                        android:textSize="15sp"
-                        tools:text="2" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                android:background="@color/whiteFFFFFF"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp">
-
-                    <TextView
-                        android:layout_width="0px"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:text="GPS Limit Payload Type"
-                        android:textColor="@color/black_333333"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvGPSLimitPayloadType"
-                        android:layout_width="wrap_content"
-                        android:layout_height="35dp"
-                        android:background="@drawable/lw006_shape_radius_blue_btn_bg"
-                        android:gravity="center"
-                        android:minWidth="105dp"
-                        android:textColor="@color/whiteFFFFFF"
-                        android:textSize="15sp"
-                        tools:text="Unconfirmed" />
-                </LinearLayout>
-
-                <View
-                    android:id="@+id/lineGpsLimitTimes"
-                    style="@style/divider_line"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:visibility="gone" />
-
-                <LinearLayout
-                    android:id="@+id/layoutGpsLimitTimes"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:layout_width="0px"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:text="Max Retransmission Times"
-                        android:textColor="@color/black_333333"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvGPSLimitTimes"
-                        android:layout_width="50dp"
-                        android:layout_height="35dp"
-                        android:background="@drawable/lw006_shape_radius_blue_btn_bg"
-                        android:gravity="center"
-                        android:textColor="@color/whiteFFFFFF"
-                        android:textSize="15sp"
-                        tools:text="2" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                android:background="@color/whiteFFFFFF"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp">
-
-                    <TextView
-                        android:layout_width="0px"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:text="Positioning Payload Type"
-                        android:textColor="@color/black_333333"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvPositioningPayloadType"
-                        android:layout_width="wrap_content"
-                        android:layout_height="35dp"
-                        android:background="@drawable/lw006_shape_radius_blue_btn_bg"
-                        android:gravity="center"
-                        android:minWidth="105dp"
-                        android:textColor="@color/whiteFFFFFF"
-                        android:textSize="15sp"
-                        tools:text="Unconfirmed" />
-                </LinearLayout>
-
-                <View
-                    android:id="@+id/linePosTimes"
-                    style="@style/divider_line"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:visibility="gone" />
-
-                <LinearLayout
-                    android:id="@+id/layoutPosTimes"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:layout_width="0px"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:text="Max Retransmission Times"
-                        android:textColor="@color/black_333333"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvPositioningTimes"
-                        android:layout_width="50dp"
-                        android:layout_height="35dp"
-                        android:background="@drawable/lw006_shape_radius_blue_btn_bg"
+                        android:background="@drawable/shape_radius_blue_btn_bg"
                         android:gravity="center"
                         android:textColor="@color/whiteFFFFFF"
                         android:textSize="15sp"

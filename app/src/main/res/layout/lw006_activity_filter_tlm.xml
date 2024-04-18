@@ -101,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="12dp"
-                android:background="@drawable/lw006_shape_radius_blue_btn_bg"
+                android:background="@drawable/shape_radius_blue_btn_bg"
                 android:clickable="true"
                 android:gravity="center"
                 android:minWidth="150dp"

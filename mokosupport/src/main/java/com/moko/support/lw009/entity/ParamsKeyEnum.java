@@ -280,17 +280,17 @@ public enum ParamsKeyEnum implements Serializable {
     // 网络检查间隔
     KEY_LORA_NETWORK_CHECK_INTERVAL(0xA0),
     //设备信息包上行配置
-    KEY_DEVICE_INFO_PAYLOAD(0xA1),
+    KEY_PARKING_INFO_PAYLOAD(0xA2),
     //心跳数据包上行配置
-    KEY_HEARTBEAT_PAYLOAD(0xA2),
+    KEY_HEARTBEAT_PAYLOAD(0xA1),
     //低电状态数据包上行配置
-    KEY_LOW_POWER_PAYLOAD(0xA3),
+    KEY_BEACON_PAYLOAD(0xA3),
     //事件信息包上行配置
-    KEY_EVENT_PAYLOAD(0xA4),
+    KEY_EVENT_PAYLOAD(0xA6),
     //GPS极限定位数据包上行配置
-    KEY_GPS_LIMIT_PAYLOAD(0xA5),
+    KEY_LOW_POWER_PAYLOAD(0xA4),
     //定位数据包上行配置
-    KEY_POSITIONING_PAYLOAD(0xA6),
+    KEY_SHUTDOWN_PAYLOAD(0xA5),
 
 
 

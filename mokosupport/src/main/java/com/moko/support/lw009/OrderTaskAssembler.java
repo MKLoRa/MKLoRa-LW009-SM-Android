@@ -887,9 +887,9 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask getDeviceInfoPayload() {
+    public static OrderTask getParkingInfoPayload() {
         ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_DEVICE_INFO_PAYLOAD);
+        task.setData(ParamsKeyEnum.KEY_PARKING_INFO_PAYLOAD);
         return task;
     }
 
@@ -899,9 +899,9 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask getLowPowerPayload() {
+    public static OrderTask getBeaconPayload() {
         ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_LOW_POWER_PAYLOAD);
+        task.setData(ParamsKeyEnum.KEY_BEACON_PAYLOAD);
         return task;
     }
 
@@ -911,15 +911,15 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask getGPSLimitPayload() {
+    public static OrderTask getLowPowerPayload() {
         ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_GPS_LIMIT_PAYLOAD);
+        task.setData(ParamsKeyEnum.KEY_LOW_POWER_PAYLOAD);
         return task;
     }
 
-    public static OrderTask getPositioningPayload() {
+    public static OrderTask getShutdownPayload() {
         ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_POSITIONING_PAYLOAD);
+        task.setData(ParamsKeyEnum.KEY_SHUTDOWN_PAYLOAD);
         return task;
     }
 
@@ -1784,9 +1784,9 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask setDeviceInfoPayload(@IntRange(from = 0, to = 1) int flag, @IntRange(from = 1, to = 4) int times) {
+    public static OrderTask setParkingInfoPayload(@IntRange(from = 0, to = 1) int flag, @IntRange(from = 1, to = 4) int times) {
         ParamsWriteTask task = new ParamsWriteTask();
-        task.setPayloadInfo(flag, times, ParamsKeyEnum.KEY_DEVICE_INFO_PAYLOAD.getParamsKey());
+        task.setPayloadInfo(flag, times, ParamsKeyEnum.KEY_PARKING_INFO_PAYLOAD.getParamsKey());
         return task;
     }
 
@@ -1796,9 +1796,9 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask setLowPowerPayload(@IntRange(from = 0, to = 1) int flag, @IntRange(from = 1, to = 4) int times) {
+    public static OrderTask setBeaconPayload(@IntRange(from = 0, to = 1) int flag, @IntRange(from = 1, to = 4) int times) {
         ParamsWriteTask task = new ParamsWriteTask();
-        task.setPayloadInfo(flag, times, ParamsKeyEnum.KEY_LOW_POWER_PAYLOAD.getParamsKey());
+        task.setPayloadInfo(flag, times, ParamsKeyEnum.KEY_BEACON_PAYLOAD.getParamsKey());
         return task;
     }
 
@@ -1808,15 +1808,15 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask setGPSLimitPayload(@IntRange(from = 0, to = 1) int flag, @IntRange(from = 1, to = 4) int times) {
+    public static OrderTask setLowPowerPayload(@IntRange(from = 0, to = 1) int flag, @IntRange(from = 1, to = 4) int times) {
         ParamsWriteTask task = new ParamsWriteTask();
-        task.setPayloadInfo(flag, times, ParamsKeyEnum.KEY_GPS_LIMIT_PAYLOAD.getParamsKey());
+        task.setPayloadInfo(flag, times, ParamsKeyEnum.KEY_LOW_POWER_PAYLOAD.getParamsKey());
         return task;
     }
 
-    public static OrderTask setPositioningPayload(@IntRange(from = 0, to = 1) int flag, @IntRange(from = 1, to = 4) int times) {
+    public static OrderTask setShutdownPayload(@IntRange(from = 0, to = 1) int flag, @IntRange(from = 1, to = 4) int times) {
         ParamsWriteTask task = new ParamsWriteTask();
-        task.setPayloadInfo(flag, times, ParamsKeyEnum.KEY_POSITIONING_PAYLOAD.getParamsKey());
+        task.setPayloadInfo(flag, times, ParamsKeyEnum.KEY_SHUTDOWN_PAYLOAD.getParamsKey());
         return task;
     }
 

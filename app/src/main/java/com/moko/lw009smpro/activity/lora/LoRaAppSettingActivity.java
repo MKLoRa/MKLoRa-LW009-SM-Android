@@ -15,7 +15,7 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw009smpro.activity.Lw006BaseActivity;
-import com.moko.lw009smpro.databinding.Lw006ActivityAppSettingBinding;
+import com.moko.lw009smpro.databinding.ActivityAppSettingBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
@@ -30,14 +30,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LoRaAppSettingActivity extends Lw006BaseActivity {
-    private Lw006ActivityAppSettingBinding mBind;
+    private ActivityAppSettingBinding mBind;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = Lw006ActivityAppSettingBinding.inflate(getLayoutInflater());
+        mBind = ActivityAppSettingBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
         // 注册广播接收器
@@ -46,12 +46,10 @@ public class LoRaAppSettingActivity extends Lw006BaseActivity {
         registerReceiver(mReceiver, filter);
         mReceiverTag = true;
         showSyncingProgressDialog();
-        mBind.etSyncInterval.postDelayed(() -> {
-            List<OrderTask> orderTasks = new ArrayList<>();
-            orderTasks.add(OrderTaskAssembler.getLoraTimeSyncInterval());
-            orderTasks.add(OrderTaskAssembler.getLoraNetworkCheckInterval());
-            MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-        }, 300);
+        List<OrderTask> orderTasks = new ArrayList<>(2);
+        orderTasks.add(OrderTaskAssembler.getLoraTimeSyncInterval());
+        orderTasks.add(OrderTaskAssembler.getLoraNetworkCheckInterval());
+        MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         mBind.layoutMsgTypeSetting.setOnClickListener(v -> startActivity(new Intent(this, MessageTypeSettingsActivity.class)));
     }
 
@@ -71,8 +69,6 @@ public class LoRaAppSettingActivity extends Lw006BaseActivity {
         if (!MokoConstants.ACTION_CURRENT_DATA.equals(action))
             EventBus.getDefault().cancelEventDelivery(event);
         runOnUiThread(() -> {
-            if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
-            }
             if (MokoConstants.ACTION_ORDER_FINISH.equals(action)) {
                 dismissSyncProgressDialog();
             }
@@ -94,14 +90,11 @@ public class LoRaAppSettingActivity extends Lw006BaseActivity {
                             int result = value[4] & 0xFF;
                             switch (configKeyEnum) {
                                 case KEY_LORA_TIME_SYNC_INTERVAL:
-                                    if (result != 1) {
-                                        savedParamsError = true;
-                                    }
+                                    if (result != 1) savedParamsError = true;
                                     break;
+
                                 case KEY_LORA_NETWORK_CHECK_INTERVAL:
-                                    if (result != 1) {
-                                        savedParamsError = true;
-                                    }
+                                    if (result != 1) savedParamsError = true;
                                     if (savedParamsError) {
                                         ToastUtils.showToast(this, "Opps！Save failed. Please check the input characters and try again.");
                                     } else {
@@ -120,6 +113,7 @@ public class LoRaAppSettingActivity extends Lw006BaseActivity {
                                         mBind.etSyncInterval.setSelection(mBind.etSyncInterval.getText().length());
                                     }
                                     break;
+
                                 case KEY_LORA_NETWORK_CHECK_INTERVAL:
                                     if (length > 0) {
                                         int interval = value[4] & 0xFF;
@@ -194,7 +188,8 @@ public class LoRaAppSettingActivity extends Lw006BaseActivity {
             // 注销广播
             unregisterReceiver(mReceiver);
         }
-        EventBus.getDefault().unregister(this);
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
     }
 
     public void onBack(View view) {
@@ -207,6 +202,7 @@ public class LoRaAppSettingActivity extends Lw006BaseActivity {
     }
 
     private void backHome() {
+        EventBus.getDefault().unregister(this);
         finish();
     }
 }

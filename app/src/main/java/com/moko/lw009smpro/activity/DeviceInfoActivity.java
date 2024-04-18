@@ -358,7 +358,6 @@ public class DeviceInfoActivity extends Lw006BaseActivity implements RadioGroup.
     }
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent != null) {
@@ -371,12 +370,9 @@ public class DeviceInfoActivity extends Lw006BaseActivity implements RadioGroup.
                         builder.setTitle("Dismiss");
                         builder.setCancelable(false);
                         builder.setMessage("The current system of bluetooth is not available!");
-                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                DeviceInfoActivity.this.setResult(RESULT_OK);
-                                finish();
-                            }
+                        builder.setPositiveButton("OK", (dialog, which) -> {
+                            DeviceInfoActivity.this.setResult(RESULT_OK);
+                            finish();
                         });
                         builder.show();
                     }
@@ -391,14 +387,11 @@ public class DeviceInfoActivity extends Lw006BaseActivity implements RadioGroup.
         if (requestCode == AppConstants.REQUEST_CODE_LORA_CONN_SETTING) {
             if (resultCode == RESULT_OK) {
                 showSyncingProgressDialog();
-//                mBind.ivSave.postDelayed(() -> {
-                List<OrderTask> orderTasks = new ArrayList<>();
-                // setting
+                List<OrderTask> orderTasks = new ArrayList<>(4);
                 orderTasks.add(OrderTaskAssembler.getLoraRegion());
                 orderTasks.add(OrderTaskAssembler.getLoraUploadMode());
                 orderTasks.add(OrderTaskAssembler.getLoraNetworkStatus());
                 MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-//                }, 500);
             }
         } else if (requestCode == AppConstants.REQUEST_CODE_SYSTEM_INFO) {
             if (resultCode == RESULT_OK) {

@@ -77,7 +77,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:background="@drawable/lw006_shape_radius_blue_btn_bg"
+            android:background="@drawable/shape_radius_blue_btn_bg"
             android:gravity="center"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
