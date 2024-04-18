@@ -27,7 +27,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"
             android:text=""
-            android:textColor="@color/lw006_text_black_4d4d4d"
+            android:textColor="@color/black_4d4d4d"
             android:textSize="15sp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

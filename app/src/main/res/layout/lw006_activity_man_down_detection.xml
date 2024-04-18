@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lw006_grey_f2f2f2"
+    android:background="@color/grey_f2f2f2"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="@color/lw006_blue_2f84d0">
+        android:background="@color/blue_2f84d0">
 
         <TextView
             android:id="@+id/tv_back"
@@ -22,7 +22,7 @@
             android:onClick="onBack"
             android:paddingLeft="16dp"
             android:text=""
-            android:textColor="@color/lw006_white_ffffff"
+            android:textColor="@color/whiteFFFFFF"
             android:textSize="15sp" />
 
         <TextView
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/man_down_detection"
-            android:textColor="@color/lw006_white_ffffff"
+            android:textColor="@color/whiteFFFFFF"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -53,7 +53,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:background="@color/lw006_white_ffffff"
+        android:background="@color/whiteFFFFFF"
         android:paddingStart="10dp"
         android:paddingEnd="10dp">
 
@@ -66,13 +66,13 @@
             android:drawableRight="@drawable/lw006_selector_cb_btn"
             android:gravity="center_vertical"
             android:text="Man Down Detection"
-            android:textColor="@color/lw006_black_333333"
+            android:textColor="@color/black_333333"
             android:textSize="15sp"
             android:textStyle="bold" />
 
         <View
             android:id="@+id/line1"
-            style="@style/lw006_divider_line"
+            style="@style/divider_line"
             app:layout_constraintTop_toBottomOf="@id/cb_man_down_detection" />
 
         <TextView
@@ -81,7 +81,7 @@
             android:layout_height="50dp"
             android:gravity="center_vertical"
             android:text="Detection Timeout"
-            android:textColor="@color/lw006_black_333333"
+            android:textColor="@color/black_333333"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@+id/line1" />
@@ -96,8 +96,8 @@
             android:inputType="number"
             android:maxLength="3"
             android:text=""
-            android:textColor="@color/lw006_black_333333"
-            android:textColorHint="@color/lw006_grey_ebebeb"
+            android:textColor="@color/black_333333"
+            android:textColorHint="@color/grey_ebebeb"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@+id/tvDetectionTimeout"
             app:layout_constraintRight_toLeftOf="@+id/tvTimeoutUnit"
@@ -108,7 +108,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Mins"
-            android:textColor="@color/lw006_black_333333"
+            android:textColor="@color/black_333333"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/tvDetectionTimeout"
@@ -117,7 +117,7 @@
 
         <View
             android:id="@+id/line3"
-            style="@style/lw006_divider_line"
+            style="@style/divider_line"
             app:layout_constraintTop_toBottomOf="@id/tvDetectionTimeout" />
 
         <TextView
@@ -126,7 +126,7 @@
             android:layout_height="50dp"
             android:gravity="center_vertical"
             android:text="Positioning Strategy"
-            android:textColor="@color/lw006_black_333333"
+            android:textColor="@color/black_333333"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@+id/line3" />
@@ -142,7 +142,7 @@
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="GPS"
-            android:textColor="@color/lw006_white_ffffff"
+            android:textColor="@color/whiteFFFFFF"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@+id/tv1"
             app:layout_constraintRight_toRightOf="parent"
@@ -150,7 +150,7 @@
 
         <View
             android:id="@+id/line4"
-            style="@style/lw006_divider_line"
+            style="@style/divider_line"
             app:layout_constraintTop_toBottomOf="@id/tv1" />
 
         <TextView
@@ -159,7 +159,7 @@
             android:layout_height="50dp"
             android:gravity="center_vertical"
             android:text="Report Interval"
-            android:textColor="@color/lw006_black_333333"
+            android:textColor="@color/black_333333"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@+id/line4" />
@@ -174,8 +174,8 @@
             android:inputType="number"
             android:maxLength="3"
             android:text=""
-            android:textColor="@color/lw006_black_333333"
-            android:textColorHint="@color/lw006_grey_ebebeb"
+            android:textColor="@color/black_333333"
+            android:textColorHint="@color/grey_ebebeb"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@+id/tvReportInterval"
             app:layout_constraintRight_toLeftOf="@+id/tvTimeoutUnit1"
@@ -186,7 +186,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="s"
-            android:textColor="@color/lw006_black_333333"
+            android:textColor="@color/black_333333"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/tvReportInterval"
@@ -201,7 +201,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:background="@color/lw006_white_ffffff"
+        android:background="@color/whiteFFFFFF"
         android:orientation="vertical"
         android:paddingStart="10dp"
         android:paddingEnd="10dp">
@@ -215,11 +215,11 @@
             android:drawableRight="@drawable/lw006_selector_cb_btn"
             android:gravity="center_vertical"
             android:text="Notify Event On Man Down Start"
-            android:textColor="@color/lw006_black_333333"
+            android:textColor="@color/black_333333"
             android:textSize="15sp"
             android:textStyle="bold" />
 
-        <View style="@style/lw006_divider_line" />
+        <View style="@style/divider_line" />
 
         <CheckBox
             android:id="@+id/cbNotifyManDownEnd"
@@ -230,7 +230,7 @@
             android:drawableRight="@drawable/lw006_selector_cb_btn"
             android:gravity="center_vertical"
             android:text="Notify Event On Man Down End"
-            android:textColor="@color/lw006_black_333333"
+            android:textColor="@color/black_333333"
             android:textSize="15sp"
             android:textStyle="bold" />
     </LinearLayout>

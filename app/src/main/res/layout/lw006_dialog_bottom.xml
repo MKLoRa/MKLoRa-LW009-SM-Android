@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/lw006_white_ffffff"
+    android:background="@color/whiteFFFFFF"
     android:paddingBottom="20dp">
 
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:background="@color/lw006_blue_2f84d0"
+        android:background="@color/blue_2f84d0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -22,7 +22,7 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:text="@string/cancel"
-            android:textColor="@color/lw006_white_ffffff"
+            android:textColor="@color/whiteFFFFFF"
             android:textSize="15sp" />
 
         <TextView
@@ -34,11 +34,11 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:text="@string/confirm"
-            android:textColor="@color/lw006_white_ffffff"
+            android:textColor="@color/whiteFFFFFF"
             android:textSize="15sp" />
     </RelativeLayout>
 
-    <com.moko.lw006.view.WheelView
+    <com.moko.lw009smpro.view.WheelView
         android:id="@+id/wv_bottom"
         android:layout_width="0dp"
         android:layout_height="204dp"
@@ -49,13 +49,13 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:lineColor="@color/lw006_transparent"
+        app:lineColor="@color/transparent"
         app:lineHeight="1dp"
         app:maskHeight="0dp"
         app:noEmpty="true"
-        app:normalTextColor="@color/lw006_black_333333"
+        app:normalTextColor="@color/black_333333"
         app:normalTextSize="15sp"
-        app:selectedTextColor="@color/lw006_blue_2f84d0"
+        app:selectedTextColor="@color/blue_2f84d0"
         app:selectedTextSize="18sp"
         app:unitHeight="40dp" />
 
@@ -65,7 +65,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="130dp"
         android:layout_marginRight="30dp"
-        android:background="@color/lw006_grey_bfbfbf"
+        android:background="@color/grey_bfbfbf"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -76,7 +76,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="170dp"
         android:layout_marginRight="30dp"
-        android:background="@color/lw006_grey_bfbfbf"
+        android:background="@color/grey_bfbfbf"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

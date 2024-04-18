@@ -27,10 +27,10 @@
                 android:layout_gravity="center"
                 android:padding="10dp"
                 android:text=""
-                android:textColor="@color/lw006_text_black_4d4d4d"
+                android:textColor="@color/black_4d4d4d"
                 android:textSize="16sp" />
 
-            <View style="@style/lw006_divider_line" />
+            <View style="@style/divider_line" />
         </LinearLayout>
 
         <TextView
@@ -42,10 +42,10 @@
             android:minHeight="70dp"
             android:padding="10dp"
             android:text=""
-            android:textColor="@color/lw006_text_black_4d4d4d"
+            android:textColor="@color/black_4d4d4d"
             android:textSize="16sp" />
 
-        <View style="@style/lw006_divider_line" />
+        <View style="@style/divider_line" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -59,14 +59,14 @@
                 android:layout_weight="1.0"
                 android:gravity="center"
                 android:text="@string/cancel"
-                android:textColor="@color/lw006_blue_2f84d0"
+                android:textColor="@color/blue_2f84d0"
                 android:textSize="16sp" />
 
             <View
                 android:id="@+id/view_divider"
                 android:layout_width="1px"
                 android:layout_height="match_parent"
-                android:background="@color/lw006_grey_d9d9d9" />
+                android:background="@color/grey_d9d9d9" />
 
             <TextView
                 android:id="@+id/tv_alert_confirm"
@@ -75,7 +75,7 @@
                 android:layout_weight="1.0"
                 android:gravity="center"
                 android:text="@string/confirm"
-                android:textColor="@color/lw006_blue_2f84d0"
+                android:textColor="@color/blue_2f84d0"
                 android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>
