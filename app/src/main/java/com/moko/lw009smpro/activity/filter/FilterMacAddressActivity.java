@@ -1,5 +1,9 @@
 package com.moko.lw009smpro.activity.filter;
 
+import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
+import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -14,8 +18,8 @@ import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw009smpro.R;
-import com.moko.lw009smpro.activity.Lw006BaseActivity;
-import com.moko.lw009smpro.databinding.Lw006ActivityFilterMacAddressBinding;
+import com.moko.lw009smpro.activity.Lw009BaseActivity;
+import com.moko.lw009smpro.databinding.ActivityFilterMacAddressBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
@@ -30,20 +34,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FilterMacAddressActivity extends Lw006BaseActivity {
-    private Lw006ActivityFilterMacAddressBinding mBind;
+public class FilterMacAddressActivity extends Lw009BaseActivity {
+    private ActivityFilterMacAddressBinding mBind;
     private boolean savedParamsError;
-    private ArrayList<String> filterMacAddress;
+    private final List<String> filterMacAddress = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = Lw006ActivityFilterMacAddressBinding.inflate(getLayoutInflater());
+        mBind = ActivityFilterMacAddressBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
-        filterMacAddress = new ArrayList<>();
         showSyncingProgressDialog();
-        List<OrderTask> orderTasks = new ArrayList<>();
+        List<OrderTask> orderTasks = new ArrayList<>(4);
         orderTasks.add(OrderTaskAssembler.getFilterMacPrecise());
         orderTasks.add(OrderTaskAssembler.getFilterMacReverse());
         orderTasks.add(OrderTaskAssembler.getFilterMacRules());
@@ -60,14 +63,13 @@ public class FilterMacAddressActivity extends Lw006BaseActivity {
         });
     }
 
+    @SuppressLint("DefaultLocale")
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 300)
     public void onOrderTaskResponseEvent(OrderTaskResponseEvent event) {
         final String action = event.getAction();
         if (!MokoConstants.ACTION_CURRENT_DATA.equals(action))
             EventBus.getDefault().cancelEventDelivery(event);
         runOnUiThread(() -> {
-            if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
-            }
             if (MokoConstants.ACTION_ORDER_FINISH.equals(action)) {
                 dismissSyncProgressDialog();
             }
@@ -80,12 +82,9 @@ public class FilterMacAddressActivity extends Lw006BaseActivity {
                         int header = value[0] & 0xFF;// 0xED
                         int flag = value[1] & 0xFF;// read or write
                         int cmd = value[2] & 0xFF;
-                        if (header != 0xED)
-                            return;
+                        if (header != 0xED) return;
                         ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
-                        if (configKeyEnum == null) {
-                            return;
-                        }
+                        if (configKeyEnum == null) return;
                         int length = value[3] & 0xFF;
                         if (flag == 0x01) {
                             // write
@@ -93,19 +92,11 @@ public class FilterMacAddressActivity extends Lw006BaseActivity {
                             switch (configKeyEnum) {
                                 case KEY_FILTER_MAC_PRECISE:
                                 case KEY_FILTER_MAC_REVERSE:
-                                    if (result != 1) {
-                                        savedParamsError = true;
-                                    }
+                                    if (result != 1) savedParamsError = true;
                                     break;
                                 case KEY_FILTER_MAC_RULES:
-                                    if (result != 1) {
-                                        savedParamsError = true;
-                                    }
-                                    if (savedParamsError) {
-                                        ToastUtils.showToast(FilterMacAddressActivity.this, "Opps！Save failed. Please check the input characters and try again.");
-                                    } else {
-                                        ToastUtils.showToast(this, "Save Successfully！");
-                                    }
+                                    if (result != 1) savedParamsError = true;
+                                    ToastUtils.showToast(this, savedParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
                             }
                         }
@@ -114,14 +105,12 @@ public class FilterMacAddressActivity extends Lw006BaseActivity {
                             switch (configKeyEnum) {
                                 case KEY_FILTER_MAC_PRECISE:
                                     if (length > 0) {
-                                        int enable = value[4] & 0xFF;
-                                        mBind.cbPreciseMatch.setChecked(enable == 1);
+                                        mBind.cbPreciseMatch.setChecked((value[4] & 0xff) == 1);
                                     }
                                     break;
                                 case KEY_FILTER_MAC_REVERSE:
                                     if (length > 0) {
-                                        int enable = value[4] & 0xFF;
-                                        mBind.cbReverseFilter.setChecked(enable == 1);
+                                        mBind.cbReverseFilter.setChecked((value[4] & 0xff) == 1);
                                     }
                                     break;
                                 case KEY_FILTER_MAC_RULES:
@@ -136,7 +125,7 @@ public class FilterMacAddressActivity extends Lw006BaseActivity {
                                         }
                                         for (int i = 0, l = filterMacAddress.size(); i < l; i++) {
                                             String macAddress = filterMacAddress.get(i);
-                                            View v = LayoutInflater.from(FilterMacAddressActivity.this).inflate(R.layout.lw006_item_mac_address_filter, mBind.llMacAddress, false);
+                                            View v = LayoutInflater.from(FilterMacAddressActivity.this).inflate(R.layout.item_mac_address_filter, mBind.llMacAddress, false);
                                             TextView title = v.findViewById(R.id.tv_mac_address_title);
                                             EditText etMacAddress = v.findViewById(R.id.et_mac_address);
                                             title.setText(String.format("MAC %d", i + 1));
@@ -164,6 +153,7 @@ public class FilterMacAddressActivity extends Lw006BaseActivity {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     public void onAdd(View view) {
         if (isWindowLocked()) return;
         int count = mBind.llMacAddress.getChildCount();
@@ -171,7 +161,7 @@ public class FilterMacAddressActivity extends Lw006BaseActivity {
             ToastUtils.showToast(this, "You can set up to 10 filters!");
             return;
         }
-        View v = LayoutInflater.from(this).inflate(R.layout.lw006_item_mac_address_filter, mBind.llMacAddress, false);
+        View v = LayoutInflater.from(this).inflate(R.layout.item_mac_address_filter, mBind.llMacAddress, false);
         TextView title = v.findViewById(R.id.tv_mac_address_title);
         title.setText(String.format("MAC %d", count + 1));
         mBind.llMacAddress.addView(v);
@@ -192,7 +182,7 @@ public class FilterMacAddressActivity extends Lw006BaseActivity {
 
     private void saveParams() {
         savedParamsError = false;
-        List<OrderTask> orderTasks = new ArrayList<>();
+        List<OrderTask> orderTasks = new ArrayList<>(4);
         orderTasks.add(OrderTaskAssembler.setFilterMacPrecise(mBind.cbPreciseMatch.isChecked() ? 1 : 0));
         orderTasks.add(OrderTaskAssembler.setFilterMacReverse(mBind.cbReverseFilter.isChecked() ? 1 : 0));
         orderTasks.add(OrderTaskAssembler.setFilterMacRules(filterMacAddress));
@@ -207,13 +197,9 @@ public class FilterMacAddressActivity extends Lw006BaseActivity {
                 View v = mBind.llMacAddress.getChildAt(i);
                 EditText etMacAddress = v.findViewById(R.id.et_mac_address);
                 final String macAddress = etMacAddress.getText().toString();
-                if (TextUtils.isEmpty(macAddress)) {
-                    return false;
-                }
+                if (TextUtils.isEmpty(macAddress)) return false;
                 int length = macAddress.length();
-                if (length % 2 != 0 || length > 12) {
-                    return false;
-                }
+                if (length % 2 != 0 || length > 12) return false;
                 filterMacAddress.add(macAddress);
             }
         }
@@ -223,20 +209,17 @@ public class FilterMacAddressActivity extends Lw006BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
     }
 
     public void onBack(View view) {
-        backHome();
+        onBackPressed();
     }
 
     @Override
     public void onBackPressed() {
-        backHome();
-    }
-
-    private void backHome() {
-        setResult(RESULT_OK);
-        finish();
+        EventBus.getDefault().unregister(this);
+        super.onBackPressed();
     }
 }

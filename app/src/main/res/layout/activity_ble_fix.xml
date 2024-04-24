@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_f2f2f2"
+    tools:ignore="HardcodedText"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/blue_2f84d0">
+
+        <TextView
+            android:id="@+id/tv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:drawableStart="@drawable/ic_back"
+            android:drawablePadding="6dp"
+            android:gravity="center_vertical"
+            android:onClick="onBack"
+            android:paddingStart="16dp"
+            android:paddingEnd="0px"
+            android:textColor="@color/whiteFFFFFF"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Bluetooth Filter Settings"
+            android:textColor="@color/whiteFFFFFF"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:onClick="onSave"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:src="@drawable/ic_save" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_radius_white_bg"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <TextView
+                android:id="@+id/tvPosTimeout"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:text="Positioning Timeout"
+                android:textColor="@color/black_333333"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent" />
+
+            <EditText
+                android:id="@+id/et_pos_timeout"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="0px"
+                android:gravity="center"
+                android:hint="1~10"
+                android:inputType="number"
+                android:maxLength="2"
+                android:textColor="@color/black_333333"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvPosTimeout"
+                app:layout_constraintRight_toLeftOf="@+id/tvTimeoutUnit"
+                app:layout_constraintTop_toTopOf="@+id/tvPosTimeout" />
+
+            <TextView
+                android:id="@+id/tvTimeoutUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="s"
+                android:textColor="@color/black_333333"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/tvPosTimeout"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tvPosTimeout" />
+
+            <View
+                android:id="@+id/line1"
+                style="@style/divider_line"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                app:layout_constraintTop_toBottomOf="@id/tvPosTimeout" />
+
+            <TextView
+                android:id="@+id/tvNumMac"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:text="Number Of MAC"
+                android:textColor="@color/black_333333"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/line1" />
+
+            <EditText
+                android:id="@+id/et_mac_number"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:hint="1~10"
+                android:inputType="number"
+                android:maxLength="2"
+                android:textColor="@color/black_333333"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvNumMac"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tvNumMac" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape_radius_white_bg"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:id="@+id/rssi_1m"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="RSSI Filter"
+                    android:textColor="@color/black_333333"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@id/sb_rssi_filter"
+                    app:layout_constraintLeft_toLeftOf="parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="0px"
+                    android:text="(-127dBm~0dBm)"
+                    android:textColor="@color/ColorB3B3B3"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toTopOf="@id/sb_rssi_filter"
+                    app:layout_constraintLeft_toRightOf="@id/rssi_1m" />
+
+                <SeekBar
+                    android:id="@+id/sb_rssi_filter"
+                    style="@style/CustomSeekbarStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="20dp"
+                    android:max="127"
+                    android:maxHeight="2dp"
+                    android:minHeight="2dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:progress="0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/tv_rssi_filter_value"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_rssi_filter_value"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="-127dBm"
+                    android:textColor="@color/black_333333"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="@id/sb_rssi_filter"
+                    app:layout_constraintLeft_toRightOf="@id/sb_rssi_filter"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/sb_rssi_filter" />
+
+                <TextView
+                    android:id="@+id/tv_rssi_filter_tips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rssi_filter"
+                    android:textColor="@color/black_333333"
+                    android:textSize="12sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/sb_rssi_filter" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View style="@style/divider_line" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Filter Relationship"
+                    android:textColor="@color/black_333333"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_filter_relationship"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/tv_filter_relationship"
+                    app:layout_constraintTop_toTopOf="@id/tv_filter_relationship" />
+
+                <TextView
+                    android:id="@+id/tv_filter_relationship"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_radius_blue_btn_bg"
+                    android:gravity="center"
+                    android:minWidth="150dp"
+                    android:onClick="onFilterRelationship"
+                    android:padding="10dp"
+                    android:text="Null"
+                    android:textColor="@color/whiteFFFFFF"
+                    android:textSize="15sp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View style="@style/divider_line" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:drawableEnd="@drawable/ic_arrow_right"
+                android:gravity="center_vertical"
+                android:onClick="onFilterByMac"
+                android:text="Filter by MAC"
+                android:textColor="@color/black_333333"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <View style="@style/divider_line" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="1dp"
+                android:drawableEnd="@drawable/ic_arrow_right"
+                android:gravity="center_vertical"
+                android:onClick="onFilterByName"
+                android:text="Filter by ADV Name"
+                android:textColor="@color/black_333333"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <View style="@style/divider_line" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="1dp"
+                android:drawableEnd="@drawable/ic_arrow_right"
+                android:gravity="center_vertical"
+                android:onClick="onFilterByRawData"
+                android:text="Filter by Raw Data"
+                android:textColor="@color/black_333333"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

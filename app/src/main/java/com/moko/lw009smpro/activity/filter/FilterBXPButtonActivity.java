@@ -1,5 +1,8 @@
 package com.moko.lw009smpro.activity.filter;
 
+import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
+import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
+
 import android.os.Bundle;
 import android.view.View;
 
@@ -8,8 +11,8 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
-import com.moko.lw009smpro.activity.Lw006BaseActivity;
-import com.moko.lw009smpro.databinding.Lw006ActivityFilterBxpButtonBinding;
+import com.moko.lw009smpro.activity.Lw009BaseActivity;
+import com.moko.lw009smpro.databinding.ActivityFilterBxpButtonBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
@@ -23,23 +26,22 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FilterBXPButtonActivity extends Lw006BaseActivity {
-    private Lw006ActivityFilterBxpButtonBinding mBind;
+public class FilterBXPButtonActivity extends Lw009BaseActivity {
+    private ActivityFilterBxpButtonBinding mBind;
     private boolean savedParamsError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = Lw006ActivityFilterBxpButtonBinding.inflate(getLayoutInflater());
+        mBind = ActivityFilterBxpButtonBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
         showSyncingProgressDialog();
-        List<OrderTask> orderTasks = new ArrayList<>();
+        List<OrderTask> orderTasks = new ArrayList<>(2);
         orderTasks.add(OrderTaskAssembler.getFilterBXPButtonEnable());
         orderTasks.add(OrderTaskAssembler.getFilterBXPButtonRules());
         MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
-
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 400)
     public void onConnectStatusEvent(ConnectStatusEvent event) {
@@ -57,46 +59,31 @@ public class FilterBXPButtonActivity extends Lw006BaseActivity {
         if (!MokoConstants.ACTION_CURRENT_DATA.equals(action))
             EventBus.getDefault().cancelEventDelivery(event);
         runOnUiThread(() -> {
-            if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
-            }
             if (MokoConstants.ACTION_ORDER_FINISH.equals(action)) {
                 dismissSyncProgressDialog();
             }
             if (MokoConstants.ACTION_ORDER_RESULT.equals(action)) {
                 OrderTaskResponse response = event.getResponse();
                 OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
-                int responseType = response.responseType;
                 byte[] value = response.responseValue;
                 if (orderCHAR == OrderCHAR.CHAR_PARAMS) {
                     if (value.length >= 4) {
                         int header = value[0] & 0xFF;// 0xED
                         int flag = value[1] & 0xFF;// read or write
                         int cmd = value[2] & 0xFF;
-                        if (header != 0xED)
-                            return;
                         ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
-                        if (configKeyEnum == null) {
-                            return;
-                        }
+                        if (header != 0xED || configKeyEnum == null) return;
                         int length = value[3] & 0xFF;
                         if (flag == 0x01) {
                             // write
                             int result = value[4] & 0xFF;
                             switch (configKeyEnum) {
                                 case KEY_FILTER_BXP_BUTTON_RULES:
-                                    if (result != 1) {
-                                        savedParamsError = true;
-                                    }
+                                    if (result != 1) savedParamsError = true;
                                     break;
                                 case KEY_FILTER_BXP_BUTTON_ENABLE:
-                                    if (result != 1) {
-                                        savedParamsError = true;
-                                    }
-                                    if (savedParamsError) {
-                                        ToastUtils.showToast(this, "Opps！Save failed. Please check the input characters and try again.");
-                                    } else {
-                                        ToastUtils.showToast(this, "Save Successfully！");
-                                    }
+                                    if (result != 1) savedParamsError = true;
+                                    ToastUtils.showToast(this, savedParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
                             }
                         }
@@ -113,8 +100,7 @@ public class FilterBXPButtonActivity extends Lw006BaseActivity {
                                     break;
                                 case KEY_FILTER_BXP_BUTTON_ENABLE:
                                     if (length > 0) {
-                                        int enable = value[4] & 0xFF;
-                                        mBind.cbEnable.setChecked(enable == 1);
+                                        mBind.cbEnable.setChecked((value[4] & 0xFF) == 1);
                                     }
                                     break;
                             }
@@ -127,19 +113,13 @@ public class FilterBXPButtonActivity extends Lw006BaseActivity {
 
     public void onSave(View view) {
         if (isWindowLocked()) return;
-        if (isValid()) {
-            showSyncingProgressDialog();
-            saveParams();
-        }
-    }
-
-    private boolean isValid() {
-        return true;
+        showSyncingProgressDialog();
+        saveParams();
     }
 
     private void saveParams() {
         savedParamsError = false;
-        List<OrderTask> orderTasks = new ArrayList<>();
+        List<OrderTask> orderTasks = new ArrayList<>(2);
         orderTasks.add(OrderTaskAssembler.setFilterBXPButtonRules(mBind.cbSinglePress.isChecked() ? 1 : 0,
                 mBind.cbDoublePress.isChecked() ? 1 : 0,
                 mBind.cbLongPress.isChecked() ? 1 : 0,

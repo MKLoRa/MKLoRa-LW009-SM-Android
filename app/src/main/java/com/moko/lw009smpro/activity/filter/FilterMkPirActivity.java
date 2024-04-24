@@ -1,5 +1,8 @@
 package com.moko.lw009smpro.activity.filter;
 
+import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
+import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
+
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -11,8 +14,8 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
-import com.moko.lw009smpro.activity.Lw006BaseActivity;
-import com.moko.lw009smpro.databinding.Lw006ActivityFilterMkpirBinding;
+import com.moko.lw009smpro.activity.Lw009BaseActivity;
+import com.moko.lw009smpro.databinding.ActivityFilterMkpirBinding;
 import com.moko.lw009smpro.dialog.BottomDialog;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
@@ -30,11 +33,11 @@ import java.util.List;
 
 /**
  * @author: jun.liu
- * @date: 2023/6/7 10:43
+ * @date: 2023/4/18 10:43
  * @des:
  */
-public class FilterMkPirActivity extends Lw006BaseActivity {
-    private Lw006ActivityFilterMkpirBinding mBind;
+public class FilterMkPirActivity extends Lw009BaseActivity {
+    private ActivityFilterMkpirBinding mBind;
     private final String[] detectionStatusArray = {"No motion detected", "Motion detected", "All"};
     private final String[] sensorSensitivityArray = {"Low", "Medium", "High", "All"};
     private final String[] doorStatusArray = {"Close", "Open", "All"};
@@ -43,17 +46,12 @@ public class FilterMkPirActivity extends Lw006BaseActivity {
     private int sensorSensitivityIndex;
     private int doorStatusIndex;
     private int delayResStatusIndex;
-    private int mkPirEnableFlag;
-    private int detectionStatusFlag;
-    private int sensorSensitivityFlag;
-    private int doorStatusFlag;
-    private int delayResStatusFlag;
-    private int majorFlag;
+    private boolean saveParamsError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = Lw006ActivityFilterMkpirBinding.inflate(getLayoutInflater());
+        mBind = ActivityFilterMkpirBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
         showSyncingProgressDialog();
@@ -70,14 +68,10 @@ public class FilterMkPirActivity extends Lw006BaseActivity {
     }
 
     private void setListener() {
-        mBind.tvDetectionStatus.setOnClickListener(v -> showBottomDialog(new ArrayList<>(Arrays.asList(detectionStatusArray)),
-                detectionStatusIndex, mBind.tvDetectionStatus, 1));
-        mBind.tvSensorSensitivity.setOnClickListener(v -> showBottomDialog(new ArrayList<>(Arrays.asList(sensorSensitivityArray)),
-                sensorSensitivityIndex, mBind.tvSensorSensitivity, 2));
-        mBind.tvDoorStatus.setOnClickListener(v -> showBottomDialog(new ArrayList<>(Arrays.asList(doorStatusArray)),
-                doorStatusIndex, mBind.tvDoorStatus, 3));
-        mBind.tvDelayResStatus.setOnClickListener(v -> showBottomDialog(new ArrayList<>(Arrays.asList(delayResStatusArray)),
-                delayResStatusIndex, mBind.tvDelayResStatus, 4));
+        mBind.tvDetectionStatus.setOnClickListener(v -> showBottomDialog(detectionStatusArray, detectionStatusIndex, mBind.tvDetectionStatus, 1));
+        mBind.tvSensorSensitivity.setOnClickListener(v -> showBottomDialog(sensorSensitivityArray, sensorSensitivityIndex, mBind.tvSensorSensitivity, 2));
+        mBind.tvDoorStatus.setOnClickListener(v -> showBottomDialog(doorStatusArray, doorStatusIndex, mBind.tvDoorStatus, 3));
+        mBind.tvDelayResStatus.setOnClickListener(v -> showBottomDialog(delayResStatusArray, delayResStatusIndex, mBind.tvDelayResStatus, 4));
     }
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 400)
@@ -96,8 +90,6 @@ public class FilterMkPirActivity extends Lw006BaseActivity {
         if (!MokoConstants.ACTION_CURRENT_DATA.equals(action))
             EventBus.getDefault().cancelEventDelivery(event);
         runOnUiThread(() -> {
-            if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
-            }
             if (MokoConstants.ACTION_ORDER_FINISH.equals(action)) {
                 dismissSyncProgressDialog();
             }
@@ -110,45 +102,25 @@ public class FilterMkPirActivity extends Lw006BaseActivity {
                         int header = value[0] & 0xFF;// 0xED
                         int flag = value[1] & 0xFF;// read or write
                         int cmd = value[2] & 0xFF;
-                        if (header != 0xED) return;
                         ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
-                        if (configKeyEnum == null) return;
+                        if (header != 0xED || configKeyEnum == null) return;
                         int length = value[3] & 0xFF;
                         if (flag == 0x01) {
                             // write
                             int result = value[4] & 0xFF;
                             switch (configKeyEnum) {
                                 case KEY_FILTER_MK_PIR_ENABLE:
-                                    mkPirEnableFlag = result;
-                                    break;
-
                                 case KEY_FILTER_MK_PIR_DETECTION_STATUS:
-                                    detectionStatusFlag = result;
-                                    break;
-
                                 case KEY_FILTER_MK_PIR_SENSOR_SENSITIVITY:
-                                    sensorSensitivityFlag = result;
-                                    break;
-
                                 case KEY_FILTER_MK_PIR_DOOR_STATUS:
-                                    doorStatusFlag = result;
-                                    break;
-
                                 case KEY_FILTER_MK_PIR_DELAY_RES_STATUS:
-                                    delayResStatusFlag = result;
-                                    break;
-
                                 case KEY_FILTER_MK_PIR_MAJOR:
-                                    majorFlag = result;
+                                    if (result != 1) saveParamsError = true;
                                     break;
 
                                 case KEY_FILTER_MK_PIR_MINOR:
-                                    if (mkPirEnableFlag == 1 && detectionStatusFlag == 1 && sensorSensitivityFlag == 1 &&
-                                            doorStatusFlag == 1 && delayResStatusFlag == 1 && majorFlag == 1 && result == 1) {
-                                        ToastUtils.showToast(this, "Save Successfully！");
-                                    } else {
-                                        ToastUtils.showToast(this, "Opps！Save failed. Please check the input characters and try again.");
-                                    }
+                                    if (result != 1) saveParamsError = true;
+                                    ToastUtils.showToast(this, saveParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
                             }
                         }
@@ -157,8 +129,7 @@ public class FilterMkPirActivity extends Lw006BaseActivity {
                             switch (configKeyEnum) {
                                 case KEY_FILTER_MK_PIR_ENABLE:
                                     if (length == 1) {
-                                        int enable = value[4] & 0xFF;
-                                        mBind.cbMkPir.setChecked(enable == 1);
+                                        mBind.cbMkPir.setChecked((value[4] & 0xFF) == 1);
                                     }
                                     break;
 
@@ -249,6 +220,7 @@ public class FilterMkPirActivity extends Lw006BaseActivity {
             minorMin = Integer.parseInt(mBind.etMinorMin.getText().toString());
             minorMax = Integer.parseInt(mBind.etMinorMax.getText().toString());
         }
+        saveParamsError = false;
         List<OrderTask> orderTasks = new ArrayList<>(8);
         orderTasks.add(OrderTaskAssembler.setFilterMkPirEnable(mBind.cbMkPir.isChecked() ? 1 : 0));
         orderTasks.add(OrderTaskAssembler.setFilterMkPirSensorDetectionStatus(detectionStatusIndex));
@@ -260,12 +232,12 @@ public class FilterMkPirActivity extends Lw006BaseActivity {
         MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 
-    private void showBottomDialog(ArrayList<String> mValues, int mSelected, TextView textView, int type) {
+    private void showBottomDialog(String[] mValues, int mSelected, TextView textView, int type) {
         if (isWindowLocked()) return;
         BottomDialog dialog = new BottomDialog();
-        dialog.setDatas(mValues, mSelected);
+        dialog.setDatas(new ArrayList<>(Arrays.asList(mValues)), mSelected);
         dialog.setListener(value -> {
-            textView.setText(mValues.get(value));
+            textView.setText(mValues[value]);
             if (type == 1) detectionStatusIndex = value;
             else if (type == 2) sensorSensitivityIndex = value;
             else if (type == 3) doorStatusIndex = value;

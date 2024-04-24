@@ -1,5 +1,8 @@
 package com.moko.lw009smpro.activity.filter;
 
+import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
+import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
+
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -14,8 +17,8 @@ import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw009smpro.R;
-import com.moko.lw009smpro.activity.Lw006BaseActivity;
-import com.moko.lw009smpro.databinding.Lw006ActivityFilterOtherBinding;
+import com.moko.lw009smpro.activity.Lw009BaseActivity;
+import com.moko.lw009smpro.databinding.ActivityFilterOtherBinding;
 import com.moko.lw009smpro.dialog.BottomDialog;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
@@ -31,21 +34,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FilterOtherActivity extends Lw006BaseActivity {
-    private Lw006ActivityFilterOtherBinding mBind;
+public class FilterOtherActivity extends Lw009BaseActivity {
+    private ActivityFilterOtherBinding mBind;
     private boolean savedParamsError;
-    private ArrayList<String> filterOther;
+    private ArrayList<String> filterOther = new ArrayList<>();
     private ArrayList<String> mValues;
     private int mSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = Lw006ActivityFilterOtherBinding.inflate(getLayoutInflater());
+        mBind = ActivityFilterOtherBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
 
-        filterOther = new ArrayList<>();
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.getFilterOtherEnable());
@@ -70,27 +72,20 @@ public class FilterOtherActivity extends Lw006BaseActivity {
         if (!MokoConstants.ACTION_CURRENT_DATA.equals(action))
             EventBus.getDefault().cancelEventDelivery(event);
         runOnUiThread(() -> {
-            if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
-            }
             if (MokoConstants.ACTION_ORDER_FINISH.equals(action)) {
                 dismissSyncProgressDialog();
             }
             if (MokoConstants.ACTION_ORDER_RESULT.equals(action)) {
                 OrderTaskResponse response = event.getResponse();
                 OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
-                int responseType = response.responseType;
                 byte[] value = response.responseValue;
                 if (orderCHAR == OrderCHAR.CHAR_PARAMS) {
                     if (value.length >= 4) {
                         int header = value[0] & 0xFF;// 0xED
                         int flag = value[1] & 0xFF;// read or write
                         int cmd = value[2] & 0xFF;
-                        if (header != 0xED)
-                            return;
                         ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
-                        if (configKeyEnum == null) {
-                            return;
-                        }
+                        if (header != 0xED || configKeyEnum == null) return;
                         int length = value[3] & 0xFF;
                         if (flag == 0x01) {
                             // write
@@ -98,19 +93,11 @@ public class FilterOtherActivity extends Lw006BaseActivity {
                             switch (configKeyEnum) {
                                 case KEY_FILTER_OTHER_RELATIONSHIP:
                                 case KEY_FILTER_OTHER_RULES:
-                                    if (result != 1) {
-                                        savedParamsError = true;
-                                    }
+                                    if (result != 1) savedParamsError = true;
                                     break;
                                 case KEY_FILTER_OTHER_ENABLE:
-                                    if (result != 1) {
-                                        savedParamsError = true;
-                                    }
-                                    if (savedParamsError) {
-                                        ToastUtils.showToast(FilterOtherActivity.this, "Opps！Save failed. Please check the input characters and try again.");
-                                    } else {
-                                        ToastUtils.showToast(this, "Save Successfully！");
-                                    }
+                                    if (result != 1) savedParamsError = true;
+                                    ToastUtils.showToast(this, savedParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
                             }
                         }
@@ -151,7 +138,7 @@ public class FilterOtherActivity extends Lw006BaseActivity {
                                         }
                                         for (int i = 0, l = filterOther.size(); i < l; i++) {
                                             String other = filterOther.get(i);
-                                            View v = LayoutInflater.from(this).inflate(R.layout.lw006_item_other_filter, mBind.llFilterCondition, false);
+                                            View v = LayoutInflater.from(this).inflate(R.layout.item_other_filter, mBind.llFilterCondition, false);
                                             TextView tvCondition = v.findViewById(R.id.tv_condition);
                                             EditText etDataType = v.findViewById(R.id.et_data_type);
                                             EditText etMin = v.findViewById(R.id.et_min);
@@ -185,8 +172,7 @@ public class FilterOtherActivity extends Lw006BaseActivity {
 
                                 case KEY_FILTER_OTHER_ENABLE:
                                     if (length > 0) {
-                                        int enable = value[4] & 0xFF;
-                                        mBind.cbOther.setChecked(enable == 1);
+                                        mBind.cbOther.setChecked((value[4] & 0xFF) == 1);
                                     }
                                     break;
                             }
@@ -224,35 +210,19 @@ public class FilterOtherActivity extends Lw006BaseActivity {
                 final String rawDataStr = etRawData.getText().toString();
 
                 final int dataType = TextUtils.isEmpty(dataTypeStr) ? 0 : Integer.parseInt(dataTypeStr, 16);
-//                final DataTypeEnum dataTypeEnum = DataTypeEnum.fromDataType(dataType);
-                if (dataType < 0 || dataType > 0xFF)
-                    return false;
-                if (TextUtils.isEmpty(rawDataStr)) {
-                    return false;
-                }
+                if (dataType < 0 || dataType > 0xFF) return false;
+                if (TextUtils.isEmpty(rawDataStr)) return false;
                 int length = rawDataStr.length();
-                if (length % 2 != 0) {
-                    return false;
-                }
+                if (length % 2 != 0) return false;
                 int min = 0;
                 int max = 0;
                 if (dataType != 0) {
-                    if (!TextUtils.isEmpty(minStr))
-                        min = Integer.parseInt(minStr);
-                    if (!TextUtils.isEmpty(maxStr))
-                        max = Integer.parseInt(maxStr);
-                    if (min == 0 && max != 0) {
-                        return false;
-                    }
-                    if (min > 29) {
-                        return false;
-                    }
-                    if (max > 29) {
-                        return false;
-                    }
-                    if (max < min) {
-                        return false;
-                    }
+                    if (!TextUtils.isEmpty(minStr)) min = Integer.parseInt(minStr);
+                    if (!TextUtils.isEmpty(maxStr)) max = Integer.parseInt(maxStr);
+                    if (min == 0 && max != 0) return false;
+                    if (min > 29) return false;
+                    if (max > 29) return false;
+                    if (max < min) return false;
                     if (min > 0) {
                         int interval = max - min;
                         if (length != ((interval + 1) * 2)) {
@@ -263,12 +233,11 @@ public class FilterOtherActivity extends Lw006BaseActivity {
                     etMin.setText("0");
                     etMax.setText("0");
                 }
-                StringBuffer sb = new StringBuffer();
-                sb.append(MokoUtils.int2HexString(dataType));
-                sb.append(MokoUtils.int2HexString(min));
-                sb.append(MokoUtils.int2HexString(max));
-                sb.append(rawDataStr);
-                filterOther.add(sb.toString());
+                String sb = MokoUtils.int2HexString(dataType) +
+                        MokoUtils.int2HexString(min) +
+                        MokoUtils.int2HexString(max) +
+                        rawDataStr;
+                filterOther.add(sb);
             }
         } else {
             filterOther = new ArrayList<>();
@@ -278,12 +247,9 @@ public class FilterOtherActivity extends Lw006BaseActivity {
 
     private void saveParams() {
         savedParamsError = false;
-        List<OrderTask> orderTasks = new ArrayList<>();
+        List<OrderTask> orderTasks = new ArrayList<>(2);
         orderTasks.add(OrderTaskAssembler.setFilterOtherRules(filterOther));
         int relationship = 0;
-        if (filterOther.size() == 1) {
-            relationship = 0;
-        }
         if (filterOther.size() == 2) {
             relationship = mSelected + 1;
         }
@@ -302,7 +268,7 @@ public class FilterOtherActivity extends Lw006BaseActivity {
             ToastUtils.showToast(this, "You can set up to 3 filters!");
             return;
         }
-        View v = LayoutInflater.from(this).inflate(R.layout.lw006_item_other_filter, mBind.llFilterCondition, false);
+        View v = LayoutInflater.from(this).inflate(R.layout.item_other_filter, mBind.llFilterCondition, false);
         TextView tvCondition = v.findViewById(R.id.tv_condition);
         if (count == 0) {
             tvCondition.setText("Condition A");

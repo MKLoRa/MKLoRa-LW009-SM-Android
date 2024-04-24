@@ -7,7 +7,7 @@
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/lw006_shape_radius_white_bg"
+        android:background="@drawable/shape_radius_white_bg"
         android:padding="20dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

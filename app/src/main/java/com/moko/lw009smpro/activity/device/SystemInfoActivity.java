@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -26,8 +27,8 @@ import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw009smpro.AppConstants;
-import com.moko.lw009smpro.activity.Lw006BaseActivity;
-import com.moko.lw009smpro.databinding.Lw006ActivitySystemInfoBinding;
+import com.moko.lw009smpro.activity.Lw009BaseActivity;
+import com.moko.lw009smpro.databinding.ActivitySystemInfoBinding;
 import com.moko.lw009smpro.service.DfuService;
 import com.moko.lw009smpro.utils.FileUtils;
 import com.moko.lw009smpro.utils.ToastUtils;
@@ -50,10 +51,9 @@ import no.nordicsemi.android.dfu.DfuProgressListenerAdapter;
 import no.nordicsemi.android.dfu.DfuServiceInitiator;
 import no.nordicsemi.android.dfu.DfuServiceListenerHelper;
 
-public class SystemInfoActivity extends Lw006BaseActivity {
+public class SystemInfoActivity extends Lw009BaseActivity {
     public static final int REQUEST_CODE_SELECT_FIRMWARE = 0x10;
-
-    private Lw006ActivitySystemInfoBinding mBind;
+    private ActivitySystemInfoBinding mBind;
     private boolean mReceiverTag = false;
     private String mDeviceMac;
     private String mDeviceName;
@@ -61,7 +61,7 @@ public class SystemInfoActivity extends Lw006BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = Lw006ActivitySystemInfoBinding.inflate(getLayoutInflater());
+        mBind = ActivitySystemInfoBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
         // 注册广播接收器
@@ -70,7 +70,7 @@ public class SystemInfoActivity extends Lw006BaseActivity {
         registerReceiver(mReceiver, filter);
         mReceiverTag = true;
         showSyncingProgressDialog();
-        List<OrderTask> orderTasks = new ArrayList<>();
+        List<OrderTask> orderTasks = new ArrayList<>(8);
         orderTasks.add(OrderTaskAssembler.getAdvName());
         orderTasks.add(OrderTaskAssembler.getMacAddress());
         orderTasks.add(OrderTaskAssembler.getBattery());
@@ -81,6 +81,11 @@ public class SystemInfoActivity extends Lw006BaseActivity {
         orderTasks.add(OrderTaskAssembler.getManufacturer());
         MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         DfuServiceListenerHelper.registerProgressListener(this, mDfuProgressListener);
+        mBind.layoutTop.setOnClickListener(v -> {
+            if (isTriggerValid()) {
+                startActivity(new Intent(this, SelfTestActivity.class));
+            }
+        });
     }
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)
@@ -105,8 +110,6 @@ public class SystemInfoActivity extends Lw006BaseActivity {
         if (!MokoConstants.ACTION_CURRENT_DATA.equals(action))
             EventBus.getDefault().cancelEventDelivery(event);
         runOnUiThread(() -> {
-            if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
-            }
             if (MokoConstants.ACTION_ORDER_FINISH.equals(action)) {
                 dismissSyncProgressDialog();
             }
@@ -140,12 +143,8 @@ public class SystemInfoActivity extends Lw006BaseActivity {
                             int header = value[0] & 0xFF;// 0xED
                             int flag = value[1] & 0xFF;// read or write
                             int cmd = value[2] & 0xFF;
-                            if (header != 0xED)
-                                return;
                             ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
-                            if (configKeyEnum == null) {
-                                return;
-                            }
+                            if (header != 0xED || configKeyEnum == null) return;
                             int length = value[3] & 0xFF;
                             if (flag == 0x00) {
                                 // read
@@ -168,13 +167,13 @@ public class SystemInfoActivity extends Lw006BaseActivity {
                                         if (length > 0) {
                                             byte[] macBytes = Arrays.copyOfRange(value, 4, 4 + length);
                                             String mac = MokoUtils.bytesToHexString(macBytes);
-                                            StringBuilder stringBuffer = new StringBuilder(mac);
-                                            stringBuffer.insert(2, ":");
-                                            stringBuffer.insert(5, ":");
-                                            stringBuffer.insert(8, ":");
-                                            stringBuffer.insert(11, ":");
-                                            stringBuffer.insert(14, ":");
-                                            mDeviceMac = stringBuffer.toString().toUpperCase();
+                                            StringBuilder builder = new StringBuilder(mac);
+                                            builder.insert(2, ":");
+                                            builder.insert(5, ":");
+                                            builder.insert(8, ":");
+                                            builder.insert(11, ":");
+                                            builder.insert(14, ":");
+                                            mDeviceMac = builder.toString().toUpperCase();
                                             mBind.tvMacAddress.setText(mDeviceMac);
                                         }
                                         break;
@@ -195,7 +194,6 @@ public class SystemInfoActivity extends Lw006BaseActivity {
     }
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent != null) {
@@ -241,7 +239,7 @@ public class SystemInfoActivity extends Lw006BaseActivity {
 
     public void onUpdateFirmware(View view) {
         if (isWindowLocked()) return;
-        if (TextUtils.isEmpty(mDeviceName) || TextUtils.isEmpty(mDeviceMac)) return;
+        if (TextUtils.isEmpty(mDeviceMac)) return;
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
         intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -282,7 +280,7 @@ public class SystemInfoActivity extends Lw006BaseActivity {
 
     private final DfuProgressListener mDfuProgressListener = new DfuProgressListenerAdapter() {
         @Override
-        public void onDeviceConnecting(String deviceAddress) {
+        public void onDeviceConnecting(@NonNull String deviceAddress) {
             XLog.w("onDeviceConnecting...");
             mDeviceConnectCount++;
             if (mDeviceConnectCount > 3) {
@@ -301,23 +299,23 @@ public class SystemInfoActivity extends Lw006BaseActivity {
         }
 
         @Override
-        public void onDfuProcessStarting(String deviceAddress) {
+        public void onDfuProcessStarting(@NonNull String deviceAddress) {
             isUpgrade = true;
             mDFUDialog.setMessage("DfuProcessStarting...");
         }
 
         @Override
-        public void onEnablingDfuMode(String deviceAddress) {
+        public void onEnablingDfuMode(@NonNull String deviceAddress) {
             mDFUDialog.setMessage("EnablingDfuMode...");
         }
 
         @Override
-        public void onFirmwareValidating(String deviceAddress) {
+        public void onFirmwareValidating(@NonNull String deviceAddress) {
             mDFUDialog.setMessage("FirmwareValidating...");
         }
 
         @Override
-        public void onDfuCompleted(String deviceAddress) {
+        public void onDfuCompleted(@NonNull String deviceAddress) {
             mDeviceConnectCount = 0;
             if (!isFinishing() && mDFUDialog != null && mDFUDialog.isShowing()) {
                 mDFUDialog.dismiss();
@@ -327,18 +325,18 @@ public class SystemInfoActivity extends Lw006BaseActivity {
         }
 
         @Override
-        public void onDfuAborted(String deviceAddress) {
+        public void onDfuAborted(@NonNull String deviceAddress) {
             mDFUDialog.setMessage("DfuAborted...");
         }
 
         @Override
-        public void onProgressChanged(String deviceAddress, int percent, float speed, float avgSpeed, int currentPart, int partsTotal) {
+        public void onProgressChanged(@NonNull String deviceAddress, int percent, float speed, float avgSpeed, int currentPart, int partsTotal) {
             XLog.i("Progress:" + percent + "%");
             mDFUDialog.setMessage("Progress：" + percent + "%");
         }
 
         @Override
-        public void onError(String deviceAddress, int error, int errorType, String message) {
+        public void onError(@NonNull String deviceAddress, int error, int errorType, String message) {
             ToastUtils.showToast(SystemInfoActivity.this, "Opps!DFU Failed. Please try again!");
             XLog.i("Error:" + message);
             dismissDFUProgressDialog();
@@ -353,8 +351,7 @@ public class SystemInfoActivity extends Lw006BaseActivity {
                 //得到uri，后面就是将uri转化成file的过程。
                 Uri uri = data.getData();
                 String firmwareFilePath = FileUtils.getPath(this, uri);
-                if (TextUtils.isEmpty(firmwareFilePath))
-                    return;
+                if (TextUtils.isEmpty(firmwareFilePath)) return;
                 final File firmwareFile = new File(firmwareFilePath);
                 if (!firmwareFile.exists() || !firmwareFilePath.toLowerCase().endsWith("zip") || firmwareFile.length() == 0) {
                     ToastUtils.showToast(this, "File error!");
@@ -389,11 +386,5 @@ public class SystemInfoActivity extends Lw006BaseActivity {
             }
         }
         return false;
-    }
-
-    public void onTest(View view) {
-        if (isTriggerValid()) {
-            startActivity(new Intent(this, SelfTestActivity.class));
-        }
     }
 }

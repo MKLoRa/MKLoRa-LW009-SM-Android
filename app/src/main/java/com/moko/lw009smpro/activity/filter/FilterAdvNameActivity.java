@@ -1,5 +1,9 @@
 package com.moko.lw009smpro.activity.filter;
 
+import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
+import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -14,8 +18,8 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw009smpro.R;
-import com.moko.lw009smpro.activity.Lw006BaseActivity;
-import com.moko.lw009smpro.databinding.Lw006ActivityFilterAdvNameBinding;
+import com.moko.lw009smpro.activity.Lw009BaseActivity;
+import com.moko.lw009smpro.databinding.ActivityFilterAdvNameBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
@@ -30,28 +34,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FilterAdvNameActivity extends Lw006BaseActivity {
+public class FilterAdvNameActivity extends Lw009BaseActivity {
     private final String FILTER_ASCII = "[ -~]*";
-    private Lw006ActivityFilterAdvNameBinding mBind;
+    private ActivityFilterAdvNameBinding mBind;
     private boolean savedParamsError;
-    private ArrayList<String> filterAdvName;
+    private final List<String> filterAdvName = new ArrayList<>();
     private InputFilter filter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = Lw006ActivityFilterAdvNameBinding.inflate(getLayoutInflater());
+        mBind = ActivityFilterAdvNameBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
-        filterAdvName = new ArrayList<>();
-        filter = (source, start, end, dest, dstart, dend) -> {
-            if (!(source + "").matches(FILTER_ASCII)) {
-                return "";
-            }
+        filter = (source, start, end, dest, dStart, dEnd) -> {
+            if (!(source + "").matches(FILTER_ASCII)) return "";
             return null;
         };
         showSyncingProgressDialog();
-        List<OrderTask> orderTasks = new ArrayList<>();
+        List<OrderTask> orderTasks = new ArrayList<>(4);
         orderTasks.add(OrderTaskAssembler.getFilterNamePrecise());
         orderTasks.add(OrderTaskAssembler.getFilterNameReverse());
         orderTasks.add(OrderTaskAssembler.getFilterNameRules());
@@ -68,31 +69,26 @@ public class FilterAdvNameActivity extends Lw006BaseActivity {
         });
     }
 
+    @SuppressLint("DefaultLocale")
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 300)
     public void onOrderTaskResponseEvent(OrderTaskResponseEvent event) {
         final String action = event.getAction();
         if (!MokoConstants.ACTION_CURRENT_DATA.equals(action))
             EventBus.getDefault().cancelEventDelivery(event);
         runOnUiThread(() -> {
-            if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
-            }
             if (MokoConstants.ACTION_ORDER_FINISH.equals(action)) {
                 dismissSyncProgressDialog();
             }
             if (MokoConstants.ACTION_ORDER_RESULT.equals(action)) {
                 OrderTaskResponse response = event.getResponse();
                 OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
-                int responseType = response.responseType;
                 byte[] value = response.responseValue;
                 if (orderCHAR == OrderCHAR.CHAR_PARAMS) {
                     if (value.length >= 4) {
-                        int header = value[0] & 0xFF;// 0xED
                         int flag = value[1] & 0xFF;// read or write
                         int cmd = value[2] & 0xFF;
                         ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
-                        if (configKeyEnum == null) {
-                            return;
-                        }
+                        if (configKeyEnum == null) return;
                         int length = value[3] & 0xFF;
                         if (flag == 0x01) {
                             // write
@@ -100,19 +96,11 @@ public class FilterAdvNameActivity extends Lw006BaseActivity {
                             switch (configKeyEnum) {
                                 case KEY_FILTER_NAME_PRECISE:
                                 case KEY_FILTER_NAME_REVERSE:
-                                    if (result != 1) {
-                                        savedParamsError = true;
-                                    }
+                                    if (result != 1) savedParamsError = true;
                                     break;
                                 case KEY_FILTER_NAME_RULES:
-                                    if (result != 1) {
-                                        savedParamsError = true;
-                                    }
-                                    if (savedParamsError) {
-                                        ToastUtils.showToast(FilterAdvNameActivity.this, "Opps！Save failed. Please check the input characters and try again.");
-                                    } else {
-                                        ToastUtils.showToast(this, "Save Successfully！");
-                                    }
+                                    if (result != 1) savedParamsError = true;
+                                    ToastUtils.showToast(this, savedParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
                             }
                         }
@@ -121,14 +109,12 @@ public class FilterAdvNameActivity extends Lw006BaseActivity {
                             switch (configKeyEnum) {
                                 case KEY_FILTER_NAME_PRECISE:
                                     if (length > 0) {
-                                        int enable = value[4] & 0xFF;
-                                        mBind.cbPreciseMatch.setChecked(enable == 1);
+                                        mBind.cbPreciseMatch.setChecked((value[4] & 0xff) == 1);
                                     }
                                     break;
                                 case KEY_FILTER_NAME_REVERSE:
                                     if (length > 0) {
-                                        int enable = value[4] & 0xFF;
-                                        mBind.cbReverseFilter.setChecked(enable == 1);
+                                        mBind.cbReverseFilter.setChecked((value[4] & 0xff) == 1);
                                     }
                                     break;
                                 case KEY_FILTER_NAME_RULES:
@@ -143,7 +129,7 @@ public class FilterAdvNameActivity extends Lw006BaseActivity {
                                         }
                                         for (int i = 0, l = filterAdvName.size(); i < l; i++) {
                                             String advName = filterAdvName.get(i);
-                                            View v = LayoutInflater.from(FilterAdvNameActivity.this).inflate(R.layout.lw006_item_adv_name_filter, mBind.llDavName, false);
+                                            View v = LayoutInflater.from(FilterAdvNameActivity.this).inflate(R.layout.item_adv_name_filter, mBind.llDavName, false);
                                             TextView title = v.findViewById(R.id.tv_adv_name_title);
                                             EditText etAdvName = v.findViewById(R.id.et_adv_name);
                                             etAdvName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20), filter});
@@ -163,8 +149,7 @@ public class FilterAdvNameActivity extends Lw006BaseActivity {
     }
 
     public void onSave(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         if (isValid()) {
             showSyncingProgressDialog();
             saveParams();
@@ -173,15 +158,15 @@ public class FilterAdvNameActivity extends Lw006BaseActivity {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     public void onAdd(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         int count = mBind.llDavName.getChildCount();
         if (count > 9) {
             ToastUtils.showToast(this, "You can set up to 10 filters!");
             return;
         }
-        View v = LayoutInflater.from(this).inflate(R.layout.lw006_item_adv_name_filter, mBind.llDavName, false);
+        View v = LayoutInflater.from(this).inflate(R.layout.item_adv_name_filter, mBind.llDavName, false);
         TextView title = v.findViewById(R.id.tv_adv_name_title);
         title.setText(String.format("ADV Name%d", count + 1));
         EditText etAdvName = v.findViewById(R.id.et_adv_name);
@@ -190,8 +175,7 @@ public class FilterAdvNameActivity extends Lw006BaseActivity {
     }
 
     public void onDel(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         final int c = mBind.llDavName.getChildCount();
         if (c == 0) {
             ToastUtils.showToast(this, "There are currently no filters to delete");
@@ -205,7 +189,7 @@ public class FilterAdvNameActivity extends Lw006BaseActivity {
 
     private void saveParams() {
         savedParamsError = false;
-        List<OrderTask> orderTasks = new ArrayList<>();
+        List<OrderTask> orderTasks = new ArrayList<>(4);
         orderTasks.add(OrderTaskAssembler.setFilterNamePrecise(mBind.cbPreciseMatch.isChecked() ? 1 : 0));
         orderTasks.add(OrderTaskAssembler.setFilterNameReverse(mBind.cbReverseFilter.isChecked() ? 1 : 0));
         orderTasks.add(OrderTaskAssembler.setFilterNameRules(filterAdvName));
@@ -220,13 +204,9 @@ public class FilterAdvNameActivity extends Lw006BaseActivity {
                 View v = mBind.llDavName.getChildAt(i);
                 EditText etAdvName = v.findViewById(R.id.et_adv_name);
                 final String advName = etAdvName.getText().toString();
-                if (TextUtils.isEmpty(advName)) {
-                    return false;
-                }
+                if (TextUtils.isEmpty(advName)) return false;
                 int length = advName.length();
-                if (length > 20) {
-                    return false;
-                }
+                if (length > 20) return false;
                 filterAdvName.add(advName);
             }
         }
@@ -236,20 +216,17 @@ public class FilterAdvNameActivity extends Lw006BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
     }
 
     public void onBack(View view) {
-        backHome();
+        onBackPressed();
     }
 
     @Override
     public void onBackPressed() {
-        backHome();
-    }
-
-    private void backHome() {
-        setResult(RESULT_OK);
-        finish();
+        EventBus.getDefault().unregister(this);
+        super.onBackPressed();
     }
 }

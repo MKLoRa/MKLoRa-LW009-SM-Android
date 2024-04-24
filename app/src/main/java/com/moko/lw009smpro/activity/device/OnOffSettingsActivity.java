@@ -1,5 +1,8 @@
 package com.moko.lw009smpro.activity.device;
 
+import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
+import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
+
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,7 +17,7 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw009smpro.R;
-import com.moko.lw009smpro.activity.Lw006BaseActivity;
+import com.moko.lw009smpro.activity.Lw009BaseActivity;
 import com.moko.lw009smpro.databinding.ActivityOnOffSettingsBinding;
 import com.moko.lw009smpro.dialog.AlertMessageDialog;
 import com.moko.lw009smpro.utils.ToastUtils;
@@ -32,15 +35,13 @@ import java.util.List;
 
 /**
  * @author: jun.liu
- * @date: 2023/6/12 17:39
+ * @date: 2024/4/18 15:39
  * @des:
  */
-public class OnOffSettingsActivity extends Lw006BaseActivity {
+public class OnOffSettingsActivity extends Lw009BaseActivity {
     private ActivityOnOffSettingsBinding mBind;
     private boolean mReceiverTag;
     private boolean shutdownPayloadOpen;
-    private boolean offByButtonOpen;
-    private boolean autoPowerOnOpen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,11 +59,7 @@ public class OnOffSettingsActivity extends Lw006BaseActivity {
             MoKoSupport.getInstance().enableBluetooth();
         } else {
             showSyncingProgressDialog();
-            List<OrderTask> orderTasks = new ArrayList<>(4);
-            orderTasks.add(OrderTaskAssembler.getShutdownPayloadEnable());
-            orderTasks.add(OrderTaskAssembler.getOffByButtonEnable());
-            orderTasks.add(OrderTaskAssembler.getAutoPowerOn());
-            MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+            MoKoSupport.getInstance().sendOrder(OrderTaskAssembler.getShutdownPayloadEnable());
         }
         setListener();
     }
@@ -76,24 +73,6 @@ public class OnOffSettingsActivity extends Lw006BaseActivity {
             orderTasks.add(OrderTaskAssembler.getShutdownPayloadEnable());
             MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         });
-        mBind.ivOffByButton.setOnClickListener(v -> {
-            if (isWindowLocked()) return;
-            showSyncingProgressDialog();
-            List<OrderTask> orderTasks = new ArrayList<>(2);
-            orderTasks.add(OrderTaskAssembler.setOffByButton(offByButtonOpen ? 0 : 1));
-            orderTasks.add(OrderTaskAssembler.getOffByButtonEnable());
-            MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-        });
-
-        mBind.ivAutoPowerOn.setOnClickListener(v -> {
-            if (isWindowLocked()) return;
-            showSyncingProgressDialog();
-            List<OrderTask> orderTasks = new ArrayList<>(2);
-            orderTasks.add(OrderTaskAssembler.setAutoPowerOn(autoPowerOnOpen ? 0 : 1));
-            orderTasks.add(OrderTaskAssembler.getAutoPowerOn());
-            MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-        });
-
         mBind.ivPowerOff.setOnClickListener(v -> {
             if (isWindowLocked()) return;
             AlertMessageDialog dialog = new AlertMessageDialog();
@@ -124,8 +103,6 @@ public class OnOffSettingsActivity extends Lw006BaseActivity {
         if (!MokoConstants.ACTION_CURRENT_DATA.equals(action))
             EventBus.getDefault().cancelEventDelivery(event);
         runOnUiThread(() -> {
-            if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
-            }
             if (MokoConstants.ACTION_ORDER_FINISH.equals(action)) {
                 dismissSyncProgressDialog();
             }
@@ -138,51 +115,23 @@ public class OnOffSettingsActivity extends Lw006BaseActivity {
                         int header = value[0] & 0xFF;// 0xED
                         int flag = value[1] & 0xFF;// read or write
                         int cmd = value[2] & 0xFF;
-                        if (header != 0xED) return;
                         ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
-                        if (configKeyEnum == null) {
-                            return;
-                        }
+                        if (header != 0xED || configKeyEnum == null) return;
                         int length = value[3] & 0xFF;
                         if (flag == 0x01) {
                             // write
                             int result = value[4] & 0xFF;
-                            switch (configKeyEnum) {
-                                case KEY_SHUTDOWN_PAYLOAD_ENABLE:
-                                case KEY_OFF_BY_BUTTON:
-                                case KEY_AUTO_POWER_ON_ENABLE:
-                                    if (result == 1) {
-                                        ToastUtils.showToast(this, "Save Successfully！");
-                                    } else {
-                                        ToastUtils.showToast(this, "Opps！Save failed. Please check the input characters and try again.");
-                                    }
-                                    break;
+                            if (configKeyEnum == ParamsKeyEnum.KEY_SHUTDOWN_PAYLOAD_ENABLE) {
+                                ToastUtils.showToast(this, result == 1 ? SAVE_SUCCESS : SAVE_ERROR);
                             }
-                        }
-                        if (flag == 0x00) {
+                        }else if (flag == 0x00) {
                             // read
-                            switch (configKeyEnum) {
-                                case KEY_SHUTDOWN_PAYLOAD_ENABLE:
-                                    if (length == 1) {
-                                        int enable = value[4] & 0xFF;
-                                        shutdownPayloadOpen = enable == 1;
-                                        mBind.ivShutdownPayload.setImageResource(enable == 1 ? R.drawable.lw006_ic_checked : R.drawable.lw006_ic_unchecked);
-                                    }
-                                    break;
-                                case KEY_OFF_BY_BUTTON:
-                                    if (length == 1) {
-                                        int enable = value[4] & 0xFF;
-                                        offByButtonOpen = enable == 1;
-                                        mBind.ivOffByButton.setImageResource(enable == 1 ? R.drawable.lw006_ic_checked : R.drawable.lw006_ic_unchecked);
-                                    }
-                                    break;
-                                case KEY_AUTO_POWER_ON_ENABLE:
-                                    if (length == 1) {
-                                        int enable = value[4] & 0xFF;
-                                        autoPowerOnOpen = enable == 1;
-                                        mBind.ivAutoPowerOn.setImageResource(enable == 1 ? R.drawable.lw006_ic_checked : R.drawable.lw006_ic_unchecked);
-                                    }
-                                    break;
+                            if (configKeyEnum == ParamsKeyEnum.KEY_SHUTDOWN_PAYLOAD_ENABLE) {
+                                if (length == 1) {
+                                    int enable = value[4] & 0xFF;
+                                    shutdownPayloadOpen = enable == 1;
+                                    mBind.ivShutdownPayload.setImageResource(enable == 1 ? R.drawable.ic_checked : R.drawable.ic_unchecked);
+                                }
                             }
                         }
                     }
@@ -192,7 +141,6 @@ public class OnOffSettingsActivity extends Lw006BaseActivity {
     }
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent != null) {

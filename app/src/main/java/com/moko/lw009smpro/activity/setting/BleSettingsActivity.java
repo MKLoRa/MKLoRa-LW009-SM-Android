@@ -1,5 +1,9 @@
 package com.moko.lw009smpro.activity.setting;
 
+import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
+import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -12,8 +16,8 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw009smpro.R;
-import com.moko.lw009smpro.activity.Lw006BaseActivity;
-import com.moko.lw009smpro.databinding.Lw006ActivityBleSettingsBinding;
+import com.moko.lw009smpro.activity.Lw009BaseActivity;
+import com.moko.lw009smpro.databinding.ActivityBleSettingsBinding;
 import com.moko.lw009smpro.dialog.ChangePasswordDialog;
 import com.moko.lw009smpro.entity.TxPowerEnum;
 import com.moko.lw009smpro.utils.ToastUtils;
@@ -32,10 +36,9 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class BleSettingsActivity extends Lw006BaseActivity implements SeekBar.OnSeekBarChangeListener {
+public class BleSettingsActivity extends Lw009BaseActivity implements SeekBar.OnSeekBarChangeListener {
     private final String FILTER_ASCII = "[ -~]*";
-
-    private Lw006ActivityBleSettingsBinding mBind;
+    private ActivityBleSettingsBinding mBind;
     private boolean savedParamsError;
     private boolean mPasswordVerifyEnable;
     private boolean mPasswordVerifyDisable;
@@ -43,19 +46,17 @@ public class BleSettingsActivity extends Lw006BaseActivity implements SeekBar.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = Lw006ActivityBleSettingsBinding.inflate(getLayoutInflater());
+        mBind = ActivityBleSettingsBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
-        InputFilter inputFilter = (source, start, end, dest, dstart, dend) -> {
-            if (!(source + "").matches(FILTER_ASCII)) {
-                return "";
-            }
+        InputFilter inputFilter = (source, start, end, dest, dStart, dEnd) -> {
+            if (!(source + "").matches(FILTER_ASCII)) return "";
             return null;
         };
         mBind.etAdvName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(16), inputFilter});
         mBind.sbTxPower.setOnSeekBarChangeListener(this);
         showSyncingProgressDialog();
-        List<OrderTask> orderTasks = new ArrayList<>();
+        List<OrderTask> orderTasks = new ArrayList<>(6);
         orderTasks.add(OrderTaskAssembler.getAdvName());
         orderTasks.add(OrderTaskAssembler.getAdvInterval());
         orderTasks.add(OrderTaskAssembler.getAdvTxPower());
@@ -74,32 +75,27 @@ public class BleSettingsActivity extends Lw006BaseActivity implements SeekBar.On
         });
     }
 
+    @SuppressLint("DefaultLocale")
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)
     public void onOrderTaskResponseEvent(OrderTaskResponseEvent event) {
         final String action = event.getAction();
         if (!MokoConstants.ACTION_CURRENT_DATA.equals(action))
             EventBus.getDefault().cancelEventDelivery(event);
         runOnUiThread(() -> {
-            if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
-            }
             if (MokoConstants.ACTION_ORDER_FINISH.equals(action)) {
                 dismissSyncProgressDialog();
             }
             if (MokoConstants.ACTION_ORDER_RESULT.equals(action)) {
                 OrderTaskResponse response = event.getResponse();
                 OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
-                int responseType = response.responseType;
                 byte[] value = response.responseValue;
                 if (orderCHAR == OrderCHAR.CHAR_PARAMS) {
                     if (value.length >= 4) {
                         int header = value[0] & 0xFF;// 0xED
                         int flag = value[1] & 0xFF;// read or write
                         int cmd = value[2] & 0xFF;
-                        if (header != 0xED) return;
                         ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
-                        if (configKeyEnum == null) {
-                            return;
-                        }
+                        if (header != 0xED || configKeyEnum == null) return;
                         int length = value[3] & 0xFF;
                         if (flag == 0x01) {
                             // write
@@ -109,19 +105,11 @@ public class BleSettingsActivity extends Lw006BaseActivity implements SeekBar.On
                                 case KEY_ADV_INTERVAL:
                                 case KEY_ADV_TIMEOUT:
                                 case KEY_ADV_TX_POWER:
-                                    if (result != 1) {
-                                        savedParamsError = true;
-                                    }
+                                    if (result != 1) savedParamsError = true;
                                     break;
                                 case KEY_PASSWORD_VERIFY_ENABLE:
-                                    if (result != 1) {
-                                        savedParamsError = true;
-                                    }
-                                    if (savedParamsError) {
-                                        ToastUtils.showToast(this, "Opps！Save failed. Please check the input characters and try again.");
-                                    } else {
-                                        ToastUtils.showToast(this, "Save Successfully！");
-                                    }
+                                    if (result != 1) savedParamsError = true;
+                                    ToastUtils.showToast(this, savedParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
                             }
                         }
@@ -136,8 +124,7 @@ public class BleSettingsActivity extends Lw006BaseActivity implements SeekBar.On
                                     break;
                                 case KEY_ADV_TIMEOUT:
                                     if (length > 0) {
-                                        int timeout = value[4] & 0xFF;
-                                        mBind.etAdvTimeout.setText(String.valueOf(timeout));
+                                        mBind.etAdvTimeout.setText(String.valueOf(value[4] & 0xFF));
                                         mBind.etAdvTimeout.setSelection(mBind.etAdvTimeout.getText().length());
                                     }
                                     break;
@@ -146,23 +133,25 @@ public class BleSettingsActivity extends Lw006BaseActivity implements SeekBar.On
                                         int enable = value[4] & 0xFF;
                                         mPasswordVerifyEnable = enable == 1;
                                         mPasswordVerifyDisable = enable == 0;
-                                        mBind.ivLoginMode.setImageResource(mPasswordVerifyEnable ? R.drawable.lw006_ic_checked : R.drawable.lw006_ic_unchecked);
+                                        mBind.ivLoginMode.setImageResource(mPasswordVerifyEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
                                         mBind.tvChangePassword.setVisibility(mPasswordVerifyEnable ? View.VISIBLE : View.GONE);
                                     }
                                     break;
                                 case KEY_ADV_TX_POWER:
                                     if (length > 0) {
                                         int txPower = value[4];
-                                        int progress = TxPowerEnum.fromTxPower(txPower).ordinal();
-                                        mBind.sbTxPower.setProgress(progress);
-                                        mBind.tvTxPowerValue.setText(String.format("%ddBm", txPower));
+                                        TxPowerEnum txPowerEnum = TxPowerEnum.fromTxPower(txPower);
+                                        if (null != txPowerEnum) {
+                                            int progress = txPowerEnum.ordinal();
+                                            mBind.sbTxPower.setProgress(progress);
+                                            mBind.tvTxPowerValue.setText(String.format("%ddBm", txPower));
+                                        }
                                     }
                                     break;
 
                                 case KEY_ADV_INTERVAL:
                                     if (length > 0) {
-                                        int interval = value[4] & 0xff;
-                                        mBind.etAdInterval.setText(String.valueOf(interval));
+                                        mBind.etAdInterval.setText(String.valueOf(value[4] & 0xff));
                                         mBind.etAdInterval.setSelection(mBind.etAdInterval.getText().length());
                                     }
                                     break;
@@ -181,17 +170,7 @@ public class BleSettingsActivity extends Lw006BaseActivity implements SeekBar.On
     }
 
     public void onBack(View view) {
-        backHome();
-    }
-
-    @Override
-    public void onBackPressed() {
-        backHome();
-    }
-
-    private void backHome() {
-        setResult(RESULT_OK);
-        finish();
+        onBackPressed();
     }
 
     public void onSave(View view) {
@@ -224,7 +203,7 @@ public class BleSettingsActivity extends Lw006BaseActivity implements SeekBar.On
         int interval = Integer.parseInt(mBind.etAdInterval.getText().toString().trim());
         TxPowerEnum txPowerEnum = TxPowerEnum.fromOrdinal(progress);
         savedParamsError = false;
-        List<OrderTask> orderTasks = new ArrayList<>();
+        List<OrderTask> orderTasks = new ArrayList<>(6);
         orderTasks.add(OrderTaskAssembler.setAdvName(advName));
         orderTasks.add(OrderTaskAssembler.setAdvInterval(interval));
         orderTasks.add(OrderTaskAssembler.setAdvTimeout(timeout));
@@ -248,7 +227,7 @@ public class BleSettingsActivity extends Lw006BaseActivity implements SeekBar.On
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                runOnUiThread(() -> dialog.showKeyboard());
+                runOnUiThread(dialog::showKeyboard);
             }
         }, 200);
     }
@@ -256,10 +235,11 @@ public class BleSettingsActivity extends Lw006BaseActivity implements SeekBar.On
     public void onChangeLoginMode(View view) {
         if (isWindowLocked()) return;
         mPasswordVerifyEnable = !mPasswordVerifyEnable;
-        mBind.ivLoginMode.setImageResource(mPasswordVerifyEnable ? R.drawable.lw006_ic_checked : R.drawable.lw006_ic_unchecked);
+        mBind.ivLoginMode.setImageResource(mPasswordVerifyEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
         mBind.tvChangePassword.setVisibility(mPasswordVerifyEnable ? View.VISIBLE : View.GONE);
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
         TxPowerEnum txPowerEnum = TxPowerEnum.fromOrdinal(progress);

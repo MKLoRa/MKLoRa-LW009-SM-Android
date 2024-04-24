@@ -21,7 +21,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 
-public class GuideActivity extends Lw006BaseActivity {
+public class GuideActivity extends Lw009BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +75,7 @@ public class GuideActivity extends Lw006BaseActivity {
 
     private void gotoMain() {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            startActivity(new Intent(this, LoRaLW006MainActivity.class));
+            startActivity(new Intent(this, LoRaLW009MainActivity.class));
             finish();
         }, 1000);
     }

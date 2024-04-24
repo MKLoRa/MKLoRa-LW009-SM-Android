@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/lw006_shape_radius_white_bg"
+    android:background="@drawable/shape_radius_white_bg"
     android:paddingBottom="15dp"
     tools:viewBindingIgnore="true">
 
@@ -38,7 +38,7 @@
         android:id="@+id/tv_rssi"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:drawableTop="@drawable/lw006_ic_rssi"
+        android:drawableTop="@drawable/ic_rssi"
         android:drawablePadding="5dp"
         android:gravity="center_horizontal"
         android:text="N/A"
@@ -53,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_marginRight="15dp"
-        android:background="@drawable/lw006_shape_radius_blue_bg"
+        android:background="@drawable/shape_radius_blue_bg"
         android:gravity="center"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
@@ -77,7 +77,7 @@
             android:id="@+id/iv_battery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/lw006_ic_battery"
+            android:src="@drawable/ic_battery"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_rssi" />
 

@@ -24,40 +24,16 @@ public enum ParamsKeyEnum implements Serializable {
     KEY_BATTERY_POWER(0x19),
     // 厂家信息
     KEY_MANUFACTURER(0x1A),
-    // 工作模式选择
-    KEY_DEVICE_MODE(0x1B),
     // 关机信息上报
-    KEY_SHUTDOWN_PAYLOAD_ENABLE(0x1C),
-    //按键关机
-    KEY_OFF_BY_BUTTON(0x1D),
+    KEY_SHUTDOWN_PAYLOAD_ENABLE(0x1B),
     // 低电触发心跳开关
-    KEY_LOW_POWER_PAYLOAD_ENABLE(0x1E),
-    //低电百分比
-    KEY_LOW_POWER_PERCENT(0x1F),
+    KEY_LOW_POWER_PAYLOAD_ENABLE(0x1C),
     // 设备心跳间隔
-    KEY_HEARTBEAT_INTERVAL(0x20),
-    // 三轴唤醒条件
-    KEY_ACC_WAKEUP_CONDITION(0x21),
-    // 运动检测判断
-    KEY_ACC_MOTION_CONDITION(0x22),
-    //蜂鸣器声效选择
-    KEY_BUZZER_SOUND_CHOOSE(0x23),
-    //马达震动强度选择
-    KEY_VIBRATION_INTENSITY(0x24),
-    //马达异常状态
-    KEY_MOTOR_STATE(0x25),
-    //清除马达异常状态
-    KEY_RESET_MOTOR_STATE(0x26),
-    // 指示灯开关
-    KEY_INDICATOR_STATUS(0x27),
-    // 电池信息信息
-    KEY_BATTERY_INFO(0x28),
-    // 电池信息清除
-    KEY_BATTERY_RESET(0x29),
-    //充电自动开机
-    KEY_AUTO_POWER_ON_ENABLE(0x2B),
-    //硬件版本
-    KEY_HARDWARE_VERSION(0x2C),
+    KEY_HEARTBEAT_INTERVAL(0x1D),
+    KEY_PARKING_DETECTION_PAYLOAD_TYPE(0x1E),
+    KEY_BLE_SCAN_TIME(0x1F),
+    KEY_PAYLOAD_BEACON_COUNT(0x20),
+    KEY_NO_PARKING_CALIBRATION_STATUS(0x21),
 
 
     //// 蓝牙相关参数
@@ -75,45 +51,28 @@ public enum ParamsKeyEnum implements Serializable {
     KEY_ADV_INTERVAL(0x35),
 
 
-    //// 模式相关参数
-    //待机模式定位策略
-    KEY_STANDBY_MODE_POS_STRATEGY(0x3F),
-    // 定期模式定位策略
-    KEY_PERIODIC_MODE_POS_STRATEGY(0x40),
-    // 定期模式上报间隔
-    KEY_PERIODIC_MODE_REPORT_INTERVAL(0x41),
-    // 定时模式定位策略
-    KEY_TIME_MODE_POS_STRATEGY(0x42),
-    // 定时模式时间点
-    KEY_TIME_MODE_REPORT_TIME_POINT(0x43),
-    // 运动模式事件
-    KEY_MOTION_MODE_EVENT(0x44),
-    // 运动开始定位上报次数
-    KEY_MOTION_MODE_START_NUMBER(0x45),
-    // 运动开始定位策略
-    KEY_MOTION_MODE_START_POS_STRATEGY(0x46),
-    // 运动中定位间隔
-    KEY_MOTION_MODE_TRIP_REPORT_INTERVAL(0x47),
-    // 运动中定位策略
-    KEY_MOTION_MODE_TRIP_POS_STRATEGY(0x48),
-    // 运动结束判断时间
-    KEY_MOTION_MODE_END_TIMEOUT(0x49),
-    // 运动结束定位次数
-    KEY_MOTION_MODE_END_NUMBER(0x4A),
-    // 运动结束定位间隔
-    KEY_MOTION_MODE_END_REPORT_INTERVAL(0x4B),
-    // 运动结束定位策略
-    KEY_MOTION_MODE_END_POS_STRATEGY(0x4C),
-    //运动静止状态定位策略
-    KEY_MOTION_MODE_STATIONARY_POS_STRATEGY(0x4D),
-    //运动禁止状态上报间隔
-    KEY_MOTION_MODE_STATIONARY_REPORT_INTERVAL(0x4E),
+
+    //车位检测功能参数
+    KEY_NO_PARKING_CALIBRATION(0x3A),
+    KEY_TRIGGER_PARKING_DETECTION(0x3B),
+    KEY_TRIGGER_SLAVE_RESET(0x3C),
+    KEY_TRIGGER_PARKING_DETECTION_TIMES(0x3D),
+    KEY_SLAVE_WORK_MODE(0x3E),
+    KEY_PARKING_DETECTION_SENSITIVITY(0x3F),
+    KEY_PARKING_DETECTION_MODE(0x40),
+    KEY_PARKING_DETECTION_DURATION(0x41),
+    KEY_PARKING_DETECTION_CONFIRM_DURATION(0x42),
+    KEY_PARKING_DETECTION_THRESHOLD(0x43),
+    KEY_PARKING_LOT_TYPE(0x44),
+    KEY_AUTO_CALIBRATION_SWITCH(0x45),
+    KEY_AUTO_CALIBRATION_THRESHOLD(0x46),
+    KEY_AUTO_CALIBRATION_DELAY_SAMPLE_TIME(0x47),
+    KEY_RADAR_DELAY_CLOSE_SWITCH(0x48),
+    KEY_SLAVE_LOG_SWITCH(0x49),
 
 
 
     ////蓝牙扫描过滤参数
-    // 蓝牙扫描PHY选择
-    KEY_FILTER_BLE_SCAN_PHY(0x50),
     // RSSI过滤规则
     KEY_FILTER_RSSI(0x51),
     // 广播内容过滤逻辑
@@ -208,47 +167,6 @@ public enum ParamsKeyEnum implements Serializable {
     KEY_FILTER_OTHER_RULES(0x7B),
 
 
-    //// 定位参数
-    // WIFI定位数据格式
-    KEY_WIFI_POS_DATA_TYPE(0x7D),
-    //wifi定位机制
-    KEY_WIFI_POS_MECHANISM(0x7E),
-    // WIFI定位超时时间
-    KEY_WIFI_POS_TIMEOUT(0x7F),
-    // WIFI定位成功BSSID数量
-    KEY_WIFI_POS_BSSID_NUMBER(0x80),
-    // 蓝牙定位机制选择
-    KEY_BLE_POS_MECHANISM(0x81),
-    // 蓝牙定位超时时间
-    KEY_BLE_POS_TIMEOUT(0x82),
-    // 蓝牙定位成功MAC数量
-    KEY_BLE_POS_MAC_NUMBER(0x83),
-    //gps型号选择
-    KEY_GPS_MODULE(0x84),
-    // GPS极限上传模式（L76版本）
-    KEY_GPS_EXTREME_MODE_L76C(0x85),
-    // GPS定位超时时间（L76版本）
-    KEY_GPS_POS_TIMEOUT_L76C(0x86),
-    // GPS位置精度因子PDOP（L76版本）
-    KEY_GPS_PDOP_LIMIT_L76C(0x87),
-    // GPS定位数据格式（LR1110版本）
-    KEY_GPS_POS_DATA_TYPE(0x88),
-    // GPS定位超时时间（LR1110版本）
-    KEY_GPS_POS_TIMEOUT(0x89),
-    // GPS搜星数量（LR1110版本）
-    KEY_GPS_POS_SATELLITE_THRESHOLD(0x8A),
-    // GPS定位星座（LR1110版本）
-    KEY_GPS_POS_SYSTEM(0x8B),
-    // 定位方式选择（LR1110版本）
-    KEY_GPS_POS_AUTONMOUS_AIDING_ENABLE(0x8C),
-    // 辅助定位经纬度（LR1110版本）
-    KEY_GPS_POS_AUXILIARY_LAT_LON(0x8D),
-    // 星历开始更新事件开关
-    KEY_GPS_POS_EPHEMERIS_NOTIFY_ENABLE(0x8E),
-    // 离线定位功能开关
-    KEY_OFFLINE_LOCATION_ENABLE(0x8F),
-
-
 
     //// LoRaWAN参数
     // LoRaWAN网络状态
@@ -279,60 +197,26 @@ public enum ParamsKeyEnum implements Serializable {
     KEY_LORA_TIME_SYNC_INTERVAL(0x9F),
     // 网络检查间隔
     KEY_LORA_NETWORK_CHECK_INTERVAL(0xA0),
-    //设备信息包上行配置
-    KEY_PARKING_INFO_PAYLOAD(0xA2),
     //心跳数据包上行配置
     KEY_HEARTBEAT_PAYLOAD(0xA1),
-    //低电状态数据包上行配置
+    //车位信息包上行配置
+    KEY_PARKING_INFO_PAYLOAD(0xA2),
+    //车位Beacon信息包上行配置
     KEY_BEACON_PAYLOAD(0xA3),
+    //低电信息包上行配置
+    KEY_LOW_POWER_PAYLOAD(0xA4),
+    //关机信息包上行配置
+    KEY_SHUTDOWN_PAYLOAD(0xA5),
     //事件信息包上行配置
     KEY_EVENT_PAYLOAD(0xA6),
-    //GPS极限定位数据包上行配置
-    KEY_LOW_POWER_PAYLOAD(0xA4),
-    //定位数据包上行配置
-    KEY_SHUTDOWN_PAYLOAD(0xA5),
 
 
 
-    //// 辅助功能参数
-    // 下行请求定位策略
-    KEY_DOWN_LINK_POS_STRATEGY(0xB0),
-    // 闲置功能使能
-    KEY_MAN_DOWN_DETECTION_ENABLE(0xB1),
-    //ManDown 定位策略
-    KEY_MAN_DOWN_POS_STRATEGY(0xB2),
-    // 闲置超时时间
-    KEY_MAN_DOWN_DETECTION_TIMEOUT(0xB3),
-    //ManDown 定 位 数 据上报间隔
-    KEY_MAN_DOWN_DETECTION_REPORT_INTERVAL(0xB4),
-    //报警类型选择
-    KEY_ALARM_TYPE(0xB5),
-    //退出报警按键时间
-    KEY_ALARM_EXIT_TIME(0xB6),
-    //Alert 报警触发按键模式
-    KEY_ALARM_ALERT_TRIGGER_TYPE(0xB7),
-    //Alert 报警定位策略
-    KEY_ALARM_ALERT_POS_STRATEGY(0xB8),
-    //Alert 报警事件通知
-    KEY_ALARM_ALERT_NOTIFY_ENABLE(0xB9),
-    //SOS 报警触发按键
-    KEY_ALARM_SOS_TRIGGER_TYPE(0xBA),
-    //SOS 报警定位策略
-    KEY_ALARM_SOS_POS_STRATEGY(0xBB),
-    //SOS 定位数据上报间隔
-    KEY_ALARM_SOS_REPORT_INTERVAL(0xBC),
-    //SOS 报警事件通知
-    KEY_ALARM_SOS_NOTIFY_ENABLE(0xBD),
-
-
-
-    //// 存储协议
-    // 读取存储的数据
-    KEY_READ_STORAGE_DATA(0xC0),
-    //清除存储的所有数据
-    KEY_CLEAR_STORAGE_DATA(0xC1),
-    //暂停/恢复传输
-    KEY_SYNC_ENABLE(0xC2),
+    //// 从机固件升级指令
+    //触发从机固件升级
+    KEY_TRIGGER_SLAVE_UPDATE(0xB0),
+    // 从机固件升级
+    KEY_SLAVE_UPDATE(0xB1),
     ;
 
     private final int paramsKey;

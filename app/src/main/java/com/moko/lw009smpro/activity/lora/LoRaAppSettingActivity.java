@@ -14,7 +14,7 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
-import com.moko.lw009smpro.activity.Lw006BaseActivity;
+import com.moko.lw009smpro.activity.Lw009BaseActivity;
 import com.moko.lw009smpro.databinding.ActivityAppSettingBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
@@ -29,7 +29,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoRaAppSettingActivity extends Lw006BaseActivity {
+public class LoRaAppSettingActivity extends Lw009BaseActivity {
     private ActivityAppSettingBinding mBind;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;

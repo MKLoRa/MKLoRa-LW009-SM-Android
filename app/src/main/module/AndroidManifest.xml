@@ -29,7 +29,7 @@
         android:required="true" />
     <application android:allowBackup="true">
         <activity
-            android:name="com.moko.lw009smpro.activity.LoRaLW006MainActivity"
+            android:name="com.moko.lw009smpro.activity.LoRaLW009MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -52,7 +52,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.moko.lw009smpro.activity.PosBleFixActivity"
+            android:name="com.moko.lw009smpro.activity.BleFixActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity

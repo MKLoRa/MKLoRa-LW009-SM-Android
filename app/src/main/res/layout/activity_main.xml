@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/grey_f2f2f2"
     android:orientation="vertical">
 
@@ -16,8 +16,7 @@
             android:id="@+id/tv_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:clickable="true"
-            android:drawableLeft="@drawable/lw006_ic_back"
+            android:drawableLeft="@drawable/ic_back"
             android:drawablePadding="6dp"
             android:gravity="center_vertical"
             android:onClick="onBack"
@@ -41,7 +40,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:clickable="true"
             android:onClick="onAbout"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
@@ -59,8 +57,7 @@
             android:layout_height="0dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="60dp"
-            android:background="@drawable/lw006_shape_radius_white_bg"
-            android:clickable="true"
+            android:background="@drawable/shape_radius_white_bg"
             android:onClick="onFilter"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -72,7 +69,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:drawableLeft="@drawable/lw006_ic_filter_search"
+                android:drawableLeft="@drawable/ic_filter_search"
                 android:drawablePadding="10dp"
                 android:gravity="center_vertical"
                 android:text="Edit Filter"
@@ -83,10 +80,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/lw006_ic_filter_arrow" />
+                android:src="@drawable/ic_filter_arrow" />
 
         </RelativeLayout>
-
 
         <RelativeLayout
             android:id="@+id/rl_filter"
@@ -94,8 +90,7 @@
             android:layout_height="0dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="60dp"
-            android:background="@drawable/lw006_shape_radius_white_bg"
-            android:clickable="true"
+            android:background="@drawable/shape_radius_white_bg"
             android:onClick="onFilter"
             android:paddingLeft="10dp"
             android:visibility="gone"
@@ -118,11 +113,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
-                android:clickable="true"
                 android:onClick="onFilterDelete"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:src="@drawable/lw006_ic_filter_delete" />
+                android:src="@drawable/ic_filter_delete" />
 
         </RelativeLayout>
 
@@ -130,11 +124,10 @@
             android:id="@+id/iv_refresh"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:clickable="true"
             android:onClick="onRefresh"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:src="@drawable/lw006_ic_refresh"
+            android:src="@drawable/ic_refresh"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -149,6 +142,7 @@
         android:overScrollMode="never"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="2"
         tools:listitem="@layout/list_item_device" />
 </LinearLayout>

@@ -15,7 +15,7 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
-import com.moko.lw009smpro.activity.Lw006BaseActivity;
+import com.moko.lw009smpro.activity.Lw009BaseActivity;
 import com.moko.lw009smpro.databinding.ActivityMsgTypeSettingsBinding;
 import com.moko.lw009smpro.dialog.BottomDialog;
 import com.moko.lw009smpro.utils.ToastUtils;
@@ -37,7 +37,7 @@ import java.util.List;
  * @date: 2024/4/18 16:25
  * @des:
  */
-public class MessageTypeSettingsActivity extends Lw006BaseActivity {
+public class MessageTypeSettingsActivity extends Lw009BaseActivity {
     private ActivityMsgTypeSettingsBinding mBind;
     private boolean mReceiverTag = false;
     private static final String unconfirmed = "Unconfirmed";

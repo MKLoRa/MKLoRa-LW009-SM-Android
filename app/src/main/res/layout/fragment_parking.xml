@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_f2f2f2"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/shape_radius_white_bg"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
+
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:text="Detection Alogorithms"
+            android:textColor="@color/black_333333"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvDetectionAlogorithms"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/shape_radius_blue_btn_bg"
+            android:gravity="center"
+            android:minWidth="100dp"
+            android:textColor="@color/whiteFFFFFF"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv1"
+            tools:text="Radar Only" />
+
+        <View
+            android:id="@+id/line1"
+            style="@style/divider_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            app:layout_constraintTop_toBottomOf="@+id/tv1" />
+
+        <TextView
+            android:id="@+id/tv2"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:text="Detection Sensitivity"
+            android:textColor="@color/black_333333"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/line1" />
+
+        <TextView
+            android:id="@+id/tvDetectionSensitivity"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:background="@drawable/shape_radius_blue_btn_bg"
+            android:gravity="center"
+            android:minWidth="100dp"
+            android:textColor="@color/whiteFFFFFF"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv2"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv2"
+            tools:text="1" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/shape_radius_white_bg"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
+
+        <TextView
+            android:id="@+id/tv3"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:text="Parking Detection Cycle"
+            android:textColor="@color/black_333333"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/etParkingDetection"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="5dp"
+            android:gravity="center"
+            android:hint="1-60"
+            android:inputType="number"
+            android:maxLength="2"
+            android:textColor="@color/whiteFFFFFF"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv3"
+            app:layout_constraintRight_toLeftOf="@+id/tv3Unit"
+            app:layout_constraintTop_toTopOf="@+id/tv3" />
+
+        <TextView
+            android:id="@+id/tv3Unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="s"
+            android:textColor="@color/black_333333"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv3"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv3" />
+
+        <View
+            android:id="@+id/line3"
+            style="@style/divider_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            app:layout_constraintTop_toBottomOf="@+id/tv3" />
+
+        <TextView
+            android:id="@+id/tv4"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:text="Detection Confirmation Duation"
+            android:textColor="@color/black_333333"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/line3" />
+
+        <EditText
+            android:id="@+id/etDetectionConfirmation"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="5dp"
+            android:gravity="center"
+            android:hint="1-60"
+            android:inputType="number"
+            android:maxLength="2"
+            android:textColor="@color/whiteFFFFFF"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv4"
+            app:layout_constraintRight_toLeftOf="@+id/tv4Unit"
+            app:layout_constraintTop_toTopOf="@+id/tv4" />
+
+        <TextView
+            android:id="@+id/tv4Unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="s"
+            android:textColor="@color/black_333333"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv4"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv4" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/shape_radius_white_bg"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No Parking Calibration"
+            android:textColor="@color/black_333333"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/tvCalibra"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvCalibra" />
+
+        <TextView
+            android:id="@+id/tvCalibra"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/shape_radius_blue_btn_bg"
+            android:gravity="center"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="Calibra"
+            android:textColor="@color/whiteFFFFFF"
+            android:textSize="14sp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:lineSpacingMultiplier="1.2"
+            android:text="*Please ensure that there is no obstruction above the device and the parking space before 'No Parking Calibration'.."
+            android:textColor="@color/grey_666666"
+            android:textSize="12sp"
+            app:layout_constraintTop_toBottomOf="@+id/tvCalibra" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/shape_radius_white_bg"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
+
+        <TextView
+            android:id="@+id/tv5"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:text="Bluetooth Beacon Report Switch"
+            android:textColor="@color/black_333333"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvBeaconReportSwitch"
+            android:layout_width="65dp"
+            android:layout_height="40dp"
+            android:background="@drawable/shape_radius_blue_btn_bg"
+            android:gravity="center"
+            android:minWidth="100dp"
+            android:textColor="@color/whiteFFFFFF"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv5"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv5"
+            tools:text="OFF" />
+
+        <View
+            android:id="@+id/line5"
+            style="@style/divider_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            app:layout_constraintTop_toBottomOf="@+id/tv5" />
+
+        <TextView
+            android:id="@+id/tvParkingReportSwitch"
+            android:layout_width="65dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/shape_radius_blue_btn_bg"
+            android:gravity="center"
+            android:minWidth="100dp"
+            android:textColor="@color/whiteFFFFFF"
+            android:textSize="14sp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/line5"
+            tools:text="OFF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="Independent Parking Data Report"
+            android:textColor="@color/black_333333"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/tvParkingReportSwitch"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvParkingReportSwitch" />
+
+        <TextView
+            android:id="@+id/tvTips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:lineSpacingMultiplier="1.2"
+            android:paddingBottom="5dp"
+            android:text="*Beacon data is a separate payload. When 'Bluetooth Beacon Report Switch' is on, did normal parking data need to be reported separately?"
+            android:textColor="@color/grey_666666"
+            android:textSize="12sp"
+            app:layout_constraintTop_toBottomOf="@+id/tvParkingReportSwitch" />
+
+        <View
+            android:id="@+id/line6"
+            style="@style/divider_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            app:layout_constraintTop_toBottomOf="@+id/tvTips" />
+
+        <TextView
+            android:id="@+id/tvBleFilterSetting"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:drawableEnd="@drawable/ic_arrow_right"
+            android:gravity="center_vertical"
+            android:text="Bluetooth Filter Settings"
+            android:textColor="@color/black_333333"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/line6" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

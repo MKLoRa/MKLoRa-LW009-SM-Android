@@ -13,7 +13,7 @@ import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 
 import com.elvishew.xlog.XLog;
-import com.moko.lw009smpro.activity.LoRaLW006MainActivity;
+import com.moko.lw009smpro.activity.LoRaLW009MainActivity;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,7 +47,7 @@ public class IOUtils {
         boolean exist = isSdCardExist();
         String sdpath = "";
         if (exist) {
-            sdpath = LoRaLW006MainActivity.PATH_LOGCAT;
+            sdpath = LoRaLW009MainActivity.PATH_LOGCAT;
         }
         return sdpath;
 
@@ -61,7 +61,7 @@ public class IOUtils {
      */
     public static String getDefaultFilePath(Context context) {
         String filepath = "";
-        File file = new File(LoRaLW006MainActivity.PATH_LOGCAT, CRASH_FILE);
+        File file = new File(LoRaLW009MainActivity.PATH_LOGCAT, CRASH_FILE);
         try {
             if (file.exists()) {
                 filepath = file.getAbsolutePath();
@@ -82,7 +82,7 @@ public class IOUtils {
      */
     public static String getFilePath(String fileName) {
         String filepath = "";
-        File file = new File(LoRaLW006MainActivity.PATH_LOGCAT, fileName);
+        File file = new File(LoRaLW009MainActivity.PATH_LOGCAT, fileName);
         try {
             if (file.exists()) {
                 filepath = file.getAbsolutePath();

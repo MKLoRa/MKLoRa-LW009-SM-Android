@@ -66,7 +66,7 @@ public class PermissionDialog extends RationaleDialogFragment {
                 window.getAttributes().width = dip2px(requireContext(), 260);
                 window.getAttributes().height = WindowManager.LayoutParams.WRAP_CONTENT;
                 window.getAttributes().gravity = Gravity.CENTER;
-                window.setBackgroundDrawableResource(R.drawable.lw006_shape_radius_solid_ffffff);
+                window.setBackgroundDrawableResource(R.drawable.shape_radius_solid_ffffff);
             }
         }
     }

@@ -1,5 +1,8 @@
 package com.moko.lw009smpro.activity.filter;
 
+import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
+import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
+
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -10,8 +13,8 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
-import com.moko.lw009smpro.activity.Lw006BaseActivity;
-import com.moko.lw009smpro.databinding.Lw006ActivityFilterIbeaconBinding;
+import com.moko.lw009smpro.activity.Lw009BaseActivity;
+import com.moko.lw009smpro.databinding.ActivityFilterIbeaconBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
@@ -26,19 +29,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FilterIBeaconActivity extends Lw006BaseActivity {
-    private Lw006ActivityFilterIbeaconBinding mBind;
+public class FilterIBeaconActivity extends Lw009BaseActivity {
+    private ActivityFilterIbeaconBinding mBind;
     private boolean savedParamsError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = Lw006ActivityFilterIbeaconBinding.inflate(getLayoutInflater());
+        mBind = ActivityFilterIbeaconBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
 
         showSyncingProgressDialog();
-        List<OrderTask> orderTasks = new ArrayList<>();
+        List<OrderTask> orderTasks = new ArrayList<>(4);
         orderTasks.add(OrderTaskAssembler.getFilterIBeaconEnable());
         orderTasks.add(OrderTaskAssembler.getFilterIBeaconUUID());
         orderTasks.add(OrderTaskAssembler.getFilterIBeaconMajorRange());
@@ -62,8 +65,6 @@ public class FilterIBeaconActivity extends Lw006BaseActivity {
         if (!MokoConstants.ACTION_CURRENT_DATA.equals(action))
             EventBus.getDefault().cancelEventDelivery(event);
         runOnUiThread(() -> {
-            if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
-            }
             if (MokoConstants.ACTION_ORDER_FINISH.equals(action)) {
                 dismissSyncProgressDialog();
             }
@@ -76,12 +77,9 @@ public class FilterIBeaconActivity extends Lw006BaseActivity {
                         int header = value[0] & 0xFF;// 0xED
                         int flag = value[1] & 0xFF;// read or write
                         int cmd = value[2] & 0xFF;
-                        if (header != 0xED)
-                            return;
+                        if (header != 0xED) return;
                         ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
-                        if (configKeyEnum == null) {
-                            return;
-                        }
+                        if (configKeyEnum == null) return;
                         int length = value[3] & 0xFF;
                         if (flag == 0x01) {
                             // write
@@ -90,19 +88,11 @@ public class FilterIBeaconActivity extends Lw006BaseActivity {
                                 case KEY_FILTER_IBEACON_UUID:
                                 case KEY_FILTER_IBEACON_MAJOR_RANGE:
                                 case KEY_FILTER_IBEACON_MINOR_RANGE:
-                                    if (result != 1) {
-                                        savedParamsError = true;
-                                    }
+                                    if (result != 1) savedParamsError = true;
                                     break;
                                 case KEY_FILTER_IBEACON_ENABLE:
-                                    if (result != 1) {
-                                        savedParamsError = true;
-                                    }
-                                    if (savedParamsError) {
-                                        ToastUtils.showToast(FilterIBeaconActivity.this, "Opps！Save failed. Please check the input characters and try again.");
-                                    } else {
-                                        ToastUtils.showToast(this, "Save Successfully！");
-                                    }
+                                    if (result != 1) savedParamsError = true;
+                                    ToastUtils.showToast(this, savedParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
                             }
                         }
@@ -138,8 +128,7 @@ public class FilterIBeaconActivity extends Lw006BaseActivity {
                                     break;
                                 case KEY_FILTER_IBEACON_ENABLE:
                                     if (length > 0) {
-                                        int enable = value[4] & 0xFF;
-                                        mBind.cbIbeacon.setChecked(enable == 1);
+                                        mBind.cbIbeacon.setChecked((value[4] & 0xff) == 1);
                                     }
                                     break;
                             }
@@ -164,22 +153,14 @@ public class FilterIBeaconActivity extends Lw006BaseActivity {
         if (!TextUtils.isEmpty(mBind.etIbeaconUuid.getText())) {
             String uuid = mBind.etIbeaconUuid.getText().toString();
             int length = uuid.length();
-            if (length % 2 != 0) {
-                return false;
-            }
+            if (length % 2 != 0) return false;
         }
         if (!TextUtils.isEmpty(mBind.etIbeaconMajorMin.getText()) && !TextUtils.isEmpty(mBind.etIbeaconMajorMax.getText())) {
             String majorMin = mBind.etIbeaconMajorMin.getText().toString();
             String majorMax = mBind.etIbeaconMajorMax.getText().toString();
-            if (Integer.parseInt(majorMin) > 65535) {
-                return false;
-            }
-            if (Integer.parseInt(majorMax) > 65535) {
-                return false;
-            }
-            if (Integer.parseInt(majorMax) < Integer.parseInt(majorMin)) {
-                return false;
-            }
+            if (Integer.parseInt(majorMin) > 65535) return false;
+            if (Integer.parseInt(majorMax) > 65535) return false;
+            if (Integer.parseInt(majorMax) < Integer.parseInt(majorMin)) return false;
         } else if (!TextUtils.isEmpty(mBind.etIbeaconMajorMin.getText()) && TextUtils.isEmpty(mBind.etIbeaconMajorMax.getText())) {
             return false;
         } else if (TextUtils.isEmpty(mBind.etIbeaconMajorMin.getText()) && !TextUtils.isEmpty(mBind.etIbeaconMajorMax.getText())) {
@@ -188,12 +169,8 @@ public class FilterIBeaconActivity extends Lw006BaseActivity {
         if (!TextUtils.isEmpty(mBind.etIbeaconMinorMin.getText()) && !TextUtils.isEmpty(mBind.etIbeaconMinorMax.getText())) {
             String minorMin = mBind.etIbeaconMinorMin.getText().toString();
             String minorMax = mBind.etIbeaconMinorMax.getText().toString();
-            if (Integer.parseInt(minorMin) > 65535) {
-                return false;
-            }
-            if (Integer.parseInt(minorMax) > 65535) {
-                return false;
-            }
+            if (Integer.parseInt(minorMin) > 65535) return false;
+            if (Integer.parseInt(minorMax) > 65535) return false;
             return Integer.parseInt(minorMax) >= Integer.parseInt(minorMin);
         } else if (!TextUtils.isEmpty(mBind.etIbeaconMinorMin.getText()) && TextUtils.isEmpty(mBind.etIbeaconMinorMax.getText())) {
             return false;
@@ -208,7 +185,7 @@ public class FilterIBeaconActivity extends Lw006BaseActivity {
         int minorMin;
         int minorMax;
         savedParamsError = false;
-        List<OrderTask> orderTasks = new ArrayList<>();
+        List<OrderTask> orderTasks = new ArrayList<>(4);
         orderTasks.add(OrderTaskAssembler.setFilterIBeaconUUID(uuid));
         if (TextUtils.isEmpty(mBind.etIbeaconMajorMin.getText()) && TextUtils.isEmpty(mBind.etIbeaconMajorMax.getText())) {
             majorMin = 0;

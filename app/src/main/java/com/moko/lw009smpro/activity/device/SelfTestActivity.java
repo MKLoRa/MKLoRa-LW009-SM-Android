@@ -9,10 +9,9 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
-import com.moko.lw009smpro.activity.Lw006BaseActivity;
-import com.moko.lw009smpro.databinding.Lw006ActivitySelftestBinding;
+import com.moko.lw009smpro.activity.Lw009BaseActivity;
+import com.moko.lw009smpro.databinding.ActivitySelftestBinding;
 import com.moko.lw009smpro.dialog.AlertMessageDialog;
-import com.moko.lw009smpro.dialog.BottomDialog;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
 import com.moko.support.lw009.entity.OrderCHAR;
@@ -26,43 +25,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SelfTestActivity extends Lw006BaseActivity {
-    private Lw006ActivitySelftestBinding mBind;
-    private final ArrayList<String> mValues = new ArrayList<>(2);
-    private int mSelected;
+public class SelfTestActivity extends Lw009BaseActivity {
+    private ActivitySelftestBinding mBind;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = Lw006ActivitySelftestBinding.inflate(getLayoutInflater());
+        mBind = ActivitySelftestBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
-        mValues.add("Traditional GPS module");
-        mValues.add("Lora Cloud");
         showSyncingProgressDialog();
-        List<OrderTask> orderTasks = new ArrayList<>();
+        List<OrderTask> orderTasks = new ArrayList<>(4);
         orderTasks.add(OrderTaskAssembler.getSelfTestStatus());
         orderTasks.add(OrderTaskAssembler.getPCBAStatus());
-        orderTasks.add(OrderTaskAssembler.getGpsModule());
-        orderTasks.add(OrderTaskAssembler.getBatteryInfo());
-        orderTasks.add(OrderTaskAssembler.getMotorState());
-        orderTasks.add(OrderTaskAssembler.getHwVersion());
+        orderTasks.add(OrderTaskAssembler.getNoParkingCalibrationStatus());
         MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-
-        mBind.tvGpsType.setOnClickListener(v -> {
-            if (isWindowLocked()) return;
-            BottomDialog dialog = new BottomDialog();
-            dialog.setDatas(mValues, mSelected);
-            dialog.setListener(value -> {
-                mSelected = value;
-                showSyncingProgressDialog();
-                List<OrderTask> orderTask = new ArrayList<>();
-                orderTask.add(OrderTaskAssembler.setGpsModule(value));
-                orderTask.add(OrderTaskAssembler.getGpsModule());
-                MoKoSupport.getInstance().sendOrder(orderTask.toArray(new OrderTask[]{}));
-            });
-            dialog.show(getSupportFragmentManager());
-        });
     }
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 300)
@@ -81,8 +58,6 @@ public class SelfTestActivity extends Lw006BaseActivity {
         if (!MokoConstants.ACTION_CURRENT_DATA.equals(action))
             EventBus.getDefault().cancelEventDelivery(event);
         runOnUiThread(() -> {
-            if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
-            }
             if (MokoConstants.ACTION_ORDER_FINISH.equals(action)) {
                 dismissSyncProgressDialog();
             }
@@ -95,11 +70,8 @@ public class SelfTestActivity extends Lw006BaseActivity {
                         int header = value[0] & 0xFF;// 0xED
                         int flag = value[1] & 0xFF;// read or write
                         int cmd = value[2] & 0xFF;
-                        if (header != 0xED) return;
                         ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
-                        if (configKeyEnum == null) {
-                            return;
-                        }
+                        if (header != 0xED || configKeyEnum == null) return;
                         int length = value[3] & 0xFF;
                         if (flag == 0x01) {
                             // write
@@ -122,16 +94,20 @@ public class SelfTestActivity extends Lw006BaseActivity {
                                         int status = value[4] & 0xFF;
                                         mBind.tvSelftestStatus.setVisibility(status == 0 ? View.VISIBLE : View.GONE);
                                         if ((status & 0x01) == 0x01)
-                                            mBind.tvGpsStatus.setVisibility(View.VISIBLE);
+                                            mBind.tvThStatus.setVisibility(View.VISIBLE);
                                         if ((status & 0x02) == 0x02)
-                                            mBind.tvAxisStatus.setVisibility(View.VISIBLE);
-                                        if ((status & 0x04) == 0x04)
-                                            mBind.tvFlashStatus.setVisibility(View.VISIBLE);
+                                            mBind.tvSlaveTestStatus.setVisibility(View.VISIBLE);
                                     }
                                     break;
                                 case KEY_PCBA_STATUS:
                                     if (length > 0) {
                                         mBind.tvPcbaStatus.setText(String.valueOf(value[4] & 0xFF));
+                                    }
+                                    break;
+                                case KEY_NO_PARKING_CALIBRATION_STATUS:
+                                    if (length == 1) {
+                                        //无车校准状态
+                                        mBind.tvCalibrationStatus.setText(value[4] & 0xff);
                                     }
                                     break;
                                 case KEY_BATTERY_INFO:
@@ -154,28 +130,6 @@ public class SelfTestActivity extends Lw006BaseActivity {
                                         mBind.tvLoraTransmissionTimes.setText(String.format("%d times", loraTransmissionTimes));
                                         int loraPower = MokoUtils.toInt(Arrays.copyOfRange(value, 36, 40));
                                         mBind.tvLoraPower.setText(String.format("%d mAS", loraPower));
-                                    }
-                                    break;
-
-                                case KEY_GPS_MODULE:
-                                    if (length == 1) {
-                                        mSelected = value[4] & 0xff;
-                                        mBind.tvGpsType.setText(mValues.get(mSelected));
-                                    }
-                                    break;
-
-                                case KEY_MOTOR_STATE:
-                                    //马达异常状态
-                                    if (length == 1) {
-                                        int result = value[4] & 0xff;
-                                        mBind.tvMotorState.setText(result == 0 ? "Normal" : "Fault");
-                                    }
-                                    break;
-
-                                case KEY_HARDWARE_VERSION:
-                                    if (length == 1) {
-                                        int result = value[4] & 0xff;
-                                        mBind.tvHwVersion.setText(result == 0 ? "No" : "Traditional GPS module Supported");
                                     }
                                     break;
                             }
@@ -202,27 +156,6 @@ public class SelfTestActivity extends Lw006BaseActivity {
         dialog.show(getSupportFragmentManager());
     }
 
-    /**
-     * 重置马达状态
-     *
-     * @param view
-     */
-    public void resetMotorState(View view) {
-        if (isWindowLocked()) return;
-        AlertMessageDialog dialog = new AlertMessageDialog();
-        dialog.setTitle("Warning！");
-        dialog.setMessage("Are you sure to reset motor state?");
-        dialog.setConfirm("OK");
-        dialog.setOnAlertConfirmListener(() -> {
-            showSyncingProgressDialog();
-            List<OrderTask> orderTasks = new ArrayList<>();
-            orderTasks.add(OrderTaskAssembler.resetMotorState());
-            orderTasks.add(OrderTaskAssembler.getMotorState());
-            MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-        });
-        dialog.show(getSupportFragmentManager());
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -230,15 +163,6 @@ public class SelfTestActivity extends Lw006BaseActivity {
     }
 
     public void onBack(View view) {
-        backHome();
-    }
-
-    @Override
-    public void onBackPressed() {
-        backHome();
-    }
-
-    private void backHome() {
         finish();
     }
 }

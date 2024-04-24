@@ -8,13 +8,12 @@ import android.text.TextWatcher;
 import android.view.inputmethod.InputMethodManager;
 
 import com.moko.lw009smpro.R;
-import com.moko.lw009smpro.databinding.Lw006DialogChangePasswordBinding;
+import com.moko.lw009smpro.databinding.DialogChangePasswordBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
 
 
-public class ChangePasswordDialog extends BaseDialog<Lw006DialogChangePasswordBinding> {
+public class ChangePasswordDialog extends BaseDialog<DialogChangePasswordBinding> {
     private final String FILTER_ASCII = "[ -~]*";
-
     private boolean passwordEnable;
     private boolean confirmPasswordEnable;
 
@@ -23,21 +22,15 @@ public class ChangePasswordDialog extends BaseDialog<Lw006DialogChangePasswordBi
     }
 
     @Override
-    protected Lw006DialogChangePasswordBinding getViewBind() {
-        return Lw006DialogChangePasswordBinding.inflate(getLayoutInflater());
+    protected DialogChangePasswordBinding getViewBind() {
+        return DialogChangePasswordBinding.inflate(getLayoutInflater());
     }
 
     @Override
     protected void onCreate() {
-        InputFilter filter = new InputFilter() {
-            @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                if (!(source + "").matches(FILTER_ASCII)) {
-                    return "";
-                }
-
-                return null;
-            }
+        InputFilter filter = (source, start, end, dest, dstart, dend) -> {
+            if (!(source + "").matches(FILTER_ASCII)) return "";
+            return null;
         };
         mBind.etPassword.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8), filter});
         mBind.etPasswordConfirm.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8), filter});
@@ -76,9 +69,7 @@ public class ChangePasswordDialog extends BaseDialog<Lw006DialogChangePasswordBi
 
             }
         });
-        mBind.tvPasswordCancel.setOnClickListener(v -> {
-            dismiss();
-        });
+        mBind.tvPasswordCancel.setOnClickListener(v -> dismiss());
         mBind.tvPasswordEnsure.setOnClickListener(v -> {
             String password = mBind.etPassword.getText().toString();
             String passwordConfirm = mBind.etPasswordConfirm.getText().toString();
@@ -107,7 +98,6 @@ public class ChangePasswordDialog extends BaseDialog<Lw006DialogChangePasswordBi
     }
 
     public interface PasswordClickListener {
-
         void onEnsureClicked(String password);
     }
 

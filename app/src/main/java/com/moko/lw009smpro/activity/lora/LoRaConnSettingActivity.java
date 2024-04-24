@@ -17,7 +17,7 @@ import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw009smpro.R;
-import com.moko.lw009smpro.activity.Lw006BaseActivity;
+import com.moko.lw009smpro.activity.Lw009BaseActivity;
 import com.moko.lw009smpro.databinding.ActivityConnSettingBinding;
 import com.moko.lw009smpro.dialog.BottomDialog;
 import com.moko.lw009smpro.utils.ToastUtils;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class LoRaConnSettingActivity extends Lw006BaseActivity implements CompoundButton.OnCheckedChangeListener {
+public class LoRaConnSettingActivity extends Lw009BaseActivity implements CompoundButton.OnCheckedChangeListener {
     private ActivityConnSettingBinding mBind;
     private boolean mReceiverTag = false;
     private final String[] mModeList = {"ABP", "OTAA"};

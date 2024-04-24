@@ -1,6 +1,7 @@
 package com.moko.lw009smpro.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +14,10 @@ import androidx.fragment.app.Fragment;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.lw009smpro.R;
 import com.moko.lw009smpro.activity.DeviceInfoActivity;
-import com.moko.lw009smpro.databinding.Lw006FragmentDeviceBinding;
+import com.moko.lw009smpro.activity.device.OnOffSettingsActivity;
+import com.moko.lw009smpro.activity.device.SystemInfoActivity;
+import com.moko.lw009smpro.databinding.FragmentDeviceBinding;
+import com.moko.lw009smpro.dialog.AlertMessageDialog;
 import com.moko.lw009smpro.dialog.BottomDialog;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
@@ -22,17 +26,9 @@ import java.util.ArrayList;
 
 public class DeviceFragment extends Fragment {
     private static final String TAG = DeviceFragment.class.getSimpleName();
-    private Lw006FragmentDeviceBinding mBind;
-
-    private ArrayList<String> mTimeZones;
+    private FragmentDeviceBinding mBind;
+    private final ArrayList<String> mTimeZones = new ArrayList<>();
     private int mSelectedTimeZone;
-    private final ArrayList<String> mLowPowerPrompts = new ArrayList<>(8);
-    private int mSelectedLowPowerPrompt;
-    private final ArrayList<String> buzzerSounds = new ArrayList<>(4);
-    private int buzzerSoundSelected;
-    private final ArrayList<String> intensityArr = new ArrayList<>(4);
-    private int intensitySelected;
-
     private boolean mLowPowerPayloadEnable;
     private DeviceInfoActivity activity;
 
@@ -47,9 +43,8 @@ public class DeviceFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView: ");
-        mBind = Lw006FragmentDeviceBinding.inflate(inflater, container, false);
+        mBind = FragmentDeviceBinding.inflate(inflater, container, false);
         activity = (DeviceInfoActivity) getActivity();
-        mTimeZones = new ArrayList<>();
         for (int i = -24; i <= 28; i++) {
             if (i < 0) {
                 if (i % 2 == 0) {
@@ -67,37 +62,39 @@ public class DeviceFragment extends Fragment {
                 }
             }
         }
-        mLowPowerPrompts.add("10%");
-        mLowPowerPrompts.add("20%");
-        mLowPowerPrompts.add("30%");
-        mLowPowerPrompts.add("40%");
-        mLowPowerPrompts.add("50%");
-        mLowPowerPrompts.add("60%");
-
-        buzzerSounds.add("No");
-        buzzerSounds.add("Alarm");
-        buzzerSounds.add("Normal");
-
-        intensityArr.add("No");
-        intensityArr.add("Low");
-        intensityArr.add("Medium");
-        intensityArr.add("High");
+        setListener();
         return mBind.getRoot();
     }
 
-    public void setTimeZone(int timeZone) {
-        mSelectedTimeZone = timeZone + 24;
-        mBind.tvTimeZone.setText(mTimeZones.get(mSelectedTimeZone));
+    private void setListener() {
+        mBind.tvTimeZone.setOnClickListener(v -> onTimezoneSelect());
+        mBind.ivLowPowerPayload.setOnClickListener(v -> {
+            mLowPowerPayloadEnable = !mLowPowerPayloadEnable;
+            activity.showSyncingProgressDialog();
+            ArrayList<OrderTask> orderTasks = new ArrayList<>(2);
+            orderTasks.add(OrderTaskAssembler.setLowPowerReportEnable(mLowPowerPayloadEnable ? 1 : 0));
+            orderTasks.add(OrderTaskAssembler.getLowPowerPayloadEnable());
+            MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+        });
+        mBind.tvOnOffSet.setOnClickListener(v -> {
+            if (activity.isWindowLocked()) return;
+            startActivity(new Intent(activity, OnOffSettingsActivity.class));
+        });
+        mBind.tvFactoryReset.setOnClickListener(v -> onFactoryReset());
+        mBind.tvDeviceInfo.setOnClickListener(v -> {
+            if (activity.isWindowLocked()) return;
+            startActivity(new Intent(activity, SystemInfoActivity.class));
+        });
     }
 
-    public void showTimeZoneDialog() {
+    private void onTimezoneSelect() {
         BottomDialog dialog = new BottomDialog();
         dialog.setDatas(mTimeZones, mSelectedTimeZone);
         dialog.setListener(value -> {
             mSelectedTimeZone = value;
             mBind.tvTimeZone.setText(mTimeZones.get(value));
             activity.showSyncingProgressDialog();
-            ArrayList<OrderTask> orderTasks = new ArrayList<>();
+            ArrayList<OrderTask> orderTasks = new ArrayList<>(2);
             orderTasks.add(OrderTaskAssembler.setTimeZone(value - 24));
             orderTasks.add(OrderTaskAssembler.getTimeZone());
             MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
@@ -105,97 +102,26 @@ public class DeviceFragment extends Fragment {
         dialog.show(activity.getSupportFragmentManager());
     }
 
+    private void onFactoryReset() {
+        if (activity.isWindowLocked()) return;
+        AlertMessageDialog dialog = new AlertMessageDialog();
+        dialog.setTitle("Factory Reset!");
+        dialog.setMessage("After factory reset,all the data will be reseted to the factory values.");
+        dialog.setConfirm("OK");
+        dialog.setOnAlertConfirmListener(() -> {
+            activity.showSyncingProgressDialog();
+            MoKoSupport.getInstance().sendOrder(OrderTaskAssembler.restore());
+        });
+        dialog.show(getChildFragmentManager());
+    }
+
+    public void setTimeZone(int timeZone) {
+        mSelectedTimeZone = timeZone + 24;
+        mBind.tvTimeZone.setText(mTimeZones.get(mSelectedTimeZone));
+    }
+
     public void setLowPowerPayload(int enable) {
         mLowPowerPayloadEnable = enable == 1;
-        mBind.ivLowPowerPayload.setImageResource(mLowPowerPayloadEnable ? R.drawable.lw006_ic_checked : R.drawable.lw006_ic_unchecked);
-    }
-
-    public void setLowPower(int lowPower) {
-        mSelectedLowPowerPrompt = lowPower;
-        mBind.tvLowPowerPrompt.setText(mLowPowerPrompts.get(mSelectedLowPowerPrompt));
-        mBind.tvLowPowerPromptTips.setText(getString(R.string.low_power_prompt_tips, mLowPowerPrompts.get(mSelectedLowPowerPrompt)));
-    }
-
-    public void setBuzzerSound(int buzzerSound) {
-        buzzerSoundSelected = buzzerSound;
-        mBind.tvBuzzer.setText(buzzerSounds.get(buzzerSound));
-    }
-
-    public void setVibrationIntensity(int intensity) {
-        if (intensity == 0) {
-            intensitySelected = 0;
-        } else if (intensity == 10) {
-            intensitySelected = 1;
-        } else if (intensity == 50) {
-            intensitySelected = 2;
-        } else if (intensity == 80) {
-            intensitySelected = 3;
-        }
-        mBind.tvVibration.setText(intensityArr.get(intensitySelected));
-    }
-
-    public void changeLowPowerPayload() {
-        mLowPowerPayloadEnable = !mLowPowerPayloadEnable;
-        activity.showSyncingProgressDialog();
-        ArrayList<OrderTask> orderTasks = new ArrayList<>();
-        orderTasks.add(OrderTaskAssembler.setLowPowerReportEnable(mLowPowerPayloadEnable ? 1 : 0));
-        orderTasks.add(OrderTaskAssembler.getLowPowerPayloadEnable());
-        MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-    }
-
-    public void showLowPowerDialog() {
-        BottomDialog dialog = new BottomDialog();
-        dialog.setDatas(mLowPowerPrompts, mSelectedLowPowerPrompt);
-        dialog.setListener(value -> {
-            mSelectedLowPowerPrompt = value;
-            mBind.tvLowPowerPrompt.setText(mLowPowerPrompts.get(value));
-            mBind.tvLowPowerPromptTips.setText(getString(R.string.low_power_prompt_tips, mLowPowerPrompts.get(value)));
-            activity.showSyncingProgressDialog();
-            ArrayList<OrderTask> orderTasks = new ArrayList<>();
-            orderTasks.add(OrderTaskAssembler.setLowPowerPercent(value));
-            orderTasks.add(OrderTaskAssembler.getLowPowerPercent());
-            MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-        });
-        dialog.show(activity.getSupportFragmentManager());
-    }
-
-    public void showBuzzerDialog() {
-        BottomDialog dialog = new BottomDialog();
-        dialog.setDatas(buzzerSounds, buzzerSoundSelected);
-        dialog.setListener(value -> {
-            buzzerSoundSelected = value;
-            mBind.tvBuzzer.setText(buzzerSounds.get(value));
-            activity.showSyncingProgressDialog();
-            ArrayList<OrderTask> orderTasks = new ArrayList<>();
-            orderTasks.add(OrderTaskAssembler.setBuzzerSound(value));
-            orderTasks.add(OrderTaskAssembler.getBuzzerSoundChoose());
-            MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-        });
-        dialog.show(activity.getSupportFragmentManager());
-    }
-
-    public void showVibrationDialog() {
-        BottomDialog dialog = new BottomDialog();
-        dialog.setDatas(intensityArr, intensitySelected);
-        dialog.setListener(value -> {
-            intensitySelected = value;
-            mBind.tvVibration.setText(intensityArr.get(value));
-            activity.showSyncingProgressDialog();
-            ArrayList<OrderTask> orderTasks = new ArrayList<>();
-            int vibrationVal;
-            if (value == 0) {
-                vibrationVal = 0;
-            } else if (value == 1) {
-                vibrationVal = 10;
-            } else if (value == 2) {
-                vibrationVal = 50;
-            } else {
-                vibrationVal = 80;
-            }
-            orderTasks.add(OrderTaskAssembler.setVibrationIntensity(vibrationVal));
-            orderTasks.add(OrderTaskAssembler.getVibrationIntensity());
-            MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-        });
-        dialog.show(activity.getSupportFragmentManager());
+        mBind.ivLowPowerPayload.setImageResource(mLowPowerPayloadEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
     }
 }

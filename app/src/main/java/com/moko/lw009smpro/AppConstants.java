@@ -60,4 +60,7 @@ public class AppConstants {
     public static final int PERMISSION_REQUEST_CODE = 1;
     // result_code
     public static final int RESULT_CONN_DISCONNECTED = 2;
+
+    public static final String SAVE_ERROR = "Opps！Save failed. Please check the input characters and try again.";
+    public static final String SAVE_SUCCESS = "Save Successfully！";
 }

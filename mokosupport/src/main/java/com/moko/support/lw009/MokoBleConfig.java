@@ -25,6 +25,7 @@ final class MokoBleConfig extends MokoBleManager {
     private BluetoothGattCharacteristic paramsCharacteristic;
     private BluetoothGattCharacteristic storageDataCharacteristic;
     private BluetoothGattCharacteristic logCharacteristic;
+    private BluetoothGattCharacteristic slaveNotifyCharacteristic;
 
     public MokoBleConfig(@NonNull Context context, MokoResponseCallback callback) {
         super(context);
@@ -40,9 +41,11 @@ final class MokoBleConfig extends MokoBleManager {
             storageDataCharacteristic = service.getCharacteristic(OrderCHAR.CHAR_STORAGE_DATA_NOTIFY.getUuid());
             paramsCharacteristic = service.getCharacteristic(OrderCHAR.CHAR_PARAMS.getUuid());
             logCharacteristic = service.getCharacteristic(OrderCHAR.CHAR_LOG.getUuid());
+            slaveNotifyCharacteristic = service.getCharacteristic(OrderCHAR.CHAR_SLAVE_NOTIFY.getUuid());
             enablePasswordNotify();
             enableDisconnectedNotify();
             enableStorageDataNotify();
+            enableSlaveNotify();
             enableParamNotify();
             return true;
         }
@@ -93,6 +96,16 @@ final class MokoBleConfig extends MokoBleManager {
     @Override
     public void onDeviceDisconnected(@NonNull BluetoothDevice device, int reason) {
         mMokoResponseCallback.onDeviceDisconnected(device, reason);
+    }
+
+    private void enableSlaveNotify() {
+        setIndicationCallback(slaveNotifyCharacteristic).with((device, data) -> {
+            final byte[] value = data.getValue();
+            XLog.e("onDataReceived");
+            XLog.e("device to app : " + MokoUtils.bytesToHexString(value));
+            mMokoResponseCallback.onCharacteristicChanged(slaveNotifyCharacteristic, value);
+        });
+        enableNotifications(slaveNotifyCharacteristic).enqueue();
     }
 
     public void enablePasswordNotify() {

@@ -10,7 +10,7 @@ import com.moko.lw009smpro.R;
 import com.moko.lw009smpro.databinding.Lw006ActivityAboutBinding;
 import com.moko.lw009smpro.utils.Utils;
 
-public class AboutActivity extends Lw006BaseActivity {
+public class AboutActivity extends Lw009BaseActivity {
     private Lw006ActivityAboutBinding mBind;
 
     @Override

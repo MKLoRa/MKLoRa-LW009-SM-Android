@@ -6,8 +6,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
@@ -15,10 +13,10 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw009smpro.AppConstants;
 import com.moko.lw009smpro.R;
-import com.moko.lw009smpro.activity.Lw006BaseActivity;
-import com.moko.lw009smpro.activity.LoRaLW006MainActivity;
+import com.moko.lw009smpro.activity.LoRaLW009MainActivity;
+import com.moko.lw009smpro.activity.Lw009BaseActivity;
 import com.moko.lw009smpro.adapter.LogDataListAdapter;
-import com.moko.lw009smpro.databinding.Lw006ActivityLogDataBinding;
+import com.moko.lw009smpro.databinding.ActivityLogDataBinding;
 import com.moko.lw009smpro.dialog.AlertMessageDialog;
 import com.moko.lw009smpro.entity.LogData;
 import com.moko.lw009smpro.utils.Utils;
@@ -37,10 +35,11 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Objects;
 
-public class LogDataActivity extends Lw006BaseActivity implements BaseQuickAdapter.OnItemClickListener {
+public class LogDataActivity extends Lw009BaseActivity implements BaseQuickAdapter.OnItemClickListener {
     public static String TAG = LogDataActivity.class.getSimpleName();
-    private Lw006ActivityLogDataBinding mBind;
+    private ActivityLogDataBinding mBind;
     private StringBuilder storeString;
     private ArrayList<LogData> LogDatas;
     private boolean isSync;
@@ -56,16 +55,15 @@ public class LogDataActivity extends Lw006BaseActivity implements BaseQuickAdapt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = Lw006ActivityLogDataBinding.inflate(getLayoutInflater());
+        mBind = ActivityLogDataBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         mDeviceMac = getIntent().getStringExtra(AppConstants.EXTRA_KEY_DEVICE_MAC).replaceAll(":", "");
-        logDirPath = LoRaLW006MainActivity.PATH_LOGCAT + File.separator + mDeviceMac;
+        logDirPath = LoRaLW009MainActivity.PATH_LOGCAT + File.separator + mDeviceMac;
         LogDatas = new ArrayList<>();
         adapter = new LogDataListAdapter();
         adapter.openLoadAnimation();
         adapter.replaceData(LogDatas);
         adapter.setOnItemClickListener(this);
-        mBind.rvExportData.setLayoutManager(new LinearLayoutManager(this));
         mBind.rvExportData.setAdapter(adapter);
         EventBus.getDefault().register(this);
         File file = new File(logDirPath);
@@ -124,18 +122,14 @@ public class LogDataActivity extends Lw006BaseActivity implements BaseQuickAdapt
             if (MokoConstants.ACTION_CURRENT_DATA.equals(action)) {
                 OrderTaskResponse response = event.getResponse();
                 OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
-                int responseType = response.responseType;
                 byte[] value = response.responseValue;
-                switch (orderCHAR) {
-                    case CHAR_LOG:
-                        String log = new String(value);
-                        storeString.append(log);
-                        break;
+                if (Objects.requireNonNull(orderCHAR) == OrderCHAR.CHAR_LOG) {
+                    String log = new String(value);
+                    storeString.append(log);
                 }
             }
         });
     }
-
 
     public void onSyncSwitch(View view) {
         if (isWindowLocked()) return;
@@ -153,7 +147,7 @@ public class LogDataActivity extends Lw006BaseActivity implements BaseQuickAdapt
             storeString = new StringBuilder();
             mBind.tvSyncSwitch.setText("Stop");
             isSync = true;
-            animation = AnimationUtils.loadAnimation(this, R.anim.lw006_rotate_refresh);
+            animation = AnimationUtils.loadAnimation(this, R.anim.rotate_refresh);
             mBind.ivSync.startAnimation(animation);
             MoKoSupport.getInstance().enableLogNotify();
             Calendar calendar = Calendar.getInstance();
@@ -192,8 +186,7 @@ public class LogDataActivity extends Lw006BaseActivity implements BaseQuickAdapt
                 if (!LogData.isSelected)
                     continue;
                 File file = new File(LogData.filePath);
-                if (file.exists())
-                    file.delete();
+                if (file.exists()) file.delete();
                 iterator.remove();
                 selectedCount--;
             }
@@ -222,8 +215,7 @@ public class LogDataActivity extends Lw006BaseActivity implements BaseQuickAdapt
             // 发送邮件
             String address = "Development@mokotechnology.com";
             String title = "Debugger Log";
-            String content = title;
-            Utils.sendEmail(LogDataActivity.this, address, content, title, "Choose Email Client", files);
+            Utils.sendEmail(LogDataActivity.this, address, title, title, "Choose Email Client", files);
         }
     }
 
@@ -239,7 +231,7 @@ public class LogDataActivity extends Lw006BaseActivity implements BaseQuickAdapt
             stopSync();
         } else {
             if (isDisconnected) {
-                Intent intent = new Intent(this, LoRaLW006MainActivity.class);
+                Intent intent = new Intent(this, LoRaLW009MainActivity.class);
                 intent.putExtra(AppConstants.EXTRA_KEY_FROM_ACTIVITY, TAG);
                 startActivity(intent);
                 return;
@@ -262,7 +254,7 @@ public class LogDataActivity extends Lw006BaseActivity implements BaseQuickAdapt
             dialog.setCancelGone();
             dialog.setOnAlertConfirmListener(() -> {
                 if (isDisconnected) {
-                    Intent intent = new Intent(this, LoRaLW006MainActivity.class);
+                    Intent intent = new Intent(this, LoRaLW009MainActivity.class);
                     intent.putExtra(AppConstants.EXTRA_KEY_FROM_ACTIVITY, TAG);
                     startActivity(intent);
                     return;
