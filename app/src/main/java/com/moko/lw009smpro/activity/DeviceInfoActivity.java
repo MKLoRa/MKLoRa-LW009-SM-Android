@@ -11,11 +11,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.RadioGroup;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.IdRes;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.moko.ble.lib.MokoConstants;
@@ -24,10 +28,10 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
-import com.moko.lw009smpro.AppConstants;
 import com.moko.lw009smpro.R;
 import com.moko.lw009smpro.activity.lora.LoRaAppSettingActivity;
 import com.moko.lw009smpro.activity.lora.LoRaConnSettingActivity;
+import com.moko.lw009smpro.activity.setting.AdvancedSettingActivity;
 import com.moko.lw009smpro.databinding.ActivityDeviceInfoBinding;
 import com.moko.lw009smpro.dialog.AlertMessageDialog;
 import com.moko.lw009smpro.fragment.DeviceFragment;
@@ -87,13 +91,19 @@ public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.
                 List<OrderTask> orderTasks = new ArrayList<>();
                 // sync time after connect success;
                 orderTasks.add(OrderTaskAssembler.setTime());
-                // get lora params
                 orderTasks.add(OrderTaskAssembler.getLoraRegion());
                 orderTasks.add(OrderTaskAssembler.getLoraUploadMode());
                 orderTasks.add(OrderTaskAssembler.getLoraNetworkStatus());
                 MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
             }, 300);
         }
+        mBind.layoutTop.setOnClickListener(v -> {
+            if (mBind.radioBtnParking.isChecked()) {
+                if (isTriggerValid()) {
+                    startActivity(new Intent(this, AdvancedSettingActivity.class));
+                }
+            }
+        });
     }
 
     private void initFragment() {
@@ -321,44 +331,6 @@ public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.
     };
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == AppConstants.REQUEST_CODE_LORA_CONN_SETTING) {
-            if (resultCode == RESULT_OK) {
-                showSyncingProgressDialog();
-                List<OrderTask> orderTasks = new ArrayList<>(4);
-                orderTasks.add(OrderTaskAssembler.getLoraRegion());
-                orderTasks.add(OrderTaskAssembler.getLoraUploadMode());
-                orderTasks.add(OrderTaskAssembler.getLoraNetworkStatus());
-                MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-            }
-        } else if (requestCode == AppConstants.REQUEST_CODE_SYSTEM_INFO) {
-            if (resultCode == RESULT_OK) {
-                AlertMessageDialog dialog = new AlertMessageDialog();
-                dialog.setTitle("Update Firmware");
-                dialog.setMessage("Update firmware successfully!\nPlease reconnect the device.");
-                dialog.setConfirm("OK");
-                dialog.setCancelGone();
-                dialog.setOnAlertConfirmListener(() -> {
-                    setResult(RESULT_OK);
-                    finish();
-                });
-                dialog.show(getSupportFragmentManager());
-            }
-            if (resultCode == RESULT_FIRST_USER) {
-                String mac = data.getStringExtra(AppConstants.EXTRA_KEY_DEVICE_MAC);
-                mBind.frameContainer.postDelayed(() -> {
-                    if (MoKoSupport.getInstance().isConnDevice(mac)) {
-                        MoKoSupport.getInstance().disConnectBle();
-                        return;
-                    }
-                    showDisconnectDialog();
-                }, 500);
-            }
-        }
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (mReceiverTag) {
@@ -409,29 +381,28 @@ public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.
     private void showDeviceAndGetData() {
         mBind.tvTitle.setText("Device Settings");
         mBind.ivSave.setVisibility(View.GONE);
-        fragmentManager.beginTransaction()
-                .hide(loraFragment)
-                .hide(parkingFragment)
-                .hide(generalFragment)
-                .show(deviceFragment)
-                .commit();
+        showFragment(deviceFragment);
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>(2);
-        // device
         orderTasks.add(OrderTaskAssembler.getTimeZone());
         orderTasks.add(OrderTaskAssembler.getLowPowerPayloadEnable());
         MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 
-    private void showGeneralAndGetData() {
-        mBind.tvTitle.setText("General");
-        mBind.ivSave.setVisibility(View.VISIBLE);
+    private void showFragment(Fragment fragment) {
         fragmentManager.beginTransaction()
                 .hide(loraFragment)
                 .hide(parkingFragment)
-                .show(generalFragment)
+                .hide(generalFragment)
                 .hide(deviceFragment)
+                .show(fragment)
                 .commit();
+    }
+
+    private void showGeneralAndGetData() {
+        mBind.tvTitle.setText("General");
+        mBind.ivSave.setVisibility(View.VISIBLE);
+        showFragment(generalFragment);
         showSyncingProgressDialog();
         MoKoSupport.getInstance().sendOrder(OrderTaskAssembler.getHeartBeatInterval());
     }
@@ -439,12 +410,7 @@ public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.
     private void showParkingAndGetData() {
         mBind.tvTitle.setText("Parking");
         mBind.ivSave.setVisibility(View.VISIBLE);
-        fragmentManager.beginTransaction()
-                .hide(loraFragment)
-                .show(parkingFragment)
-                .hide(generalFragment)
-                .hide(deviceFragment)
-                .commit();
+        showFragment(parkingFragment);
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>(6);
         orderTasks.add(OrderTaskAssembler.getParkingDetectionMode());
@@ -458,15 +424,9 @@ public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.
     private void showLoRaAndGetData() {
         mBind.tvTitle.setText(R.string.title_lora);
         mBind.ivSave.setVisibility(View.GONE);
-        fragmentManager.beginTransaction()
-                .show(loraFragment)
-                .hide(parkingFragment)
-                .hide(generalFragment)
-                .hide(deviceFragment)
-                .commit();
+        showFragment(loraFragment);
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>(4);
-        // get lora params
         orderTasks.add(OrderTaskAssembler.getLoraRegion());
         orderTasks.add(OrderTaskAssembler.getLoraUploadMode());
         orderTasks.add(OrderTaskAssembler.getLoraNetworkStatus());
@@ -475,13 +435,40 @@ public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.
 
     public void onLoRaConnSetting(View view) {
         if (isWindowLocked()) return;
-        Intent intent = new Intent(this, LoRaConnSettingActivity.class);
-        startActivityForResult(intent, AppConstants.REQUEST_CODE_LORA_CONN_SETTING);
+        launcher.launch(new Intent(this, LoRaConnSettingActivity.class));
     }
+
+    private final ActivityResultLauncher<Intent> launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if (null != result && result.getResultCode() == RESULT_OK) {
+            showSyncingProgressDialog();
+            List<OrderTask> orderTasks = new ArrayList<>(4);
+            orderTasks.add(OrderTaskAssembler.getLoraRegion());
+            orderTasks.add(OrderTaskAssembler.getLoraUploadMode());
+            orderTasks.add(OrderTaskAssembler.getLoraNetworkStatus());
+            MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+        }
+    });
 
     public void onLoRaAppSetting(View view) {
         if (isWindowLocked()) return;
-        Intent intent = new Intent(this, LoRaAppSettingActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(this, LoRaAppSettingActivity.class));
+    }
+
+    private long mLastOnClickTime = 0;
+    private int mTriggerSum;
+
+    private boolean isTriggerValid() {
+        long current = SystemClock.elapsedRealtime();
+        if (current - mLastOnClickTime > 500) {
+            mTriggerSum = 0;
+            mLastOnClickTime = current;
+        } else {
+            mTriggerSum++;
+            if (mTriggerSum == 3) {
+                mTriggerSum = 0;
+                return true;
+            }
+        }
+        return false;
     }
 }

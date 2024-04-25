@@ -1,22 +1,20 @@
 package com.moko.lw009smpro.activity.device;
 
-
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
-import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.elvishew.xlog.XLog;
@@ -29,6 +27,7 @@ import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw009smpro.AppConstants;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
 import com.moko.lw009smpro.databinding.ActivitySystemInfoBinding;
+import com.moko.lw009smpro.dialog.AlertMessageDialog;
 import com.moko.lw009smpro.service.DfuService;
 import com.moko.lw009smpro.utils.FileUtils;
 import com.moko.lw009smpro.utils.ToastUtils;
@@ -52,11 +51,9 @@ import no.nordicsemi.android.dfu.DfuServiceInitiator;
 import no.nordicsemi.android.dfu.DfuServiceListenerHelper;
 
 public class SystemInfoActivity extends Lw009BaseActivity {
-    public static final int REQUEST_CODE_SELECT_FIRMWARE = 0x10;
     private ActivitySystemInfoBinding mBind;
     private boolean mReceiverTag = false;
     private String mDeviceMac;
-    private String mDeviceName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +68,6 @@ public class SystemInfoActivity extends Lw009BaseActivity {
         mReceiverTag = true;
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>(8);
-        orderTasks.add(OrderTaskAssembler.getAdvName());
         orderTasks.add(OrderTaskAssembler.getMacAddress());
         orderTasks.add(OrderTaskAssembler.getBattery());
         orderTasks.add(OrderTaskAssembler.getDeviceModel());
@@ -95,10 +91,7 @@ public class SystemInfoActivity extends Lw009BaseActivity {
         runOnUiThread(() -> {
             if (MokoConstants.ACTION_DISCONNECTED.equals(action)) {
                 if (!isUpgrade) {
-                    Intent intent = new Intent();
-                    intent.putExtra(AppConstants.EXTRA_KEY_DEVICE_MAC, mDeviceMac);
-                    setResult(RESULT_FIRST_USER, intent);
-                    backHome();
+                    finish();
                 }
             }
         });
@@ -149,12 +142,6 @@ public class SystemInfoActivity extends Lw009BaseActivity {
                             if (flag == 0x00) {
                                 // read
                                 switch (configKeyEnum) {
-                                    case KEY_ADV_NAME:
-                                        if (length > 0) {
-                                            byte[] rawDataBytes = Arrays.copyOfRange(value, 4, 4 + length);
-                                            mDeviceName = new String(rawDataBytes);
-                                        }
-                                        break;
                                     case KEY_BATTERY_POWER:
                                         if (length > 0) {
                                             byte[] batteryBytes = Arrays.copyOfRange(value, 4, 4 + length);
@@ -238,17 +225,27 @@ public class SystemInfoActivity extends Lw009BaseActivity {
     }
 
     public void onUpdateFirmware(View view) {
-        if (isWindowLocked()) return;
-        if (TextUtils.isEmpty(mDeviceMac)) return;
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        try {
-            startActivityForResult(intent, REQUEST_CODE_SELECT_FIRMWARE);
-        } catch (ActivityNotFoundException ex) {
-            ToastUtils.showToast(this, "install file manager app");
-        }
+        if (isWindowLocked() || TextUtils.isEmpty(mDeviceMac)) return;
+        launcher.launch("*/*");
     }
+
+    private final ActivityResultLauncher<String> launcher = registerForActivityResult(new ActivityResultContracts.GetContent(), result -> {
+        if (null == result) return;
+        String firmwareFilePath = FileUtils.getPath(this, result);
+        if (TextUtils.isEmpty(firmwareFilePath)) return;
+        final File firmwareFile = new File(firmwareFilePath);
+        if (!firmwareFile.exists() || !firmwareFilePath.toLowerCase().endsWith("zip") || firmwareFile.length() == 0) {
+            ToastUtils.showToast(this, "File error!");
+            return;
+        }
+        final DfuServiceInitiator starter = new DfuServiceInitiator(mDeviceMac)
+                .setKeepBond(false)
+                .setForeground(false)
+                .setDisableNotification(true);
+        starter.setZip(null, firmwareFilePath);
+        starter.start(this, DfuService.class);
+        showDFUProgressDialog("Waiting...");
+    });
 
     private ProgressDialog mDFUDialog;
 
@@ -269,10 +266,6 @@ public class SystemInfoActivity extends Lw009BaseActivity {
         if (!isFinishing() && mDFUDialog != null && mDFUDialog.isShowing()) {
             mDFUDialog.dismiss();
         }
-        Intent intent = new Intent();
-        intent.putExtra(AppConstants.EXTRA_KEY_DEVICE_MAC, mDeviceMac);
-        setResult(RESULT_FIRST_USER, intent);
-        backHome();
     }
 
     private boolean isUpgrade;
@@ -320,8 +313,7 @@ public class SystemInfoActivity extends Lw009BaseActivity {
             if (!isFinishing() && mDFUDialog != null && mDFUDialog.isShowing()) {
                 mDFUDialog.dismiss();
             }
-            setResult(RESULT_OK);
-            finish();
+            showDfuSuccess();
         }
 
         @Override
@@ -343,30 +335,14 @@ public class SystemInfoActivity extends Lw009BaseActivity {
         }
     };
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_SELECT_FIRMWARE) {
-            if (resultCode == RESULT_OK) {
-                //得到uri，后面就是将uri转化成file的过程。
-                Uri uri = data.getData();
-                String firmwareFilePath = FileUtils.getPath(this, uri);
-                if (TextUtils.isEmpty(firmwareFilePath)) return;
-                final File firmwareFile = new File(firmwareFilePath);
-                if (!firmwareFile.exists() || !firmwareFilePath.toLowerCase().endsWith("zip") || firmwareFile.length() == 0) {
-                    ToastUtils.showToast(this, "File error!");
-                    return;
-                }
-                final DfuServiceInitiator starter = new DfuServiceInitiator(mDeviceMac)
-                        .setDeviceName(mDeviceName)
-                        .setKeepBond(false)
-                        .setForeground(false)
-                        .setDisableNotification(true);
-                starter.setZip(null, firmwareFilePath);
-                starter.start(this, DfuService.class);
-                showDFUProgressDialog("Waiting...");
-            }
-        }
+    private void showDfuSuccess() {
+        AlertMessageDialog dialog = new AlertMessageDialog();
+        dialog.setTitle("Update Firmware");
+        dialog.setMessage("Update firmware successfully!\nPlease reconnect the device.");
+        dialog.setConfirm("OK");
+        dialog.setCancelGone();
+        dialog.setOnAlertConfirmListener(this::finish);
+        dialog.show(getSupportFragmentManager());
     }
 
     // 记录上次页面控件点击时间,屏蔽无效点击事件
@@ -380,7 +356,7 @@ public class SystemInfoActivity extends Lw009BaseActivity {
             mLastOnClickTime = current;
         } else {
             mTriggerSum++;
-            if (mTriggerSum == 2) {
+            if (mTriggerSum == 3) {
                 mTriggerSum = 0;
                 return true;
             }

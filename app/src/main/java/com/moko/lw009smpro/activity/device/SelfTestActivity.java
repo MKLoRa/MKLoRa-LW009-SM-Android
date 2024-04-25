@@ -73,19 +73,19 @@ public class SelfTestActivity extends Lw009BaseActivity {
                         ParamsKeyEnum configKeyEnum = ParamsKeyEnum.fromParamKey(cmd);
                         if (header != 0xED || configKeyEnum == null) return;
                         int length = value[3] & 0xFF;
-                        if (flag == 0x01) {
-                            // write
-                            int result = value[4] & 0xFF;
-                            if (configKeyEnum == ParamsKeyEnum.KEY_BATTERY_RESET || configKeyEnum == ParamsKeyEnum.KEY_RESET_MOTOR_STATE) {
-                                if (result == 1) {
-                                    AlertMessageDialog dialog = new AlertMessageDialog();
-                                    dialog.setMessage("Reset Successfully！");
-                                    dialog.setConfirm("OK");
-                                    dialog.setCancelGone();
-                                    dialog.show(getSupportFragmentManager());
-                                }
-                            }
-                        }
+//                        if (flag == 0x01) {
+//                            // write
+//                            int result = value[4] & 0xFF;
+//                            if (configKeyEnum == ParamsKeyEnum.KEY_BATTERY_RESET || configKeyEnum == ParamsKeyEnum.KEY_RESET_MOTOR_STATE) {
+//                                if (result == 1) {
+//                                    AlertMessageDialog dialog = new AlertMessageDialog();
+//                                    dialog.setMessage("Reset Successfully！");
+//                                    dialog.setConfirm("OK");
+//                                    dialog.setCancelGone();
+//                                    dialog.show(getSupportFragmentManager());
+//                                }
+//                            }
+//                        }
                         if (flag == 0x00) {
                             // read
                             switch (configKeyEnum) {
@@ -110,28 +110,28 @@ public class SelfTestActivity extends Lw009BaseActivity {
                                         mBind.tvCalibrationStatus.setText(value[4] & 0xff);
                                     }
                                     break;
-                                case KEY_BATTERY_INFO:
-                                    if (length == 36) {
-                                        int runtime = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 8));
-                                        mBind.tvRuntime.setText(String.format("%d s", runtime));
-                                        int advTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 8, 12));
-                                        mBind.tvAdvTimes.setText(String.format("%d times", advTimes));
-                                        int flashTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 12, 16));
-                                        mBind.tvFlashTimes.setText(String.format("%d times", flashTimes));
-                                        int axisDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 16, 20));
-                                        mBind.tvAxisDuration.setText(String.format("%d ms", axisDuration));
-                                        int bleFixDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 20, 24));
-                                        mBind.tvBleFixDuration.setText(String.format("%d ms", bleFixDuration));
-                                        int wifiFixDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 24, 28));
-                                        mBind.tvWifiFixDuration.setText(String.format("%d ms", wifiFixDuration));
-                                        int gpsFixDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 28, 32));
-                                        mBind.tvGpsFixDuration.setText(String.format("%d s", gpsFixDuration));
-                                        int loraTransmissionTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 32, 36));
-                                        mBind.tvLoraTransmissionTimes.setText(String.format("%d times", loraTransmissionTimes));
-                                        int loraPower = MokoUtils.toInt(Arrays.copyOfRange(value, 36, 40));
-                                        mBind.tvLoraPower.setText(String.format("%d mAS", loraPower));
-                                    }
-                                    break;
+//                                case KEY_BATTERY_INFO:
+//                                    if (length == 36) {
+//                                        int runtime = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 8));
+//                                        mBind.tvRuntime.setText(String.format("%d s", runtime));
+//                                        int advTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 8, 12));
+//                                        mBind.tvAdvTimes.setText(String.format("%d times", advTimes));
+//                                        int flashTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 12, 16));
+//                                        mBind.tvFlashTimes.setText(String.format("%d times", flashTimes));
+//                                        int axisDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 16, 20));
+//                                        mBind.tvAxisDuration.setText(String.format("%d ms", axisDuration));
+//                                        int bleFixDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 20, 24));
+//                                        mBind.tvBleFixDuration.setText(String.format("%d ms", bleFixDuration));
+//                                        int wifiFixDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 24, 28));
+//                                        mBind.tvWifiFixDuration.setText(String.format("%d ms", wifiFixDuration));
+//                                        int gpsFixDuration = MokoUtils.toInt(Arrays.copyOfRange(value, 28, 32));
+//                                        mBind.tvGpsFixDuration.setText(String.format("%d s", gpsFixDuration));
+//                                        int loraTransmissionTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 32, 36));
+//                                        mBind.tvLoraTransmissionTimes.setText(String.format("%d times", loraTransmissionTimes));
+//                                        int loraPower = MokoUtils.toInt(Arrays.copyOfRange(value, 36, 40));
+//                                        mBind.tvLoraPower.setText(String.format("%d mAS", loraPower));
+//                                    }
+//                                    break;
                             }
                         }
                     }
@@ -140,21 +140,21 @@ public class SelfTestActivity extends Lw009BaseActivity {
         });
     }
 
-    public void onBatteryReset(View view) {
-        if (isWindowLocked()) return;
-        AlertMessageDialog dialog = new AlertMessageDialog();
-        dialog.setTitle("Warning！");
-        dialog.setMessage("Are you sure to reset battery?");
-        dialog.setConfirm("OK");
-        dialog.setOnAlertConfirmListener(() -> {
-            showSyncingProgressDialog();
-            List<OrderTask> orderTasks = new ArrayList<>();
-            orderTasks.add(OrderTaskAssembler.setBatteryReset());
-            orderTasks.add(OrderTaskAssembler.getBatteryInfo());
-            MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-        });
-        dialog.show(getSupportFragmentManager());
-    }
+//    public void onBatteryReset(View view) {
+//        if (isWindowLocked()) return;
+//        AlertMessageDialog dialog = new AlertMessageDialog();
+//        dialog.setTitle("Warning！");
+//        dialog.setMessage("Are you sure to reset battery?");
+//        dialog.setConfirm("OK");
+//        dialog.setOnAlertConfirmListener(() -> {
+//            showSyncingProgressDialog();
+//            List<OrderTask> orderTasks = new ArrayList<>();
+//            orderTasks.add(OrderTaskAssembler.setBatteryReset());
+//            orderTasks.add(OrderTaskAssembler.getBatteryInfo());
+//            MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+//        });
+//        dialog.show(getSupportFragmentManager());
+//    }
 
     @Override
     protected void onDestroy() {

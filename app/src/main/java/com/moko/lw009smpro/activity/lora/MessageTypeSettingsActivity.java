@@ -1,5 +1,8 @@
 package com.moko.lw009smpro.activity.lora;
 
+import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
+import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
+
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -44,12 +47,7 @@ public class MessageTypeSettingsActivity extends Lw009BaseActivity {
     private static final String confirmed = "Confirmed";
     private final String[] payloadTypes = {unconfirmed, confirmed};
     private final String[] retransmissionTimes = {"0", "1", "2", "3"};
-    private int parkingInfoFlag;
-    private int heartbeatFlag;
-    private int beaconFlag;
-    private int eventFlag;
-    private int lowPowerFlag;
-    private int shutdownFlag;
+    private boolean savedParamsError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -221,34 +219,17 @@ public class MessageTypeSettingsActivity extends Lw009BaseActivity {
                             }
                         } else if (flag == 1) {
                             switch (configKeyEnum) {
-                                case KEY_PARKING_INFO_PAYLOAD:
-                                    parkingInfoFlag = value[4] & 0xff;
-                                    break;
-
                                 case KEY_HEARTBEAT_PAYLOAD:
-                                    heartbeatFlag = value[4] & 0xff;
-                                    break;
-
+                                case KEY_PARKING_INFO_PAYLOAD:
                                 case KEY_BEACON_PAYLOAD:
-                                    beaconFlag = value[4] & 0xff;
-                                    break;
-
                                 case KEY_LOW_POWER_PAYLOAD:
-                                    lowPowerFlag = value[4] & 0xff;
-                                    break;
-
                                 case KEY_SHUTDOWN_PAYLOAD:
-                                    shutdownFlag = value[4] & 0xff;
+                                    if ((value[4] & 0xff) != 1) savedParamsError = true;
                                     break;
 
                                 case KEY_EVENT_PAYLOAD:
-                                    eventFlag = value[4] & 0xff;
-                                    if (parkingInfoFlag == 1 && heartbeatFlag == 1 && beaconFlag == 1 && eventFlag == 1
-                                            && lowPowerFlag == 1 && shutdownFlag == 1) {
-                                        ToastUtils.showToast(this, "Save Successfully！");
-                                    } else {
-                                        ToastUtils.showToast(this, "Opps！Save failed. Please check the input characters and try again.");
-                                    }
+                                    if ((value[4] & 0xff) != 1) savedParamsError = true;
+                                    ToastUtils.showToast(this, savedParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
                             }
                         }
@@ -292,12 +273,7 @@ public class MessageTypeSettingsActivity extends Lw009BaseActivity {
 
     public void onSave(View view) {
         showSyncingProgressDialog();
-        parkingInfoFlag = 0;
-        heartbeatFlag = 0;
-        beaconFlag = 0;
-        eventFlag = 0;
-        lowPowerFlag = 0;
-        shutdownFlag = 0;
+        savedParamsError = false;
         int parkingInfoPayloadType = confirmed.equals(mBind.tvParkingInfoPayloadType.getText().toString().trim()) ? 1 : 0;
         int parkingInfoTime = Integer.parseInt(mBind.tvParkingInfoTimes.getText().toString().trim()) + 1;
         int heartbeatPayloadType = confirmed.equals(mBind.tvHeartbeatPayloadType.getText().toString().trim()) ? 1 : 0;

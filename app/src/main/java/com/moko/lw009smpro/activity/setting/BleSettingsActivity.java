@@ -194,7 +194,6 @@ public class BleSettingsActivity extends Lw009BaseActivity implements SeekBar.On
         return interval >= 1 && interval <= 100;
     }
 
-
     private void saveParams() {
         final String advName = mBind.etAdvName.getText().toString();
         final String timeoutStr = mBind.etAdvTimeout.getText().toString();

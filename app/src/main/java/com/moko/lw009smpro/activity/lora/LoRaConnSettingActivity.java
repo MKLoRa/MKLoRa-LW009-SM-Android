@@ -1,5 +1,8 @@
 package com.moko.lw009smpro.activity.lora;
 
+import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
+import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
+
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -134,30 +137,11 @@ public class LoRaConnSettingActivity extends Lw009BaseActivity implements Compou
                                 case KEY_LORA_DUTYCYCLE:
                                 case KEY_LORA_ADR_ACK_LIMIT:
                                 case KEY_LORA_ADR_ACK_DELAY:
-                                    if (result != 1) {
-                                        savedParamsError = true;
-                                    }
+                                    if (result != 1) savedParamsError = true;
                                     break;
                                 case KEY_LORA_UPLINK_STRATEGY:
-                                    if (result != 1) {
-                                        savedParamsError = true;
-                                    }
-                                    if (savedParamsError) {
-                                        ToastUtils.showToast(this, "Opps！Save failed. Please check the input characters and try again.");
-                                    } else {
-                                        showSyncingProgressDialog();
-                                        MoKoSupport.getInstance().sendOrder(OrderTaskAssembler.restart());
-                                    }
-                                    break;
-                                case KEY_REBOOT:
-                                    if (result != 1) {
-                                        savedParamsError = true;
-                                    }
-                                    if (savedParamsError) {
-                                        ToastUtils.showToast(this, "Opps！Save failed. Please check the input characters and try again.");
-                                    } else {
-                                        ToastUtils.showToast(this, "Save Successfully！");
-                                    }
+                                    if (result != 1) savedParamsError = true;
+                                    ToastUtils.showToast(this, savedParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
                             }
                         }

@@ -77,19 +77,23 @@ public class ParamsWriteTask extends OrderTask {
         };
     }
 
-    public void setParkingDetectionThreshold(@IntRange(from = 5, to = 20000) int threshold) {
-        byte[] bytes = MokoUtils.toByteArray(threshold, 6);
+    public void setParkingDetectionThreshold(@IntRange(from = 5, to = 20000) int thresholdX,
+                                             @IntRange(from = 5, to = 20000) int thresholdY,
+                                             @IntRange(from = 5, to = 20000) int thresholdZ) {
+        byte[] bytesX = MokoUtils.toByteArray(thresholdX, 2);
+        byte[] bytesY = MokoUtils.toByteArray(thresholdY, 2);
+        byte[] bytesZ = MokoUtils.toByteArray(thresholdZ, 2);
         response.responseValue = data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
                 (byte) ParamsKeyEnum.KEY_PARKING_DETECTION_THRESHOLD.getParamsKey(),
                 (byte) 0x06,
-                bytes[0],
-                bytes[1],
-                bytes[2],
-                bytes[3],
-                bytes[4],
-                bytes[5]
+                bytesX[0],
+                bytesX[1],
+                bytesY[0],
+                bytesY[1],
+                bytesZ[0],
+                bytesZ[1]
         };
     }
 

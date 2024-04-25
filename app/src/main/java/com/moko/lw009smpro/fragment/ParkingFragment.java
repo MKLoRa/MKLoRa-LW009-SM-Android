@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.moko.ble.lib.task.OrderTask;
-import com.moko.lw009smpro.activity.BleFixActivity;
+import com.moko.lw009smpro.activity.setting.BleFixActivity;
 import com.moko.lw009smpro.activity.DeviceInfoActivity;
 import com.moko.lw009smpro.databinding.FragmentParkingBinding;
 import com.moko.lw009smpro.dialog.AlertMessageDialog;

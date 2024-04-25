@@ -1,4 +1,7 @@
-package com.moko.lw009smpro.activity;
+package com.moko.lw009smpro.activity.setting;
+
+import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
+import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
@@ -17,6 +20,7 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw009smpro.R;
+import com.moko.lw009smpro.activity.Lw009BaseActivity;
 import com.moko.lw009smpro.activity.filter.FilterAdvNameActivity;
 import com.moko.lw009smpro.activity.filter.FilterMacAddressActivity;
 import com.moko.lw009smpro.activity.filter.FilterRawDataSwitchActivity;
@@ -108,11 +112,7 @@ public class BleFixActivity extends Lw009BaseActivity implements SeekBar.OnSeekB
                                     break;
                                 case KEY_FILTER_RELATIONSHIP:
                                     if (result != 1) savedParamsError = true;
-                                    if (savedParamsError) {
-                                        ToastUtils.showToast(BleFixActivity.this, "Opps！Save failed. Please check the input characters and try again.");
-                                    } else {
-                                        ToastUtils.showToast(this, "Save Successfully！");
-                                    }
+                                    ToastUtils.showToast(this, savedParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
                             }
                         }
