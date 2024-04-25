@@ -7,7 +7,6 @@ import android.view.View;
 
 import com.moko.lw009smpro.BuildConfig;
 import com.moko.lw009smpro.R;
-import com.moko.lw009smpro.databinding.Lw006ActivityAboutBinding;
 import com.moko.lw009smpro.databinding.Lw009ActivityAboutBinding;
 import com.moko.lw009smpro.utils.Utils;
 
