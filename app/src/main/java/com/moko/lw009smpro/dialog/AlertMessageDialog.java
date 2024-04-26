@@ -11,9 +11,9 @@ import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
 
 import com.moko.lw009smpro.R;
-import com.moko.lw009smpro.databinding.Lw006DialogAlertBinding;
+import com.moko.lw009smpro.databinding.DialogAlertBinding;
 
-public class AlertMessageDialog extends MokoBaseDialog<Lw006DialogAlertBinding> {
+public class AlertMessageDialog extends MokoBaseDialog<DialogAlertBinding> {
     public static final String TAG = AlertMessageDialog.class.getSimpleName();
     private String cancel;
     private String confirm;
@@ -27,8 +27,8 @@ public class AlertMessageDialog extends MokoBaseDialog<Lw006DialogAlertBinding> 
     private int messageTextColorId = -1;
 
     @Override
-    protected Lw006DialogAlertBinding getViewBind(LayoutInflater inflater, ViewGroup container) {
-        return Lw006DialogAlertBinding.inflate(inflater, container, false);
+    protected DialogAlertBinding getViewBind(LayoutInflater inflater, ViewGroup container) {
+        return DialogAlertBinding.inflate(inflater, container, false);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class AlertMessageDialog extends MokoBaseDialog<Lw006DialogAlertBinding> 
 
     @Override
     public int getDialogStyle() {
-        return R.style.LW006CenterDialog;
+        return R.style.CenterDialog;
     }
 
     @Override

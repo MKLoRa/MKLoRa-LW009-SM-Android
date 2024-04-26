@@ -217,6 +217,13 @@ public enum ParamsKeyEnum implements Serializable {
     KEY_TRIGGER_SLAVE_UPDATE(0xB0),
     // 从机固件升级
     KEY_SLAVE_UPDATE(0xB1),
+
+    //从机升级
+    KEY_SLAVE_FIRMWARE_REQUEST(0xD0),
+
+    KEY_SLAVE_UPDATE_RESULT(0xD1),
+    KEY_NO_PARKING_CALIBRATION_RESULT(0xD2),
+    KEY_PARKING_DETECTION_TIMES(0xD3),
     ;
 
     private final int paramsKey;

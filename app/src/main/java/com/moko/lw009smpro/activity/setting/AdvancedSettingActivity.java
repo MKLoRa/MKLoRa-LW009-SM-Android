@@ -173,7 +173,7 @@ public class AdvancedSettingActivity extends Lw009BaseActivity {
                 int cmd = value[2] & 0xFF;
                 int len = value[3] & 0xFF;
                 if (orderCHAR == OrderCHAR.CHAR_SLAVE_NOTIFY) {
-                    if (header == 0xED && flag == 0x02 && cmd == 0xD3 && len == 4) {
+                    if (header == 0xED && flag == 0x02 && cmd == ParamsKeyEnum.KEY_PARKING_DETECTION_TIMES.getParamsKey() && len == 4) {
                         int parkingTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 4, len + 4));
                         mBind.tvParkingDetectionTimes.setText(String.valueOf(parkingTimes));
                     }

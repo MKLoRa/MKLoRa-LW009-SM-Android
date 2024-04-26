@@ -2,15 +2,14 @@ package com.moko.lw009smpro.dialog;
 
 import android.content.Context;
 import android.text.InputFilter;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.inputmethod.InputMethodManager;
 
 import com.moko.lw009smpro.R;
-import com.moko.lw009smpro.databinding.Lw006DialogPasswordBinding;
+import com.moko.lw009smpro.databinding.DialogPasswordBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
 
-public class PasswordDialog extends BaseDialog<Lw006DialogPasswordBinding> {
+public class PasswordDialog extends BaseDialog<DialogPasswordBinding> {
     public static final String TAG = PasswordDialog.class.getSimpleName();
     private final String FILTER_ASCII = "[ -~]*";
     private String password;
@@ -20,21 +19,17 @@ public class PasswordDialog extends BaseDialog<Lw006DialogPasswordBinding> {
     }
 
     @Override
-    protected Lw006DialogPasswordBinding getViewBind() {
-        return Lw006DialogPasswordBinding.inflate(getLayoutInflater());
+    protected DialogPasswordBinding getViewBind() {
+        return DialogPasswordBinding.inflate(getLayoutInflater());
     }
 
     @Override
     protected void onCreate() {
-        InputFilter filter = new InputFilter() {
-            @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                if (!(source + "").matches(FILTER_ASCII)) {
-                    return "";
-                }
-
-                return null;
+        InputFilter filter = (source, start, end, dest, dstart, dend) -> {
+            if (!(source + "").matches(FILTER_ASCII)) {
+                return "";
             }
+            return null;
         };
         mBind.etPassword.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8), filter});
         if (!TextUtils.isEmpty(password)) {

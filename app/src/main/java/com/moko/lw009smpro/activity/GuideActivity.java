@@ -25,7 +25,7 @@ public class GuideActivity extends Lw009BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lw006_activity_guide);
+        setContentView(R.layout.lw009_activity_guide);
         if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
             finish();
             return;

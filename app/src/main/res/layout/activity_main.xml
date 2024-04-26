@@ -43,7 +43,7 @@
             android:onClick="onAbout"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:src="@drawable/lw006_ic_about" />
+            android:src="@drawable/ic_about" />
     </RelativeLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -12,6 +12,7 @@ import android.view.WindowManager;
 
 import com.moko.lw009smpro.R;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.StyleRes;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
@@ -34,7 +35,7 @@ public abstract class MokoBaseDialog<VM extends ViewBinding> extends DialogFragm
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().setCanceledOnTouchOutside(getCancelOutside());

@@ -38,7 +38,7 @@ public class Utils {
                 if (BuildConfig.IS_LIBRARY) {
                     uri = FileProvider.getUriForFile(context, "com.moko.mklora.fileprovider", files[0]);
                 } else {
-                    uri = FileProvider.getUriForFile(context, "com.moko.lw006.fileprovider", files[0]);
+                    uri = FileProvider.getUriForFile(context, "com.moko.lw009smpro.fileprovider", files[0]);
                 }
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             } else {

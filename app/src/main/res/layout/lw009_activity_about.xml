@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
-        android:src="@drawable/lw006_ic_logo" />
+        android:src="@drawable/lw009_ic_logo" />
 
     <TextView
         android:id="@+id/app_name"

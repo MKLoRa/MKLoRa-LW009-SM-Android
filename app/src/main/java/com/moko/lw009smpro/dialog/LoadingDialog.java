@@ -7,15 +7,15 @@ import android.view.ViewGroup;
 import androidx.core.content.ContextCompat;
 
 import com.moko.lw009smpro.R;
-import com.moko.lw009smpro.databinding.Lw006DialogLoadingBinding;
+import com.moko.lw009smpro.databinding.DialogLoadingBinding;
 import com.moko.lw009smpro.view.ProgressDrawable;
 
-public class LoadingDialog extends MokoBaseDialog<Lw006DialogLoadingBinding> {
+public class LoadingDialog extends MokoBaseDialog<DialogLoadingBinding> {
     public static final String TAG = LoadingDialog.class.getSimpleName();
 
     @Override
-    protected Lw006DialogLoadingBinding getViewBind(LayoutInflater inflater, ViewGroup container) {
-        return Lw006DialogLoadingBinding.inflate(inflater, container, false);
+    protected DialogLoadingBinding getViewBind(LayoutInflater inflater, ViewGroup container) {
+        return DialogLoadingBinding.inflate(inflater, container, false);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class LoadingDialog extends MokoBaseDialog<Lw006DialogLoadingBinding> {
 
     @Override
     public int getDialogStyle() {
-        return R.style.LW006CenterDialog;
+        return R.style.CenterDialog;
     }
 
     @Override

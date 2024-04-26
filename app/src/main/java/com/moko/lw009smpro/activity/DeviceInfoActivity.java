@@ -160,7 +160,7 @@ public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.
                     }
                 } else if (orderCHAR == OrderCHAR.CHAR_SLAVE_NOTIFY) {
                     //从机通知
-                    if (header == 0xED && flag == 0x02 && cmd == 0xD2) {
+                    if (header == 0xED && flag == 0x02 && cmd == ParamsKeyEnum.KEY_NO_PARKING_CALIBRATION_RESULT.getParamsKey()) {
                         if (null != parkingFragment) {
                             parkingFragment.setNoParkingCalibration(value[4] & 0xff);
                         }

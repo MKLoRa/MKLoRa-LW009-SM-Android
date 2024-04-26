@@ -16,7 +16,8 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import androidx.annotation.Nullable;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 
@@ -25,7 +26,6 @@ import com.elvishew.xlog.XLog;
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
-import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw009smpro.AppConstants;
 import com.moko.lw009smpro.BuildConfig;
@@ -57,7 +57,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -249,10 +248,8 @@ public class LoRaLW009MainActivity extends Lw009BaseActivity implements MokoScan
         startActivity(new Intent(this, AboutActivity.class));
     }
 
-
     public void onFilter(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         if (animation != null) {
             mHandler.removeMessages(0);
             mokoBleScanner.stopScanDevice();
@@ -260,46 +257,36 @@ public class LoRaLW009MainActivity extends Lw009BaseActivity implements MokoScan
         ScanFilterDialog scanFilterDialog = new ScanFilterDialog(this);
         scanFilterDialog.setFilterName(filterName);
         scanFilterDialog.setFilterRssi(filterRssi);
-        scanFilterDialog.setOnScanFilterListener(new ScanFilterDialog.OnScanFilterListener() {
-            @Override
-            public void onDone(String filterName, int filterRssi) {
-                LoRaLW009MainActivity.this.filterName = filterName;
-                LoRaLW009MainActivity.this.filterRssi = filterRssi;
-                if (!TextUtils.isEmpty(filterName) || filterRssi != -127) {
-                    mBind.rlFilter.setVisibility(View.VISIBLE);
-                    mBind.rlEditFilter.setVisibility(View.GONE);
-                    StringBuilder stringBuilder = new StringBuilder();
-                    if (!TextUtils.isEmpty(filterName)) {
-                        stringBuilder.append(filterName);
-                        stringBuilder.append(";");
-                    }
-                    if (filterRssi != -127) {
-                        stringBuilder.append(String.format("%sdBm", filterRssi + ""));
-                        stringBuilder.append(";");
-                    }
-                    mBind.tvFilter.setText(stringBuilder.toString());
-                } else {
-                    mBind.rlFilter.setVisibility(View.GONE);
-                    mBind.rlEditFilter.setVisibility(View.VISIBLE);
+        scanFilterDialog.setOnScanFilterListener((filterName, filterRssi) -> {
+            LoRaLW009MainActivity.this.filterName = filterName;
+            LoRaLW009MainActivity.this.filterRssi = filterRssi;
+            if (!TextUtils.isEmpty(filterName) || filterRssi != -127) {
+                mBind.rlFilter.setVisibility(View.VISIBLE);
+                mBind.rlEditFilter.setVisibility(View.GONE);
+                StringBuilder stringBuilder = new StringBuilder();
+                if (!TextUtils.isEmpty(filterName)) {
+                    stringBuilder.append(filterName);
+                    stringBuilder.append(";");
                 }
-                if (isWindowLocked())
-                    return;
-                if (animation == null) {
-                    startScan();
+                if (filterRssi != -127) {
+                    stringBuilder.append(String.format("%sdBm", filterRssi + ""));
+                    stringBuilder.append(";");
                 }
+                mBind.tvFilter.setText(stringBuilder.toString());
+            } else {
+                mBind.rlFilter.setVisibility(View.GONE);
+                mBind.rlEditFilter.setVisibility(View.VISIBLE);
             }
+            if (animation == null) startScan();
         });
         scanFilterDialog.setOnDismissListener(dialog -> {
-            if (isWindowLocked())
-                return;
-            if (animation == null) {
-                startScan();
-            }
+            if (animation == null) startScan();
         });
         scanFilterDialog.show();
     }
 
     public void onFilterDelete(View view) {
+        if (isWindowLocked()) return;
         if (animation != null) {
             mHandler.removeMessages(0);
             mokoBleScanner.stopScanDevice();
@@ -308,11 +295,7 @@ public class LoRaLW009MainActivity extends Lw009BaseActivity implements MokoScan
         mBind.rlEditFilter.setVisibility(View.VISIBLE);
         filterName = "";
         filterRssi = -127;
-        if (isWindowLocked())
-            return;
-        if (animation == null) {
-            startScan();
-        }
+        if (animation == null) startScan();
     }
 
     private String mPassword;
@@ -337,7 +320,7 @@ public class LoRaLW009MainActivity extends Lw009BaseActivity implements MokoScan
                 return;
             }
             // show password
-            final PasswordDialog dialog = new PasswordDialog(LoRaLW009MainActivity.this);
+            final PasswordDialog dialog = new PasswordDialog(this);
             dialog.setData(mSavedPassword);
             dialog.setOnPasswordClicked(new PasswordDialog.PasswordClickListener() {
                 @Override
@@ -389,9 +372,7 @@ public class LoRaLW009MainActivity extends Lw009BaseActivity implements MokoScan
                             }
                             break;
                         case BluetoothAdapter.STATE_ON:
-                            if (animation == null) {
-                                startScan();
-                            }
+                            if (animation == null) startScan();
                             break;
                     }
                 }
@@ -409,7 +390,7 @@ public class LoRaLW009MainActivity extends Lw009BaseActivity implements MokoScan
             if (isPasswordError) {
                 isPasswordError = false;
             } else {
-                ToastUtils.showToast(LoRaLW009MainActivity.this, "Connection Failed");
+                ToastUtils.showToast(this, "Connection Failed");
             }
             if (animation == null) startScan();
         }
@@ -417,15 +398,11 @@ public class LoRaLW009MainActivity extends Lw009BaseActivity implements MokoScan
             dismissLoadingProgressDialog();
             if (!isVerifyEnable) {
                 XLog.i("Success");
-                Intent i = new Intent(this, DeviceInfoActivity.class);
-                startActivityForResult(i, AppConstants.REQUEST_CODE_DEVICE_INFO);
+                launcher.launch(new Intent(this, DeviceInfoActivity.class));
                 return;
             }
             showLoadingMessageDialog();
-            // open password notify and set passwrord
-            List<OrderTask> orderTasks = new ArrayList<>();
-            orderTasks.add(OrderTaskAssembler.setPassword(mPassword));
-            MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+            MoKoSupport.getInstance().sendOrder(OrderTaskAssembler.setPassword(mPassword));
         }
     }
 
@@ -454,8 +431,7 @@ public class LoRaLW009MainActivity extends Lw009BaseActivity implements MokoScan
                             mSavedPassword = mPassword;
                             SPUtiles.setStringValue(this, AppConstants.SP_KEY_SAVED_PASSWORD, mSavedPassword);
                             XLog.i("Success");
-                            Intent i = new Intent(this, DeviceInfoActivity.class);
-                            startActivityForResult(i, AppConstants.REQUEST_CODE_DEVICE_INFO);
+                            launcher.launch(new Intent(this, DeviceInfoActivity.class));
                         } else if (0 == result) {
                             isPasswordError = true;
                             ToastUtils.showToast(this, "Password Error");
@@ -467,15 +443,11 @@ public class LoRaLW009MainActivity extends Lw009BaseActivity implements MokoScan
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == AppConstants.REQUEST_CODE_DEVICE_INFO) {
-            if (resultCode == RESULT_OK) {
-                if (animation == null) startScan();
-            }
+    private final ActivityResultLauncher<Intent> launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if (null != result && result.getResultCode() == RESULT_OK) {
+            if (animation == null) startScan();
         }
-    }
+    });
 
     private LoadingDialog mLoadingDialog;
 
@@ -526,9 +498,7 @@ public class LoRaLW009MainActivity extends Lw009BaseActivity implements MokoScan
         if (getIntent().getExtras() != null) {
             String from = getIntent().getStringExtra(AppConstants.EXTRA_KEY_FROM_ACTIVITY);
             if (LogDataActivity.TAG.equals(from)) {
-                if (animation == null) {
-                    startScan();
-                }
+                if (animation == null) startScan();
             }
         }
     }
