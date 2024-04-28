@@ -8,10 +8,8 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
-import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
 import com.moko.lw009smpro.databinding.ActivitySelftestBinding;
-import com.moko.lw009smpro.dialog.AlertMessageDialog;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
 import com.moko.support.lw009.entity.OrderCHAR;
@@ -22,7 +20,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class SelfTestActivity extends Lw009BaseActivity {
@@ -89,7 +86,7 @@ public class SelfTestActivity extends Lw009BaseActivity {
                         if (flag == 0x00) {
                             // read
                             switch (configKeyEnum) {
-                                case KEY_SELFTEST_STATUS:
+                                case KEY_SELF_TEST_STATUS:
                                     if (length > 0) {
                                         int status = value[4] & 0xFF;
                                         mBind.tvSelftestStatus.setVisibility(status == 0 ? View.VISIBLE : View.GONE);

@@ -3,7 +3,7 @@ package com.moko.support.lw009.task;
 import android.text.TextUtils;
 
 import androidx.annotation.IntRange;
-import androidx.fragment.app.Fragment;
+import androidx.annotation.NonNull;
 
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.utils.MokoUtils;
@@ -191,6 +191,37 @@ public class ParamsWriteTask extends OrderTask {
         };
     }
 
+    public void setTriggerSlaveUpdate(int hardwareVersion, int softwareVersion, int deviceMode, int firmwareLength, byte[] checkCrc) {
+        byte[] lenBytes = MokoUtils.toByteArray(firmwareLength, 4);
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_TRIGGER_SLAVE_UPDATE.getParamsKey(),
+                (byte) 11,
+                (byte) hardwareVersion,
+                (byte) softwareVersion,
+                (byte) deviceMode,
+                lenBytes[0],
+                lenBytes[1],
+                lenBytes[2],
+                lenBytes[3],
+                checkCrc[0],
+                checkCrc[1],
+                checkCrc[2],
+                checkCrc[3]
+        };
+    }
+
+    public void setSlaveUpdate(@NonNull byte[] bytes) {
+        data = new byte[bytes.length + 4];
+        data[0] = (byte) 0xED;
+        data[1] = (byte) 0x01;
+        data[2] = (byte) ParamsKeyEnum.KEY_SLAVE_UPDATE.getParamsKey();
+        data[3] = (byte) bytes.length;
+        System.arraycopy(bytes, 0, data, 4, bytes.length);
+        response.responseValue = data;
+    }
+
     /**
      * 上行配置参数
      *
@@ -292,9 +323,7 @@ public class ParamsWriteTask extends OrderTask {
         data[1] = (byte) 0x01;
         data[2] = (byte) ParamsKeyEnum.KEY_MANUFACTURER.getParamsKey();
         data[3] = (byte) length;
-        for (int i = 0; i < manufacturerBytes.length; i++) {
-            data[i + 4] = manufacturerBytes[i];
-        }
+        System.arraycopy(manufacturerBytes, 0, data, 4, manufacturerBytes.length);
         response.responseValue = data;
     }
 
@@ -339,9 +368,7 @@ public class ParamsWriteTask extends OrderTask {
         data[1] = (byte) 0x01;
         data[2] = (byte) ParamsKeyEnum.KEY_PASSWORD.getParamsKey();
         data[3] = (byte) length;
-        for (int i = 0; i < passwordBytes.length; i++) {
-            data[i + 4] = passwordBytes[i];
-        }
+        System.arraycopy(passwordBytes, 0, data, 4, passwordBytes.length);
         response.responseValue = data;
     }
 
@@ -517,7 +544,7 @@ public class ParamsWriteTask extends OrderTask {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_FILTER_IBEACON_ENABLE.getParamsKey(),
+                (byte) ParamsKeyEnum.KEY_FILTER_I_BEACON_ENABLE.getParamsKey(),
                 (byte) 0x01,
                 (byte) enable
         };
@@ -531,7 +558,7 @@ public class ParamsWriteTask extends OrderTask {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_FILTER_IBEACON_MAJOR_RANGE.getParamsKey(),
+                (byte) ParamsKeyEnum.KEY_FILTER_I_BEACON_MAJOR_RANGE.getParamsKey(),
                 (byte) 0x04,
                 minBytes[0],
                 minBytes[1],
@@ -548,7 +575,7 @@ public class ParamsWriteTask extends OrderTask {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_FILTER_IBEACON_MINOR_RANGE.getParamsKey(),
+                (byte) ParamsKeyEnum.KEY_FILTER_I_BEACON_MINOR_RANGE.getParamsKey(),
                 (byte) 0x04,
                 minBytes[0],
                 minBytes[1],
@@ -563,7 +590,7 @@ public class ParamsWriteTask extends OrderTask {
             data = new byte[4];
             data[0] = (byte) 0xED;
             data[1] = (byte) 0x01;
-            data[2] = (byte) ParamsKeyEnum.KEY_FILTER_IBEACON_UUID.getParamsKey();
+            data[2] = (byte) ParamsKeyEnum.KEY_FILTER_I_BEACON_UUID.getParamsKey();
             data[3] = (byte) 0x00;
         } else {
             byte[] uuidBytes = MokoUtils.hex2bytes(uuid);
@@ -571,7 +598,7 @@ public class ParamsWriteTask extends OrderTask {
             data = new byte[length + 4];
             data[0] = (byte) 0xED;
             data[1] = (byte) 0x01;
-            data[2] = (byte) ParamsKeyEnum.KEY_FILTER_IBEACON_UUID.getParamsKey();
+            data[2] = (byte) ParamsKeyEnum.KEY_FILTER_I_BEACON_UUID.getParamsKey();
             data[3] = (byte) length;
             System.arraycopy(uuidBytes, 0, data, 4, uuidBytes.length);
         }
@@ -582,7 +609,7 @@ public class ParamsWriteTask extends OrderTask {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_FILTER_BXP_IBEACON_ENABLE.getParamsKey(),
+                (byte) ParamsKeyEnum.KEY_FILTER_BXP_I_BEACON_ENABLE.getParamsKey(),
                 (byte) 0x01,
                 (byte) enable
         };
@@ -596,7 +623,7 @@ public class ParamsWriteTask extends OrderTask {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_FILTER_BXP_IBEACON_MAJOR_RANGE.getParamsKey(),
+                (byte) ParamsKeyEnum.KEY_FILTER_BXP_I_BEACON_MAJOR_RANGE.getParamsKey(),
                 (byte) 0x04,
                 minBytes[0],
                 minBytes[1],
@@ -613,7 +640,7 @@ public class ParamsWriteTask extends OrderTask {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_FILTER_BXP_IBEACON_MINOR_RANGE.getParamsKey(),
+                (byte) ParamsKeyEnum.KEY_FILTER_BXP_I_BEACON_MINOR_RANGE.getParamsKey(),
                 (byte) 0x04,
                 minBytes[0],
                 minBytes[1],
@@ -628,7 +655,7 @@ public class ParamsWriteTask extends OrderTask {
             data = new byte[4];
             data[0] = (byte) 0xED;
             data[1] = (byte) 0x01;
-            data[2] = (byte) ParamsKeyEnum.KEY_FILTER_BXP_IBEACON_UUID.getParamsKey();
+            data[2] = (byte) ParamsKeyEnum.KEY_FILTER_BXP_I_BEACON_UUID.getParamsKey();
             data[3] = (byte) 0x00;
         } else {
             byte[] uuidBytes = MokoUtils.hex2bytes(uuid);
@@ -636,7 +663,7 @@ public class ParamsWriteTask extends OrderTask {
             data = new byte[length + 4];
             data[0] = (byte) 0xED;
             data[1] = (byte) 0x01;
-            data[2] = (byte) ParamsKeyEnum.KEY_FILTER_BXP_IBEACON_UUID.getParamsKey();
+            data[2] = (byte) ParamsKeyEnum.KEY_FILTER_BXP_I_BEACON_UUID.getParamsKey();
             data[3] = (byte) length;
             for (int i = 0; i < uuidBytes.length; i++) {
                 data[i + 4] = uuidBytes[i];
@@ -1154,7 +1181,7 @@ public class ParamsWriteTask extends OrderTask {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_LORA_DUTYCYCLE.getParamsKey(),
+                (byte) ParamsKeyEnum.KEY_LORA_DUTY_CYCLE.getParamsKey(),
                 (byte) 0x01,
                 (byte) enable
         };

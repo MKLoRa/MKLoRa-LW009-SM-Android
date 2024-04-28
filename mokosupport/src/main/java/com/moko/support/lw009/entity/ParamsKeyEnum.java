@@ -15,7 +15,7 @@ public enum ParamsKeyEnum implements Serializable {
     // 芯片MAC
     KEY_CHIP_MAC(0x15),
     // 自检状态
-    KEY_SELFTEST_STATUS(0x16),
+    KEY_SELF_TEST_STATUS(0x16),
     // 产测状态
     KEY_PCBA_STATUS(0x17),
     // 读取当前需求版本
@@ -92,13 +92,13 @@ public enum ParamsKeyEnum implements Serializable {
     // 过滤设备类型开关
     KEY_FILTER_RAW_DATA(0x59),
     // iBeacon类型过滤开关
-    KEY_FILTER_IBEACON_ENABLE(0x5A),
+    KEY_FILTER_I_BEACON_ENABLE(0x5A),
     // iBeacon类型Major范围
-    KEY_FILTER_IBEACON_MAJOR_RANGE(0x5B),
+    KEY_FILTER_I_BEACON_MAJOR_RANGE(0x5B),
     // iBeacon类型Minor范围
-    KEY_FILTER_IBEACON_MINOR_RANGE(0x5C),
+    KEY_FILTER_I_BEACON_MINOR_RANGE(0x5C),
     // iBeacon类型UUID
-    KEY_FILTER_IBEACON_UUID(0x5D),
+    KEY_FILTER_I_BEACON_UUID(0x5D),
     // eddystone-UID类型过滤开关
     KEY_FILTER_EDDYSTONE_UID_ENABLE(0x5E),
     // eddystone-UID类型Namespace
@@ -114,13 +114,13 @@ public enum ParamsKeyEnum implements Serializable {
     // eddystone- TLM类型TLMVersion
     KEY_FILTER_EDDYSTONE_TLM_VERSION(0x64),
     // BXP-iBeacon类型过滤开关
-    KEY_FILTER_BXP_IBEACON_ENABLE(0x65),
+    KEY_FILTER_BXP_I_BEACON_ENABLE(0x65),
     // BXP-iBeacon类型Major范围
-    KEY_FILTER_BXP_IBEACON_MAJOR_RANGE(0x66),
+    KEY_FILTER_BXP_I_BEACON_MAJOR_RANGE(0x66),
     // BXP-iBeacon类型Minor范围
-    KEY_FILTER_BXP_IBEACON_MINOR_RANGE(0x67),
+    KEY_FILTER_BXP_I_BEACON_MINOR_RANGE(0x67),
     // BXP-iBeacon类型UUID
-    KEY_FILTER_BXP_IBEACON_UUID(0x68),
+    KEY_FILTER_BXP_I_BEACON_UUID(0x68),
     // BXP-Device类型过滤开关
     KEY_FILTER_BXP_DEVICE(0x69),
     // BeaconX Pro-ACC设备过滤开关
@@ -188,7 +188,7 @@ public enum ParamsKeyEnum implements Serializable {
     // 数据发送策略
     KEY_LORA_UPLINK_STRATEGY(0x9B),
     // DUTYCYCLE
-    KEY_LORA_DUTYCYCLE(0x9C),
+    KEY_LORA_DUTY_CYCLE(0x9C),
     //ADR_ACK_LIMIT
     KEY_LORA_ADR_ACK_LIMIT(0x9D),
     //ADR_ACK_DELAY
@@ -218,9 +218,10 @@ public enum ParamsKeyEnum implements Serializable {
     // 从机固件升级
     KEY_SLAVE_UPDATE(0xB1),
 
+
+
     //从机升级
     KEY_SLAVE_FIRMWARE_REQUEST(0xD0),
-
     KEY_SLAVE_UPDATE_RESULT(0xD1),
     KEY_NO_PARKING_CALIBRATION_RESULT(0xD2),
     KEY_PARKING_DETECTION_TIMES(0xD3),

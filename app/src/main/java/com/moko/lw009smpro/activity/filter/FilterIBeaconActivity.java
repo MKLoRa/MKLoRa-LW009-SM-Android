@@ -85,12 +85,12 @@ public class FilterIBeaconActivity extends Lw009BaseActivity {
                             // write
                             int result = value[4] & 0xFF;
                             switch (configKeyEnum) {
-                                case KEY_FILTER_IBEACON_UUID:
-                                case KEY_FILTER_IBEACON_MAJOR_RANGE:
-                                case KEY_FILTER_IBEACON_MINOR_RANGE:
+                                case KEY_FILTER_I_BEACON_UUID:
+                                case KEY_FILTER_I_BEACON_MAJOR_RANGE:
+                                case KEY_FILTER_I_BEACON_MINOR_RANGE:
                                     if (result != 1) savedParamsError = true;
                                     break;
-                                case KEY_FILTER_IBEACON_ENABLE:
+                                case KEY_FILTER_I_BEACON_ENABLE:
                                     if (result != 1) savedParamsError = true;
                                     ToastUtils.showToast(this, savedParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
@@ -99,14 +99,14 @@ public class FilterIBeaconActivity extends Lw009BaseActivity {
                         if (flag == 0x00) {
                             // read
                             switch (configKeyEnum) {
-                                case KEY_FILTER_IBEACON_UUID:
+                                case KEY_FILTER_I_BEACON_UUID:
                                     if (length > 0) {
                                         String uuid = MokoUtils.bytesToHexString(Arrays.copyOfRange(value, 4, 4 + length));
                                         mBind.etIbeaconUuid.setText(String.valueOf(uuid));
                                         mBind.etIbeaconUuid.setSelection(mBind.etIbeaconUuid.getText().length());
                                     }
                                     break;
-                                case KEY_FILTER_IBEACON_MAJOR_RANGE:
+                                case KEY_FILTER_I_BEACON_MAJOR_RANGE:
                                     if (length == 4) {
                                         int majorMin = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 6));
                                         int majorMax = MokoUtils.toInt(Arrays.copyOfRange(value, 6, 8));
@@ -116,7 +116,7 @@ public class FilterIBeaconActivity extends Lw009BaseActivity {
                                         mBind.etIbeaconMajorMax.setSelection(mBind.etIbeaconMajorMax.getText().length());
                                     }
                                     break;
-                                case KEY_FILTER_IBEACON_MINOR_RANGE:
+                                case KEY_FILTER_I_BEACON_MINOR_RANGE:
                                     if (length == 4) {
                                         int minorMin = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 6));
                                         int minorMax = MokoUtils.toInt(Arrays.copyOfRange(value, 6, 8));
@@ -126,7 +126,7 @@ public class FilterIBeaconActivity extends Lw009BaseActivity {
                                         mBind.etIbeaconMinorMax.setSelection(mBind.etIbeaconMinorMax.getText().length());
                                     }
                                     break;
-                                case KEY_FILTER_IBEACON_ENABLE:
+                                case KEY_FILTER_I_BEACON_ENABLE:
                                     if (length > 0) {
                                         mBind.cbIbeacon.setChecked((value[4] & 0xff) == 1);
                                     }

@@ -1,6 +1,7 @@
 package com.moko.support.lw009;
 
 import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
 
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.support.lw009.entity.ParamsKeyEnum;
@@ -205,7 +206,7 @@ public class OrderTaskAssembler {
 
     public static OrderTask getSelfTestStatus() {
         ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_SELFTEST_STATUS);
+        task.setData(ParamsKeyEnum.KEY_SELF_TEST_STATUS);
         return task;
     }
 
@@ -296,49 +297,49 @@ public class OrderTaskAssembler {
 
     public static OrderTask getFilterIBeaconEnable() {
         ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_FILTER_IBEACON_ENABLE);
+        task.setData(ParamsKeyEnum.KEY_FILTER_I_BEACON_ENABLE);
         return task;
     }
 
     public static OrderTask getFilterIBeaconMajorRange() {
         ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_FILTER_IBEACON_MAJOR_RANGE);
+        task.setData(ParamsKeyEnum.KEY_FILTER_I_BEACON_MAJOR_RANGE);
         return task;
     }
 
     public static OrderTask getFilterIBeaconMinorRange() {
         ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_FILTER_IBEACON_MINOR_RANGE);
+        task.setData(ParamsKeyEnum.KEY_FILTER_I_BEACON_MINOR_RANGE);
         return task;
     }
 
     public static OrderTask getFilterIBeaconUUID() {
         ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_FILTER_IBEACON_UUID);
+        task.setData(ParamsKeyEnum.KEY_FILTER_I_BEACON_UUID);
         return task;
     }
 
     public static OrderTask getFilterBXPIBeaconEnable() {
         ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_FILTER_BXP_IBEACON_ENABLE);
+        task.setData(ParamsKeyEnum.KEY_FILTER_BXP_I_BEACON_ENABLE);
         return task;
     }
 
     public static OrderTask getFilterBXPIBeaconMajorRange() {
         ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_FILTER_BXP_IBEACON_MAJOR_RANGE);
+        task.setData(ParamsKeyEnum.KEY_FILTER_BXP_I_BEACON_MAJOR_RANGE);
         return task;
     }
 
     public static OrderTask getFilterBXPIBeaconMinorRange() {
         ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_FILTER_BXP_IBEACON_MINOR_RANGE);
+        task.setData(ParamsKeyEnum.KEY_FILTER_BXP_I_BEACON_MINOR_RANGE);
         return task;
     }
 
     public static OrderTask getFilterBXPIBeaconUUID() {
         ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_FILTER_BXP_IBEACON_UUID);
+        task.setData(ParamsKeyEnum.KEY_FILTER_BXP_I_BEACON_UUID);
         return task;
     }
 
@@ -572,7 +573,7 @@ public class OrderTaskAssembler {
 
     public static OrderTask getLoraDutyCycleEnable() {
         ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_LORA_DUTYCYCLE);
+        task.setData(ParamsKeyEnum.KEY_LORA_DUTY_CYCLE);
         return task;
     }
 
@@ -1258,6 +1259,18 @@ public class OrderTaskAssembler {
     public static OrderTask setBeaconPayloadCount(@IntRange(from = 1, to = 10) int count) {
         ParamsWriteTask task = new ParamsWriteTask();
         task.setBeaconPayloadCount(count);
+        return task;
+    }
+
+    public static OrderTask setTriggerSlaveUpdate(int hardwareVersion, int softwareVersion, int deviceMode, int firmwareLength, byte[] checkCrc) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setTriggerSlaveUpdate(hardwareVersion, softwareVersion, deviceMode, firmwareLength, checkCrc);
+        return task;
+    }
+
+    public static OrderTask setSlaveUpdate(@NonNull byte[] bytes) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setSlaveUpdate(bytes);
         return task;
     }
 }

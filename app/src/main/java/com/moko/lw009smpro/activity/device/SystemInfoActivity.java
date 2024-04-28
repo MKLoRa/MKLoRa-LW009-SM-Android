@@ -6,12 +6,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -41,6 +43,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -103,8 +106,12 @@ public class SystemInfoActivity extends Lw009BaseActivity {
         if (!MokoConstants.ACTION_CURRENT_DATA.equals(action))
             EventBus.getDefault().cancelEventDelivery(event);
         runOnUiThread(() -> {
-            if (MokoConstants.ACTION_ORDER_FINISH.equals(action)) {
+            if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)){
+                ToastUtils.showToast(this,"time out");
                 dismissSyncProgressDialog();
+            }
+            if (MokoConstants.ACTION_ORDER_FINISH.equals(action)) {
+//                dismissSyncProgressDialog();
             }
             if (MokoConstants.ACTION_ORDER_RESULT.equals(action)) {
                 OrderTaskResponse response = event.getResponse();
@@ -128,6 +135,7 @@ public class SystemInfoActivity extends Lw009BaseActivity {
                         mBind.tvHardwareVersion.setText(hardwareVersion);
                         break;
                     case CHAR_MANUFACTURER_NAME:
+                        dismissSyncProgressDialog();
                         String manufacture = new String(value);
                         mBind.tvManufacture.setText(manufacture);
                         break;
@@ -169,15 +177,52 @@ public class SystemInfoActivity extends Lw009BaseActivity {
                         }
                         break;
                 }
+            } else if (MokoConstants.ACTION_CURRENT_DATA.equals(action)) {
+                OrderTaskResponse response = event.getResponse();
+                OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
+                byte[] value = response.responseValue;
+                int header = value[0] & 0xFF;
+                int flag = value[1] & 0xFF;
+                int cmd = value[2] & 0xFF;
+                int len = value[3] & 0xFF;
+                if (orderCHAR == OrderCHAR.CHAR_SLAVE_NOTIFY) {
+                    if (header == 0xED && flag == 0x02 && cmd == ParamsKeyEnum.KEY_SLAVE_FIRMWARE_REQUEST.getParamsKey() && len == 2) {
+                        //从机升级固件请求
+                        int packageNum = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 6));
+                        MoKoSupport.getInstance().sendOrder(OrderTaskAssembler.setSlaveUpdate(getFirmwareBytes(packageNum)));
+                    } else if (header == 0xED && flag == 0x02 && cmd == ParamsKeyEnum.KEY_SLAVE_UPDATE_RESULT.getParamsKey() && len == 1) {
+                        //从机升级结果通知
+                        dismissSyncProgressDialog();
+                        ToastUtils.showToast(this, value[4] == 1 ? "update success" : "update fail");
+                    }
+                }
             }
         });
     }
 
+    private byte[] getFirmwareBytes(int packageNum) {
+        int length = firmwareBytes.length;
+        int currentIndex = packageNum * 128;
+        if (currentIndex <= length) {
+            return Arrays.copyOfRange(firmwareBytes, currentIndex - 128, currentIndex);
+        } else {
+            return Arrays.copyOfRange(firmwareBytes, currentIndex - 128, length);
+        }
+    }
+
     public void onDebuggerMode(View view) {
         if (isWindowLocked()) return;
-        Intent intent = new Intent(this, LogDataActivity.class);
-        intent.putExtra(AppConstants.EXTRA_KEY_DEVICE_MAC, mDeviceMac);
-        startActivity(intent);
+        AlertMessageDialog dialog = new AlertMessageDialog();
+        dialog.setTitle("Debugger Mode");
+        dialog.setMessage("Do you want to let the device come into debugger mode?");
+        dialog.setCancel("Cancel");
+        dialog.setConfirm("OK");
+        dialog.setOnAlertConfirmListener(() -> {
+            Intent intent = new Intent(this, LogDataActivity.class);
+            intent.putExtra(AppConstants.EXTRA_KEY_DEVICE_MAC, mDeviceMac);
+            startActivity(intent);
+        });
+        dialog.show(getSupportFragmentManager());
     }
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -226,15 +271,70 @@ public class SystemInfoActivity extends Lw009BaseActivity {
 
     public void onUpdateFirmware(View view) {
         if (isWindowLocked() || TextUtils.isEmpty(mDeviceMac)) return;
-        launcher.launch("*/*");
+        AlertMessageDialog dialog = new AlertMessageDialog();
+        dialog.setMessage("Please disconnect the load device before DFU, otherwise there may be security risks.");
+        dialog.setCancel("Cancel");
+        dialog.setConfirm("OK");
+        dialog.setOnAlertConfirmListener(() -> {
+            launcher.launch("application/zip");
+//        slaveLauncher.launch("application/octet-stream");
+        });
+        dialog.show(getSupportFragmentManager());
     }
+
+    private byte[] checkCrc(byte[] bytes) {
+        int crc = 0x0000;
+        for (byte aByte : bytes) {
+            crc += aByte & 0xff;
+        }
+        crc ^= 0x1021;
+        return MokoUtils.toByteArray(crc, 4);
+    }
+
+    private byte[] firmwareBytes;
+
+    private final ActivityResultLauncher<String> slaveLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), result -> {
+        if (null == result) return;
+        String path = FileUtils.getPath(this, result);
+        if (TextUtils.isEmpty(path)) return;
+        showSyncingProgressDialog();
+        new Thread() {
+            @Override
+            public void run() {
+                List<Integer> list = new ArrayList<>();
+                try {
+                    FileInputStream inputStream = new FileInputStream(path);
+                    int data;
+                    while ((data = inputStream.read()) != -1) {
+                        list.add(data);
+                    }
+                    inputStream.close();
+                    Integer[] array = list.toArray(new Integer[0]);
+                    byte[] bytes = new byte[array.length];
+                    for (int i = 0; i < array.length; i++) {
+                        bytes[i] = array[i].byteValue();
+                    }
+                    int hardwareVersion = bytes[80] & 0xff;
+                    int softwareVersion = bytes[81] & 0xff;
+                    int deviceMode = bytes[82] & 0xff;
+                    int firmwareLength = bytes.length;
+                    byte[] firmwareCheckCrc = checkCrc(bytes);
+                    firmwareBytes = bytes;
+                    runOnUiThread(() -> MoKoSupport.getInstance().sendOrder(OrderTaskAssembler.setTriggerSlaveUpdate(hardwareVersion, softwareVersion, deviceMode, firmwareLength, firmwareCheckCrc)));
+                } catch (Exception e) {
+                    XLog.e(e);
+                    runOnUiThread(() -> dismissSyncProgressDialog());
+                }
+            }
+        }.start();
+    });
 
     private final ActivityResultLauncher<String> launcher = registerForActivityResult(new ActivityResultContracts.GetContent(), result -> {
         if (null == result) return;
         String firmwareFilePath = FileUtils.getPath(this, result);
         if (TextUtils.isEmpty(firmwareFilePath)) return;
         final File firmwareFile = new File(firmwareFilePath);
-        if (!firmwareFile.exists() || !firmwareFilePath.toLowerCase().endsWith("zip") || firmwareFile.length() == 0) {
+        if (!firmwareFile.exists() || firmwareFile.length() == 0) {
             ToastUtils.showToast(this, "File error!");
             return;
         }
@@ -250,7 +350,7 @@ public class SystemInfoActivity extends Lw009BaseActivity {
     private ProgressDialog mDFUDialog;
 
     private void showDFUProgressDialog(String tips) {
-        mDFUDialog = new ProgressDialog(SystemInfoActivity.this);
+        mDFUDialog = new ProgressDialog(this);
         mDFUDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mDFUDialog.setCanceledOnTouchOutside(false);
         mDFUDialog.setCancelable(false);

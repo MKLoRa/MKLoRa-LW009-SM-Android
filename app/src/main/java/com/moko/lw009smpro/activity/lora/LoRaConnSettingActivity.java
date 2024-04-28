@@ -134,7 +134,7 @@ public class LoRaConnSettingActivity extends Lw009BaseActivity implements Compou
                                 case KEY_LORA_REGION:
                                 case KEY_LORA_CH:
                                 case KEY_LORA_DR:
-                                case KEY_LORA_DUTYCYCLE:
+                                case KEY_LORA_DUTY_CYCLE:
                                 case KEY_LORA_ADR_ACK_LIMIT:
                                 case KEY_LORA_ADR_ACK_DELAY:
                                     if (result != 1) savedParamsError = true;
@@ -223,7 +223,7 @@ public class LoRaConnSettingActivity extends Lw009BaseActivity implements Compou
                                         mBind.tvCh2.setText(String.valueOf(ch2));
                                     }
                                     break;
-                                case KEY_LORA_DUTYCYCLE:
+                                case KEY_LORA_DUTY_CYCLE:
                                     if (length > 0) {
                                         final int dutyCycleEnable = value[4] & 0xFF;
                                         mBind.cbDutyCycle.setChecked(dutyCycleEnable == 1);

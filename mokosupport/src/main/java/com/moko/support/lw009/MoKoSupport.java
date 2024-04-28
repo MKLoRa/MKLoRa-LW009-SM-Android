@@ -25,6 +25,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
 public class MoKoSupport extends MokoBleLib {
@@ -148,34 +149,31 @@ public class MoKoSupport extends MokoBleLib {
                     dataSb = new StringBuilder();
                 }
                 ParamsKeyEnum keyEnum = ParamsKeyEnum.fromParamKey(cmd);
-                switch (keyEnum) {
-                    case KEY_FILTER_NAME_RULES:
-                        if (length > 0) {
-                            dataLength += length;
-                            byte[] responseData = Arrays.copyOfRange(value, 6, 6 + length);
-                            dataSb.append(MokoUtils.bytesToHexString(responseData));
-                        }
-                        if (packetIndex == (packetCount - 1)) {
-                            if (!TextUtils.isEmpty(dataSb.toString()))
-                                dataBytes = MokoUtils.hex2bytes(dataSb.toString());
-                            byte[] responseValue = new byte[4 + dataLength];
-                            responseValue[0] = (byte) 0xED;
-                            responseValue[1] = (byte) 0x00;
-                            responseValue[2] = (byte) cmd;
-                            responseValue[3] = (byte) dataLength;
-                            for (int i = 0; i < dataLength; i++) {
-                                responseValue[4 + i] = dataBytes[i];
-                            }
-                            dataSb = null;
-                            dataBytes = null;
-                            // 最后一包
-                            orderTask.orderStatus = 1;
-                            orderTask.response.responseValue = responseValue;
-                            pollTask();
-                            executeTask();
-                            orderResult(orderTask.response);
-                        }
-                        break;
+                if (Objects.requireNonNull(keyEnum) == ParamsKeyEnum.KEY_FILTER_NAME_RULES) {
+                    if (length > 0) {
+                        dataLength += length;
+                        byte[] responseData = Arrays.copyOfRange(value, 6, 6 + length);
+                        dataSb.append(MokoUtils.bytesToHexString(responseData));
+                    }
+                    if (packetIndex == (packetCount - 1)) {
+                        if (!TextUtils.isEmpty(dataSb.toString()))
+                            dataBytes = MokoUtils.hex2bytes(dataSb.toString());
+                        byte[] responseValue = new byte[4 + dataLength];
+                        responseValue[0] = (byte) 0xED;
+                        responseValue[1] = (byte) 0x00;
+                        responseValue[2] = (byte) cmd;
+                        responseValue[3] = (byte) dataLength;
+                        if (dataLength >= 0)
+                            System.arraycopy(dataBytes, 0, responseValue, 4, dataLength);
+                        dataSb = null;
+                        dataBytes = null;
+                        // 最后一包
+                        orderTask.orderStatus = 1;
+                        orderTask.response.responseValue = responseValue;
+                        pollTask();
+                        executeTask();
+                        orderResult(orderTask.response);
+                    }
                 }
                 return false;
             }
