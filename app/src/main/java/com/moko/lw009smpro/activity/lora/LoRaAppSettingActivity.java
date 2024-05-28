@@ -3,11 +3,7 @@ package com.moko.lw009smpro.activity.lora;
 import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
 import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
 
-import android.bluetooth.BluetoothAdapter;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -17,7 +13,6 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
-import com.moko.lw009smpro.AppConstants;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
 import com.moko.lw009smpro.databinding.ActivityAppSettingBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
@@ -35,7 +30,6 @@ import java.util.List;
 
 public class LoRaAppSettingActivity extends Lw009BaseActivity {
     private ActivityAppSettingBinding mBind;
-    private boolean mReceiverTag = false;
     private boolean savedParamsError;
 
     @Override
@@ -43,12 +37,6 @@ public class LoRaAppSettingActivity extends Lw009BaseActivity {
         super.onCreate(savedInstanceState);
         mBind = ActivityAppSettingBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
-        EventBus.getDefault().register(this);
-        // 注册广播接收器
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        registerReceiver(mReceiver, filter);
-        mReceiverTag = true;
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>(2);
         orderTasks.add(OrderTaskAssembler.getLoraTimeSyncInterval());
@@ -151,7 +139,6 @@ public class LoRaAppSettingActivity extends Lw009BaseActivity {
         return networkCheckInterval <= 255;
     }
 
-
     private void saveParams() {
         final String syncIntervalStr = mBind.etSyncInterval.getText().toString();
         final String networkCheckIntervalStr = mBind.etNetworkCheckInterval.getText().toString();
@@ -162,34 +149,6 @@ public class LoRaAppSettingActivity extends Lw009BaseActivity {
         orderTasks.add(OrderTaskAssembler.setLoraTimeSyncInterval(syncInterval));
         orderTasks.add(OrderTaskAssembler.setLoraNetworkInterval(networkCheckInterval));
         MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-    }
-
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                String action = intent.getAction();
-                if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
-                    int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
-                    if (blueState == BluetoothAdapter.STATE_TURNING_OFF) {
-                        dismissSyncProgressDialog();
-                        finish();
-                    }
-                }
-            }
-        }
-    };
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mReceiverTag) {
-            mReceiverTag = false;
-            // 注销广播
-            unregisterReceiver(mReceiver);
-        }
-        if (EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().unregister(this);
     }
 
     public void onBack(View view) {

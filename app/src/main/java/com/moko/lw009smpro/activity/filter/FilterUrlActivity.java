@@ -39,7 +39,6 @@ public class FilterUrlActivity extends Lw009BaseActivity {
         super.onCreate(savedInstanceState);
         mBind = ActivityFilterUrlBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
-        EventBus.getDefault().register(this);
         InputFilter inputFilter = (source, start, end, dest, dStart, dEnd) -> {
             if (!(source + "").matches(FILTER_ASCII)) return "";
             return null;
@@ -133,13 +132,6 @@ public class FilterUrlActivity extends Lw009BaseActivity {
         orderTasks.add(OrderTaskAssembler.setFilterEddystoneUrl(url));
         orderTasks.add(OrderTaskAssembler.setFilterEddystoneUrlEnable(mBind.cbUrl.isChecked() ? 1 : 0));
         MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().unregister(this);
     }
 
     public void onBack(View view) {

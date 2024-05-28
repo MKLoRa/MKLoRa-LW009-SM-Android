@@ -46,7 +46,6 @@ public class FilterOtherActivity extends Lw009BaseActivity {
         super.onCreate(savedInstanceState);
         mBind = ActivityFilterOtherBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
-        EventBus.getDefault().register(this);
 
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>();
@@ -165,7 +164,7 @@ public class FilterOtherActivity extends Lw009BaseActivity {
                                             etRawData.setSelection(etRawData.getText().length());
                                             mBind.llFilterCondition.addView(v);
                                         }
-                                        if (filterOther.size() > 0)
+                                        if (!filterOther.isEmpty())
                                             mBind.clOtherRelationship.setVisibility(View.VISIBLE);
                                     }
                                     break;
@@ -324,13 +323,6 @@ public class FilterOtherActivity extends Lw009BaseActivity {
             }
             mBind.tvOtherRelationship.setText(mValues.get(mSelected));
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().unregister(this);
     }
 
     public void onBack(View view) {

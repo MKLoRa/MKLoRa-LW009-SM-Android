@@ -4,11 +4,7 @@ import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
 import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
 
 import android.annotation.SuppressLint;
-import android.bluetooth.BluetoothAdapter;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -42,7 +38,6 @@ import java.util.List;
 
 public class BleFixActivity extends Lw009BaseActivity implements SeekBar.OnSeekBarChangeListener {
     private ActivityBleFixBinding mBind;
-    private boolean mReceiverTag = false;
     private boolean savedParamsError;
     private final String[] mRelationshipValues = {"Null", "Only MAC", "Only ADV Name", "Only Raw Data", "ADV Name&Raw Data", "MAC&ADV Name&Raw Data", "ADV Name | Raw Data"};
     private int mRelationshipSelected;
@@ -52,14 +47,8 @@ public class BleFixActivity extends Lw009BaseActivity implements SeekBar.OnSeekB
         super.onCreate(savedInstanceState);
         mBind = ActivityBleFixBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
-        EventBus.getDefault().register(this);
 
         mBind.sbRssiFilter.setOnSeekBarChangeListener(this);
-        // 注册广播接收器
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        registerReceiver(mReceiver, filter);
-        mReceiverTag = true;
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>(4);
         orderTasks.add(OrderTaskAssembler.getBleScanTime());
@@ -185,34 +174,6 @@ public class BleFixActivity extends Lw009BaseActivity implements SeekBar.OnSeekB
         orderTasks.add(OrderTaskAssembler.setFilterRSSI(mBind.sbRssiFilter.getProgress() - 127));
         orderTasks.add(OrderTaskAssembler.setFilterRelationship(mRelationshipSelected));
         MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-    }
-
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                String action = intent.getAction();
-                if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
-                    int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
-                    if (blueState == BluetoothAdapter.STATE_TURNING_OFF) {
-                        dismissSyncProgressDialog();
-                        finish();
-                    }
-                }
-            }
-        }
-    };
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mReceiverTag) {
-            mReceiverTag = false;
-            // 注销广播
-            unregisterReceiver(mReceiver);
-        }
-        if (EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().unregister(this);
     }
 
     public void onBack(View view) {

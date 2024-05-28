@@ -48,7 +48,6 @@ public class BleSettingsActivity extends Lw009BaseActivity implements SeekBar.On
         super.onCreate(savedInstanceState);
         mBind = ActivityBleSettingsBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
-        EventBus.getDefault().register(this);
         InputFilter inputFilter = (source, start, end, dest, dStart, dEnd) -> {
             if (!(source + "").matches(FILTER_ASCII)) return "";
             return null;
@@ -161,12 +160,6 @@ public class BleSettingsActivity extends Lw009BaseActivity implements SeekBar.On
                 }
             }
         });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 
     public void onBack(View view) {

@@ -3,11 +3,6 @@ package com.moko.lw009smpro.activity.device;
 import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
 import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
 
-import android.bluetooth.BluetoothAdapter;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 
@@ -40,7 +35,6 @@ import java.util.List;
  */
 public class OnOffSettingsActivity extends Lw009BaseActivity {
     private ActivityOnOffSettingsBinding mBind;
-    private boolean mReceiverTag;
     private boolean shutdownPayloadOpen;
 
     @Override
@@ -48,12 +42,6 @@ public class OnOffSettingsActivity extends Lw009BaseActivity {
         super.onCreate(savedInstanceState);
         mBind = ActivityOnOffSettingsBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
-        EventBus.getDefault().register(this);
-        // 注册广播接收器
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        registerReceiver(mReceiver, filter);
-        mReceiverTag = true;
         if (!MoKoSupport.getInstance().isBluetoothOpen()) {
             // 蓝牙未打开，开启蓝牙
             MoKoSupport.getInstance().enableBluetooth();
@@ -138,32 +126,6 @@ public class OnOffSettingsActivity extends Lw009BaseActivity {
                 }
             }
         });
-    }
-
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                String action = intent.getAction();
-                if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
-                    int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
-                    if (blueState == BluetoothAdapter.STATE_TURNING_OFF) {
-                        dismissSyncProgressDialog();
-                        finish();
-                    }
-                }
-            }
-        }
-    };
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mReceiverTag) {
-            mReceiverTag = false;
-            unregisterReceiver(mReceiver);
-        }
-        EventBus.getDefault().unregister(this);
     }
 
     public void onBack(View view) {

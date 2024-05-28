@@ -3,11 +3,6 @@ package com.moko.lw009smpro.activity.lora;
 import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
 import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
 
-import android.bluetooth.BluetoothAdapter;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -42,7 +37,6 @@ import java.util.List;
  */
 public class MessageTypeSettingsActivity extends Lw009BaseActivity {
     private ActivityMsgTypeSettingsBinding mBind;
-    private boolean mReceiverTag = false;
     private static final String unconfirmed = "Unconfirmed";
     private static final String confirmed = "Confirmed";
     private final String[] payloadTypes = {unconfirmed, confirmed};
@@ -54,12 +48,6 @@ public class MessageTypeSettingsActivity extends Lw009BaseActivity {
         super.onCreate(savedInstanceState);
         mBind = ActivityMsgTypeSettingsBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
-        EventBus.getDefault().register(this);
-        // 注册广播接收器
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        registerReceiver(mReceiver, filter);
-        mReceiverTag = true;
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>(8);
         orderTasks.add(OrderTaskAssembler.getHeartbeatPayload());
@@ -294,32 +282,5 @@ public class MessageTypeSettingsActivity extends Lw009BaseActivity {
         orderTasks.add(OrderTaskAssembler.setShutdownPayload(shutdownPayloadType, shutdownTime));
         orderTasks.add(OrderTaskAssembler.setEventPayload(eventPayloadType, eventTime));
         MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-    }
-
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                String action = intent.getAction();
-                if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
-                    int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
-                    if (blueState == BluetoothAdapter.STATE_TURNING_OFF) {
-                        dismissSyncProgressDialog();
-                        finish();
-                    }
-                }
-            }
-        }
-    };
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mReceiverTag) {
-            mReceiverTag = false;
-            // 注销广播
-            unregisterReceiver(mReceiver);
-        }
-        EventBus.getDefault().unregister(this);
     }
 }

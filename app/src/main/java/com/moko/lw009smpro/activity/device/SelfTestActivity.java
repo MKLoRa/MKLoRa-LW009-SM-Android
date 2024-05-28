@@ -30,7 +30,6 @@ public class SelfTestActivity extends Lw009BaseActivity {
         super.onCreate(savedInstanceState);
         mBind = ActivitySelftestBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
-        EventBus.getDefault().register(this);
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>(4);
         orderTasks.add(OrderTaskAssembler.getSelfTestStatus());
@@ -152,12 +151,6 @@ public class SelfTestActivity extends Lw009BaseActivity {
 //        });
 //        dialog.show(getSupportFragmentManager());
 //    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
 
     public void onBack(View view) {
         finish();

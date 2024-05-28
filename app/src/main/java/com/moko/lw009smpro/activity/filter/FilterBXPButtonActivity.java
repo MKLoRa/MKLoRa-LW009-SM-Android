@@ -35,7 +35,6 @@ public class FilterBXPButtonActivity extends Lw009BaseActivity {
         super.onCreate(savedInstanceState);
         mBind = ActivityFilterBxpButtonBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
-        EventBus.getDefault().register(this);
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>(2);
         orderTasks.add(OrderTaskAssembler.getFilterBXPButtonEnable());
@@ -126,13 +125,6 @@ public class FilterBXPButtonActivity extends Lw009BaseActivity {
                 mBind.cbAbnormalInactivity.isChecked() ? 1 : 0));
         orderTasks.add(OrderTaskAssembler.setFilterBXPButtonEnable(mBind.cbEnable.isChecked() ? 1 : 0));
         MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().unregister(this);
     }
 
     public void onBack(View view) {

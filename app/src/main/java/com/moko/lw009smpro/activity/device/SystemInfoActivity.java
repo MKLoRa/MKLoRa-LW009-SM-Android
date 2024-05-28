@@ -1,19 +1,13 @@
 package com.moko.lw009smpro.activity.device;
 
 import android.app.ProgressDialog;
-import android.bluetooth.BluetoothAdapter;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -55,7 +49,6 @@ import no.nordicsemi.android.dfu.DfuServiceListenerHelper;
 
 public class SystemInfoActivity extends Lw009BaseActivity {
     private ActivitySystemInfoBinding mBind;
-    private boolean mReceiverTag = false;
     private String mDeviceMac;
 
     @Override
@@ -63,12 +56,6 @@ public class SystemInfoActivity extends Lw009BaseActivity {
         super.onCreate(savedInstanceState);
         mBind = ActivitySystemInfoBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
-        EventBus.getDefault().register(this);
-        // 注册广播接收器
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        registerReceiver(mReceiver, filter);
-        mReceiverTag = true;
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>(8);
         orderTasks.add(OrderTaskAssembler.getMacAddress());
@@ -225,33 +212,9 @@ public class SystemInfoActivity extends Lw009BaseActivity {
         dialog.show(getSupportFragmentManager());
     }
 
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                String action = intent.getAction();
-                if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
-                    int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
-                    if (blueState == BluetoothAdapter.STATE_TURNING_OFF) {
-                        dismissSyncProgressDialog();
-                        finish();
-                    }
-                }
-            }
-        }
-    };
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mReceiverTag) {
-            mReceiverTag = false;
-            // 注销广播
-            unregisterReceiver(mReceiver);
-        }
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
-        }
         DfuServiceListenerHelper.unregisterProgressListener(this, mDfuProgressListener);
     }
 

@@ -22,6 +22,11 @@ public class AboutActivity extends Lw009BaseActivity {
         }
     }
 
+    @Override
+    protected boolean registerEvent() {
+        return false;
+    }
+
     public void onBack(View view) {
         finish();
     }

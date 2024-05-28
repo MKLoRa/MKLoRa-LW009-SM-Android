@@ -33,6 +33,11 @@ public class GuideActivity extends Lw009BaseActivity {
         requestPermission();
     }
 
+    @Override
+    protected boolean registerEvent() {
+        return false;
+    }
+
     private void requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
             //申请存储权限 6-9的版本走这里 需要申请写SD卡权限和定位权限

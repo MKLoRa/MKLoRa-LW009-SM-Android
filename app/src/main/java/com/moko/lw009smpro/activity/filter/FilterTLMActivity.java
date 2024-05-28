@@ -40,7 +40,6 @@ public class FilterTLMActivity extends Lw009BaseActivity {
         super.onCreate(savedInstanceState);
         mBind = ActivityFilterTlmBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
-        EventBus.getDefault().register(this);
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>(2);
         orderTasks.add(OrderTaskAssembler.getFilterEddystoneTlmEnable());
@@ -110,13 +109,6 @@ public class FilterTLMActivity extends Lw009BaseActivity {
                 }
             }
         });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().unregister(this);
     }
 
     public void onBack(View view) {

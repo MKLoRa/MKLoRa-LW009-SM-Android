@@ -53,7 +53,6 @@ public class FilterMkPirActivity extends Lw009BaseActivity {
         super.onCreate(savedInstanceState);
         mBind = ActivityFilterMkpirBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
-        EventBus.getDefault().register(this);
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>(8);
         orderTasks.add(OrderTaskAssembler.getMkPirEnable());
@@ -268,13 +267,6 @@ public class FilterMkPirActivity extends Lw009BaseActivity {
             return false;
         } else
             return !TextUtils.isEmpty(mBind.etMinorMin.getText()) || TextUtils.isEmpty(mBind.etMinorMax.getText());
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().unregister(this);
     }
 
     public void onBack(View view) {

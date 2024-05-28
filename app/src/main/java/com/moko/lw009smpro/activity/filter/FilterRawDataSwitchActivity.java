@@ -44,7 +44,6 @@ public class FilterRawDataSwitchActivity extends Lw009BaseActivity {
         super.onCreate(savedInstanceState);
         mBind = ActivityFilterRawDataSwitchBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
-        EventBus.getDefault().register(this);
         showSyncingProgressDialog();
         MoKoSupport.getInstance().sendOrder(OrderTaskAssembler.getFilterRawData());
     }
@@ -118,13 +117,6 @@ public class FilterRawDataSwitchActivity extends Lw009BaseActivity {
                 }
             }
         });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().unregister(this);
     }
 
     public void onBack(View view) {

@@ -65,7 +65,6 @@ public class LogDataActivity extends Lw009BaseActivity implements BaseQuickAdapt
         adapter.replaceData(LogDatas);
         adapter.setOnItemClickListener(this);
         mBind.rvExportData.setAdapter(adapter);
-        EventBus.getDefault().register(this);
         File file = new File(logDirPath);
         if (file.exists()) {
             File[] logFiles = file.listFiles();
@@ -217,12 +216,6 @@ public class LogDataActivity extends Lw009BaseActivity implements BaseQuickAdapt
             String title = "Debugger Log";
             Utils.sendEmail(LogDataActivity.this, address, title, title, "Choose Email Client", files);
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 
     private void backHome() {

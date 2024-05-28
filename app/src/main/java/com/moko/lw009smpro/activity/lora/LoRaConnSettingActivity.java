@@ -3,11 +3,6 @@ package com.moko.lw009smpro.activity.lora;
 import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
 import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
 
-import android.bluetooth.BluetoothAdapter;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -39,7 +34,6 @@ import java.util.List;
 
 public class LoRaConnSettingActivity extends Lw009BaseActivity implements CompoundButton.OnCheckedChangeListener {
     private ActivityConnSettingBinding mBind;
-    private boolean mReceiverTag = false;
     private final String[] mModeList = {"ABP", "OTAA"};
     private final String[] mRegionsList = {"AS923", "AU915", "CN470", "CN779", "EU433", "EU868", "KR920", "IN865", "US915", "RU864", "AS923-2", "AS923-3", "AS923-4"};
     private final String[] mMaxRetransmissionTimesList = {"1", "2"};
@@ -61,12 +55,6 @@ public class LoRaConnSettingActivity extends Lw009BaseActivity implements Compou
         setContentView(mBind.getRoot());
         mBind.cbAdvanceSetting.setOnCheckedChangeListener(this);
         mBind.cbAdr.setOnCheckedChangeListener(this);
-        EventBus.getDefault().register(this);
-        // 注册广播接收器
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        registerReceiver(mReceiver, filter);
-        mReceiverTag = true;
         if (!MoKoSupport.getInstance().isBluetoothOpen()) {
             MoKoSupport.getInstance().enableBluetooth();
         } else {
@@ -270,34 +258,6 @@ public class LoRaConnSettingActivity extends Lw009BaseActivity implements Compou
                 }
             }
         });
-    }
-
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                String action = intent.getAction();
-                if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
-                    int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
-                    if (blueState == BluetoothAdapter.STATE_TURNING_OFF) {
-                        dismissSyncProgressDialog();
-                        finish();
-                    }
-                }
-            }
-        }
-    };
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mReceiverTag) {
-            mReceiverTag = false;
-            // 注销广播
-            unregisterReceiver(mReceiver);
-        }
-        if (EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().unregister(this);
     }
 
     public void onBack(View view) {

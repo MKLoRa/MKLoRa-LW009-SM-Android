@@ -5,11 +5,7 @@ import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
 import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
 
 import android.app.AlertDialog;
-import android.bluetooth.BluetoothAdapter;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.TextUtils;
@@ -52,7 +48,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.OnCheckedChangeListener {
@@ -66,7 +61,6 @@ public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.
     private final String[] mRegions = {"AS923", "AU915", "CN470", "CN779", "EU433", "EU868", "KR920", "IN865", "US915", "RU864", "AS923-2", "AS923-3", "AS923-4"};
     private int mSelectedRegion;
     private int mSelectUploadMode;
-    private boolean mReceiverTag = false;
     private int disConnectType;
     private boolean savedParamsError;
 
@@ -80,12 +74,6 @@ public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.
         mBind.radioBtnLora.setChecked(true);
         mBind.tvTitle.setText(R.string.title_lora);
         mBind.rgOptions.setOnCheckedChangeListener(this);
-        EventBus.getDefault().register(this);
-        // 注册广播接收器
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        registerReceiver(mReceiver, filter);
-        mReceiverTag = true;
         if (!MoKoSupport.getInstance().isBluetoothOpen()) {
             MoKoSupport.getInstance().enableBluetooth();
         } else {
@@ -337,43 +325,21 @@ public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.
         dialog.show(getSupportFragmentManager());
     }
 
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                String action = intent.getAction();
-                if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
-                    int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
-                    if (blueState == BluetoothAdapter.STATE_TURNING_OFF) {
-                        dismissSyncProgressDialog();
-                        AlertDialog.Builder builder = new AlertDialog.Builder(DeviceInfoActivity.this);
-                        builder.setTitle("Dismiss");
-                        builder.setCancelable(false);
-                        builder.setMessage("The current system of bluetooth is not available!");
-                        builder.setPositiveButton("OK", (dialog, which) -> {
-                            DeviceInfoActivity.this.setResult(RESULT_OK);
-                            finish();
-                        });
-                        builder.show();
-                    }
-                }
-            }
-        }
-    };
-
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mReceiverTag) {
-            mReceiverTag = false;
-            // 注销广播
-            unregisterReceiver(mReceiver);
-        }
-        EventBus.getDefault().unregister(this);
+    protected void onSystemBleTurnOff() {
+        dismissSyncProgressDialog();
+        AlertDialog.Builder builder = new AlertDialog.Builder(DeviceInfoActivity.this);
+        builder.setTitle("Dismiss");
+        builder.setCancelable(false);
+        builder.setMessage("The current system of bluetooth is not available!");
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            setResult(RESULT_OK);
+            finish();
+        });
+        builder.show();
     }
 
     public void onBack(View view) {
-        if (isWindowLocked()) return;
         back();
     }
 

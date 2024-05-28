@@ -1,42 +1,71 @@
 package com.moko.lw009smpro.activity;
 
 import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.SystemClock;
-
-import com.elvishew.xlog.XLog;
-import com.moko.lw009smpro.dialog.LoadingMessageDialog;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.moko.lw009smpro.dialog.LoadingMessageDialog;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class Lw009BaseActivity extends FragmentActivity {
+    private boolean mReceiverTag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            Intent intent = new Intent(this, GuideActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            return;
+        if (registerEvent()) {
+            EventBus.getDefault().register(this);
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+            registerReceiver(mReceiver, filter);
+            mReceiverTag = true;
         }
+    }
+
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null) {
+                String action = intent.getAction();
+                if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
+                    int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
+                    if (blueState == BluetoothAdapter.STATE_TURNING_OFF) {
+                        onSystemBleTurnOff();
+                    }
+                }
+            }
+        }
+    };
+
+    protected boolean registerEvent() {
+        return true;
+    }
+
+    protected void onSystemBleTurnOff() {
+        dismissSyncProgressDialog();
+        finish();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        XLog.i("onConfigurationChanged...");
-        finish();
+        if (mReceiverTag) {
+            mReceiverTag = false;
+            // 注销广播
+            unregisterReceiver(mReceiver);
+        }
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
     }
 
 

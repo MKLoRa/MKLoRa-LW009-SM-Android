@@ -3,11 +3,6 @@ package com.moko.lw009smpro.activity.setting;
 import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
 import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
 
-import android.bluetooth.BluetoothAdapter;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -42,7 +37,6 @@ import java.util.List;
  */
 public class AdvancedSettingActivity extends Lw009BaseActivity {
     private ActivityAdvancedSettingBinding mBind;
-    private boolean mReceiverTag = false;
     private boolean savedParamsError;
     private final String[] slaveWorkStatusArray = {"Sleep", "Normal", "Upgrading"};
     private final String[] parkingSlotTypeArray = {"0", "1"};
@@ -53,12 +47,6 @@ public class AdvancedSettingActivity extends Lw009BaseActivity {
         super.onCreate(savedInstanceState);
         mBind = ActivityAdvancedSettingBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
-
-        EventBus.getDefault().register(this);
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        registerReceiver(mReceiver, filter);
-        mReceiverTag = true;
 
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>(8);
@@ -72,7 +60,7 @@ public class AdvancedSettingActivity extends Lw009BaseActivity {
         MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[0]));
         mBind.tvParkingSlotType.setOnClickListener(v -> {
             BottomDialog dialog = new BottomDialog();
-            dialog.setDatas(new ArrayList<>(Arrays.asList(parkingSlotTypeArray)),parkingSlotType);
+            dialog.setDatas(new ArrayList<>(Arrays.asList(parkingSlotTypeArray)), parkingSlotType);
             dialog.setListener(value -> {
                 parkingSlotType = value;
                 mBind.tvParkingSlotType.setText(parkingSlotTypeArray[value]);
@@ -174,7 +162,8 @@ public class AdvancedSettingActivity extends Lw009BaseActivity {
                         }
                     }
                 }
-            } else if (MokoConstants.ACTION_CURRENT_DATA.equals(action)) {
+            }
+            if (MokoConstants.ACTION_CURRENT_DATA.equals(action)) {
                 OrderTaskResponse response = event.getResponse();
                 OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
                 byte[] value = response.responseValue;
@@ -232,34 +221,6 @@ public class AdvancedSettingActivity extends Lw009BaseActivity {
         if (TextUtils.isEmpty(mBind.etThresholdZ.getText())) return false;
         int thresholdZ = Integer.parseInt(mBind.etThresholdZ.getText().toString());
         return thresholdZ >= 5 && thresholdZ <= 20000;
-    }
-
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                String action = intent.getAction();
-                if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
-                    int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
-                    if (blueState == BluetoothAdapter.STATE_TURNING_OFF) {
-                        dismissSyncProgressDialog();
-                        finish();
-                    }
-                }
-            }
-        }
-    };
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mReceiverTag) {
-            mReceiverTag = false;
-            // 注销广播
-            unregisterReceiver(mReceiver);
-        }
-        if (EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().unregister(this);
     }
 
     public void onBack(View view) {

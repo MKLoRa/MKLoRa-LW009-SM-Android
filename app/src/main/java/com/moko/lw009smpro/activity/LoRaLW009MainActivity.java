@@ -1,11 +1,7 @@
 package com.moko.lw009smpro.activity;
 
 import android.annotation.SuppressLint;
-import android.bluetooth.BluetoothAdapter;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -49,7 +45,6 @@ import com.moko.support.lw009.callback.MokoScanDeviceCallback;
 import com.moko.support.lw009.entity.DeviceInfo;
 import com.moko.support.lw009.entity.OrderCHAR;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -64,7 +59,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class LoRaLW009MainActivity extends Lw009BaseActivity implements MokoScanDeviceCallback, BaseQuickAdapter.OnItemChildClickListener {
     private ActivityMainBinding mBind;
-    private boolean mReceiverTag = false;
     private ConcurrentHashMap<String, AdvInfo> beaconInfoHashMap;
     private ArrayList<AdvInfo> beaconInfo;
     private DeviceListAdapter adapter;
@@ -106,11 +100,6 @@ public class LoRaLW009MainActivity extends Lw009BaseActivity implements MokoScan
         mBind.rvDevices.setAdapter(adapter);
         mHandler = new Handler(Looper.getMainLooper());
         mokoBleScanner = new MokoBleScanner();
-        EventBus.getDefault().register(this);
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        registerReceiver(mReceiver, filter);
-        mReceiverTag = true;
         if (!MoKoSupport.getInstance().isBluetoothOpen()) {
             MoKoSupport.getInstance().enableBluetooth();
         } else {
@@ -355,30 +344,14 @@ public class LoRaLW009MainActivity extends Lw009BaseActivity implements MokoScan
         }
     }
 
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                String action = intent.getAction();
-                if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
-                    int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
-                    switch (blueState) {
-                        case BluetoothAdapter.STATE_TURNING_OFF:
-                            if (animation != null) {
-                                mHandler.removeMessages(0);
-                                mokoBleScanner.stopScanDevice();
-                                onStopScan();
-                            }
-                            break;
-                        case BluetoothAdapter.STATE_ON:
-                            if (animation == null) startScan();
-                            break;
-                    }
-                }
-            }
+    @Override
+    protected void onSystemBleTurnOff() {
+        if (animation != null) {
+            mHandler.removeMessages(0);
+            mokoBleScanner.stopScanDevice();
+            onStopScan();
         }
-    };
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onConnectStatusEvent(ConnectStatusEvent event) {
@@ -477,17 +450,6 @@ public class LoRaLW009MainActivity extends Lw009BaseActivity implements MokoScan
     @Override
     public void onBackPressed() {
         back();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mReceiverTag) {
-            mReceiverTag = false;
-            unregisterReceiver(mReceiver);
-        }
-        if (null != timer) timer.cancel();
-        EventBus.getDefault().unregister(this);
     }
 
     @Override
