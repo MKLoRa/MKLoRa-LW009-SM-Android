@@ -163,8 +163,9 @@ public class MoKoSupport extends MokoBleLib {
                         responseValue[1] = (byte) 0x00;
                         responseValue[2] = (byte) cmd;
                         responseValue[3] = (byte) dataLength;
-                        if (dataLength >= 0)
-                            System.arraycopy(dataBytes, 0, responseValue, 4, dataLength);
+                        for (int i = 0; i < dataLength; i++) {
+                            responseValue[4 + i] = dataBytes[i];
+                        }
                         dataSb = null;
                         dataBytes = null;
                         // 最后一包
@@ -194,6 +195,9 @@ public class MoKoSupport extends MokoBleLib {
         }
         if (responseUUID.equals(OrderCHAR.CHAR_LOG.getUuid())) {
             orderCHAR = OrderCHAR.CHAR_LOG;
+        }
+        if (responseUUID.equals(OrderCHAR.CHAR_SLAVE_NOTIFY.getUuid())){
+            orderCHAR = OrderCHAR.CHAR_SLAVE_NOTIFY;
         }
         if (orderCHAR == null)
             return false;

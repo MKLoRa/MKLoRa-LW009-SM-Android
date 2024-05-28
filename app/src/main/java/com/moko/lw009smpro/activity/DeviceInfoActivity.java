@@ -13,7 +13,9 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -50,6 +52,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.OnCheckedChangeListener {
@@ -99,11 +102,30 @@ public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.
         }
         mBind.layoutTop.setOnClickListener(v -> {
             if (mBind.radioBtnParking.isChecked()) {
-                if (isTriggerValid()) {
-                    startActivity(new Intent(this, AdvancedSettingActivity.class));
-                }
+                if (isTriggerValid()) showPwdDialog();
             }
         });
+    }
+
+    private void showPwdDialog(){
+        View v = LayoutInflater.from(this).inflate(R.layout.dialog_advance, null);
+        final EditText etPwd = v.findViewById(R.id.et_order_number);
+        new AlertDialog.Builder(this)
+                .setView(v)
+                .setPositiveButton("Sure", (dialog, which) -> {
+                    if (TextUtils.isEmpty(etPwd.getText())) {
+                        ToastUtils.showToast(this, "password can not be empty！");
+                        return;
+                    }
+                    String pwd = etPwd.getText().toString();
+                    if (!"MOKO4567".equals(pwd)){
+                        ToastUtils.showToast(this,"password error");
+                        return;
+                    }
+                    startActivity(new Intent(this, AdvancedSettingActivity.class));
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
     private void initFragment() {
@@ -194,6 +216,15 @@ public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.
                                 case KEY_HEARTBEAT_INTERVAL:
                                 case KEY_TIME_ZONE:
                                 case KEY_LOW_POWER_PAYLOAD_ENABLE:
+                                    ToastUtils.showToast(this, result != 1 ? SAVE_ERROR : SAVE_SUCCESS);
+                                    break;
+                                case KEY_PARKING_DETECTION_MODE:
+                                case KEY_PARKING_DETECTION_SENSITIVITY:
+                                case KEY_PARKING_DETECTION_DURATION:
+                                case KEY_PARKING_DETECTION_CONFIRM_DURATION:
+                                    if (result != 1) savedParamsError = true;
+                                    break;
+                                case KEY_PARKING_DETECTION_PAYLOAD_TYPE:
                                     if (result != 1) savedParamsError = true;
                                     ToastUtils.showToast(this, savedParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
@@ -351,6 +382,7 @@ public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.
         if (mBind.radioBtnGeneral.isChecked()) {
             generalFragment.saveParams();
         } else if (mBind.radioBtnParking.isChecked()) {
+            savedParamsError = false;
             parkingFragment.saveParkingParams();
         }
     }

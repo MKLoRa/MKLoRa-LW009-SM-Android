@@ -38,13 +38,13 @@ final class MokoBleConfig extends MokoBleManager {
         if (service != null) {
             passwordCharacteristic = service.getCharacteristic(OrderCHAR.CHAR_PASSWORD.getUuid());
             disconnectedCharacteristic = service.getCharacteristic(OrderCHAR.CHAR_DISCONNECTED_NOTIFY.getUuid());
-            storageDataCharacteristic = service.getCharacteristic(OrderCHAR.CHAR_STORAGE_DATA_NOTIFY.getUuid());
+//            storageDataCharacteristic = service.getCharacteristic(OrderCHAR.CHAR_STORAGE_DATA_NOTIFY.getUuid());
             paramsCharacteristic = service.getCharacteristic(OrderCHAR.CHAR_PARAMS.getUuid());
             logCharacteristic = service.getCharacteristic(OrderCHAR.CHAR_LOG.getUuid());
             slaveNotifyCharacteristic = service.getCharacteristic(OrderCHAR.CHAR_SLAVE_NOTIFY.getUuid());
             enablePasswordNotify();
             enableDisconnectedNotify();
-            enableStorageDataNotify();
+//            enableStorageDataNotify();
             enableSlaveNotify();
             enableParamNotify();
             return true;

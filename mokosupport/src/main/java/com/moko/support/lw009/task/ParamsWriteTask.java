@@ -1234,6 +1234,7 @@ public class ParamsWriteTask extends OrderTask {
                     (byte) 0x01,
                     (byte) ParamsKeyEnum.KEY_FILTER_NAME_RULES.getParamsKey(),
                     (byte) 0x01,
+                    (byte) 0x00,
                     (byte) 0x00
             };
         } else {

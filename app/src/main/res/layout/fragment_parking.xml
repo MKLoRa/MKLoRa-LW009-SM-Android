@@ -17,13 +17,14 @@
 
         <TextView
             android:id="@+id/tv1"
-            android:layout_width="wrap_content"
+            android:layout_width="0px"
             android:layout_height="50dp"
             android:gravity="center_vertical"
             android:text="Detection Alogorithms"
             android:textColor="@color/black_333333"
             android:textSize="14sp"
             android:textStyle="bold"
+            app:layout_constraintRight_toLeftOf="@+id/tvDetectionAlogorithms"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,6 +37,9 @@
             android:minWidth="100dp"
             android:textColor="@color/whiteFFFFFF"
             android:textSize="14sp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            app:layout_constraintLeft_toRightOf="@+id/tv1"
             app:layout_constraintBottom_toBottomOf="@+id/tv1"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv1"
@@ -105,7 +109,7 @@
             android:hint="1-60"
             android:inputType="number"
             android:maxLength="2"
-            android:textColor="@color/whiteFFFFFF"
+            android:textColor="@color/black_333333"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@+id/tv3"
             app:layout_constraintRight_toLeftOf="@+id/tv3Unit"
@@ -150,7 +154,7 @@
             android:hint="1-60"
             android:inputType="number"
             android:maxLength="2"
-            android:textColor="@color/whiteFFFFFF"
+            android:textColor="@color/black_333333"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@+id/tv4"
             app:layout_constraintRight_toLeftOf="@+id/tv4Unit"

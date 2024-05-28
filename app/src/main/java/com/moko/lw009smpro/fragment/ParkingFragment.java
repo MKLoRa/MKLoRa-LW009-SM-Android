@@ -63,9 +63,9 @@ public class ParkingFragment extends Fragment {
 
         mBind.tvDetectionSensitivity.setOnClickListener(v -> {
             BottomDialog dialog = new BottomDialog();
-            dialog.setDatas(new ArrayList<>(Arrays.asList(parkingDetectionSensitivityArray)), parkingDetectionSensitivitySelect);
+            dialog.setDatas(new ArrayList<>(Arrays.asList(parkingDetectionSensitivityArray)), parkingDetectionSensitivitySelect - 1);
             dialog.setListener(value -> {
-                this.parkingDetectionSensitivitySelect = value;
+                this.parkingDetectionSensitivitySelect = value + 1;
                 mBind.tvDetectionSensitivity.setText(parkingDetectionSensitivityArray[value]);
             });
             dialog.show(getChildFragmentManager());
@@ -106,7 +106,7 @@ public class ParkingFragment extends Fragment {
 
     public void setParkingDetectionSensitivity(int parkingDetectionSensitivitySelect) {
         this.parkingDetectionSensitivitySelect = parkingDetectionSensitivitySelect;
-        mBind.tvDetectionSensitivity.setText(parkingDetectionSensitivityArray[parkingDetectionSensitivitySelect]);
+        mBind.tvDetectionSensitivity.setText(parkingDetectionSensitivityArray[parkingDetectionSensitivitySelect - 1]);
     }
 
     public void setParkingDetectionDuration(int duration) {
@@ -139,7 +139,7 @@ public class ParkingFragment extends Fragment {
     }
 
     public void saveParkingParams() {
-        if (isValid()){
+        if (isValid()) {
             activity.showSyncingProgressDialog();
             int duration = Integer.parseInt(mBind.etParkingDetection.getText().toString());
             int confirmDuration = Integer.parseInt(mBind.etDetectionConfirmation.getText().toString());
@@ -148,9 +148,9 @@ public class ParkingFragment extends Fragment {
             orderTasks.add(OrderTaskAssembler.setParkingDetectionSensitivity(parkingDetectionSensitivitySelect));
             orderTasks.add(OrderTaskAssembler.setParkingDetectionDuration(duration));
             orderTasks.add(OrderTaskAssembler.setParkingDetectionConfirmDuration(confirmDuration));
-            orderTasks.add(OrderTaskAssembler.setParkingDetectionPayloadType(parkingDataReportSelect,beaconReportSwitchSelect));
+            orderTasks.add(OrderTaskAssembler.setParkingDetectionPayloadType(parkingDataReportSelect, beaconReportSwitchSelect));
             MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[0]));
-        }else {
+        } else {
             ToastUtils.showToast(requireContext(), "Para error!");
         }
     }

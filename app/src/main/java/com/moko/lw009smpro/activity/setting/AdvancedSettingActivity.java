@@ -20,6 +20,7 @@ import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
 import com.moko.lw009smpro.databinding.ActivityAdvancedSettingBinding;
+import com.moko.lw009smpro.dialog.BottomDialog;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
@@ -69,6 +70,15 @@ public class AdvancedSettingActivity extends Lw009BaseActivity {
         orderTasks.add(OrderTaskAssembler.getParkingLotType());
         orderTasks.add(OrderTaskAssembler.getParkingDetectionThreshold());
         MoKoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[0]));
+        mBind.tvParkingSlotType.setOnClickListener(v -> {
+            BottomDialog dialog = new BottomDialog();
+            dialog.setDatas(new ArrayList<>(Arrays.asList(parkingSlotTypeArray)),parkingSlotType);
+            dialog.setListener(value -> {
+                parkingSlotType = value;
+                mBind.tvParkingSlotType.setText(parkingSlotTypeArray[value]);
+            });
+            dialog.show(getSupportFragmentManager());
+        });
     }
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)

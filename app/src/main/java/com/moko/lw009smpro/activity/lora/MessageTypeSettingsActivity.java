@@ -62,8 +62,8 @@ public class MessageTypeSettingsActivity extends Lw009BaseActivity {
         mReceiverTag = true;
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>(8);
-        orderTasks.add(OrderTaskAssembler.getParkingInfoPayload());
         orderTasks.add(OrderTaskAssembler.getHeartbeatPayload());
+        orderTasks.add(OrderTaskAssembler.getParkingInfoPayload());
         orderTasks.add(OrderTaskAssembler.getBeaconPayload());
         orderTasks.add(OrderTaskAssembler.getLowPowerPayload());
         orderTasks.add(OrderTaskAssembler.getShutdownPayload());
@@ -75,11 +75,11 @@ public class MessageTypeSettingsActivity extends Lw009BaseActivity {
     private void setListener() {
         mBind.tvParkingInfoPayloadType.setOnClickListener(v -> {
             int index = unconfirmed.equals(mBind.tvParkingInfoPayloadType.getText().toString().trim()) ? 0 : 1;
-            showBottomDialog(payloadTypes, index, mBind.tvParkingInfoPayloadType, 1);
+            showBottomDialog(payloadTypes, index, mBind.tvParkingInfoPayloadType, 2);
         });
         mBind.tvHeartbeatPayloadType.setOnClickListener(v -> {
             int index = unconfirmed.equals(mBind.tvHeartbeatPayloadType.getText().toString().trim()) ? 0 : 1;
-            showBottomDialog(payloadTypes, index, mBind.tvHeartbeatPayloadType, 2);
+            showBottomDialog(payloadTypes, index, mBind.tvHeartbeatPayloadType, 1);
         });
         mBind.tvBeaconPayloadType.setOnClickListener(v -> {
             int index = unconfirmed.equals(mBind.tvBeaconPayloadType.getText().toString().trim()) ? 0 : 1;

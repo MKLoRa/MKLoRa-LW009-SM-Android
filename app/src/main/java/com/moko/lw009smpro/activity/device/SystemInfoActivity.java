@@ -89,7 +89,6 @@ public class SystemInfoActivity extends Lw009BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)
     public void onConnectStatusEvent(ConnectStatusEvent event) {
-        EventBus.getDefault().cancelEventDelivery(event);
         final String action = event.getAction();
         runOnUiThread(() -> {
             if (MokoConstants.ACTION_DISCONNECTED.equals(action)) {
@@ -106,8 +105,8 @@ public class SystemInfoActivity extends Lw009BaseActivity {
         if (!MokoConstants.ACTION_CURRENT_DATA.equals(action))
             EventBus.getDefault().cancelEventDelivery(event);
         runOnUiThread(() -> {
-            if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)){
-                ToastUtils.showToast(this,"time out");
+            if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
+                ToastUtils.showToast(this, "time out");
                 dismissSyncProgressDialog();
             }
             if (MokoConstants.ACTION_ORDER_FINISH.equals(action)) {
@@ -189,6 +188,7 @@ public class SystemInfoActivity extends Lw009BaseActivity {
                     if (header == 0xED && flag == 0x02 && cmd == ParamsKeyEnum.KEY_SLAVE_FIRMWARE_REQUEST.getParamsKey() && len == 2) {
                         //从机升级固件请求
                         int packageNum = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 6));
+                        XLog.i("当前包数：" + packageNum);
                         MoKoSupport.getInstance().sendOrder(OrderTaskAssembler.setSlaveUpdate(getFirmwareBytes(packageNum)));
                     } else if (header == 0xED && flag == 0x02 && cmd == ParamsKeyEnum.KEY_SLAVE_UPDATE_RESULT.getParamsKey() && len == 1) {
                         //从机升级结果通知
@@ -276,8 +276,8 @@ public class SystemInfoActivity extends Lw009BaseActivity {
         dialog.setCancel("Cancel");
         dialog.setConfirm("OK");
         dialog.setOnAlertConfirmListener(() -> {
-            launcher.launch("application/zip");
-//        slaveLauncher.launch("application/octet-stream");
+//            launcher.launch("application/zip");
+            slaveLauncher.launch("application/octet-stream");
         });
         dialog.show(getSupportFragmentManager());
     }
@@ -314,9 +314,9 @@ public class SystemInfoActivity extends Lw009BaseActivity {
                     for (int i = 0; i < array.length; i++) {
                         bytes[i] = array[i].byteValue();
                     }
-                    int hardwareVersion = bytes[80] & 0xff;
+                    int hardwareVersion = bytes[82] & 0xff;
                     int softwareVersion = bytes[81] & 0xff;
-                    int deviceMode = bytes[82] & 0xff;
+                    int deviceMode = bytes[80] & 0xff;
                     int firmwareLength = bytes.length;
                     byte[] firmwareCheckCrc = checkCrc(bytes);
                     firmwareBytes = bytes;
