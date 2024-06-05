@@ -1,6 +1,6 @@
 if (!isLibrary.toBoolean()) {
-    include ':app'
+    include ':lw009'
     include ':mokosupport'
 } else {
-    include ':app'
+    include ':lw009'
 }
