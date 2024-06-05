@@ -267,7 +267,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="(-40,-20,-16,-12,-8,-4,0,+2,+3,+4)"
+            android:text="(-40,-20,-16,-12,-8,-4,0,+3,+4)"
             android:textColor="@color/ColorB3B3B3"
             android:textSize="12sp"
             app:layout_constraintTop_toBottomOf="@id/tx_power" />
@@ -277,7 +277,7 @@
             style="@style/CustomSeekbarStyle"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            android:max="9"
+            android:max="8"
             android:maxHeight="2dp"
             android:minHeight="2dp"
             android:paddingStart="0dp"

@@ -34,6 +34,7 @@ public enum ParamsKeyEnum implements Serializable {
     KEY_BLE_SCAN_TIME(0x1F),
     KEY_PAYLOAD_BEACON_COUNT(0x20),
     KEY_NO_PARKING_CALIBRATION_STATUS(0x21),
+    KEY_SLAVE_VERSION(0x22),
 
 
     //// 蓝牙相关参数

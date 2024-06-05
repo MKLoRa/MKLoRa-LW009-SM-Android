@@ -162,6 +162,12 @@ public class OrderTaskAssembler {
         return task;
     }
 
+    public static OrderTask getSlaveVersion(){
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_SLAVE_VERSION);
+        return task;
+    }
+
     public static OrderTask getHeartBeatInterval() {
         ParamsReadTask task = new ParamsReadTask();
         task.setData(ParamsKeyEnum.KEY_HEARTBEAT_INTERVAL);
@@ -721,7 +727,7 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask setAdvTxPower(@IntRange(from = -40, to = 8) int txPower) {
+    public static OrderTask setAdvTxPower(@IntRange(from = -40, to = 4) int txPower) {
         ParamsWriteTask task = new ParamsWriteTask();
         task.setAdvTxPower(txPower);
         return task;

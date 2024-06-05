@@ -55,7 +55,7 @@
                 <TextView
                     android:id="@+id/selftest_status"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_height="30dp"
                     android:gravity="center_vertical"
                     android:text="Selftest Status:"
                     android:textColor="@color/black_333333"
@@ -67,7 +67,7 @@
                 <TextView
                     android:id="@+id/tv_selftest_status"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_height="30dp"
                     android:layout_marginLeft="20dp"
                     android:gravity="center_vertical"
                     android:text="0"
@@ -117,7 +117,7 @@
                 <TextView
                     android:id="@+id/pcba_status"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_height="30dp"
                     android:gravity="center_vertical"
                     android:text="PCBA Status:"
                     android:textColor="@color/black_333333"
@@ -129,7 +129,7 @@
                 <TextView
                     android:id="@+id/tv_pcba_status"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_height="30dp"
                     android:layout_marginLeft="20dp"
                     android:gravity="center_vertical"
                     android:text="0"
@@ -142,7 +142,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
+                android:layout_height="50dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_radius_white_bg"
                 android:orientation="horizontal"
@@ -162,168 +162,152 @@
                     android:id="@+id/tvCalibrationStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
                     android:gravity="center_vertical"
                     android:textColor="@color/black_333333"
                     android:textSize="15sp"
-                    android:layout_marginLeft="20dp"
                     tools:text="0" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/whiteFFFFFF"
-                android:orientation="vertical"
-                android:padding="10dp">
+                android:background="@drawable/shape_radius_white_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp">
 
                 <TextView
-                    android:id="@+id/battery_info"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:text="Battery information:"
+                    android:text="Parking FW Version"
                     android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tv_runtime"
+                    android:id="@+id/tvParkingFWVersion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:gravity="center_vertical"
                     android:textColor="@color/black_333333"
-                    android:textSize="13sp"
-                    tools:text="12121212312" />
+                    android:textSize="15sp"
+                    tools:text="12" />
 
                 <TextView
-                    android:id="@+id/tv_adv_times"
+                    android:id="@+id/tvDfu"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/black_333333"
-                    android:textSize="13sp"
-                    tools:text="12121212312" />
-
-                <TextView
-                    android:id="@+id/tv_flash_times"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/black_333333"
-                    android:textSize="13sp"
-                    tools:text="12121212312" />
-
-                <TextView
-                    android:id="@+id/tv_axis_duration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/black_333333"
-                    android:textSize="13sp"
-                    tools:text="12121212312" />
-
-                <TextView
-                    android:id="@+id/tv_ble_fix_duration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/black_333333"
-                    android:textSize="13sp"
-                    tools:text="12121212312" />
-
-                <TextView
-                    android:id="@+id/tv_wifi_fix_duration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/black_333333"
-                    android:textSize="13sp"
-                    tools:text="12121212312" />
-
-                <TextView
-                    android:id="@+id/tv_gps_fix_duration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/black_333333"
-                    android:textSize="13sp"
-                    tools:text="12121212312" />
-
-                <TextView
-                    android:id="@+id/tv_lora_transmission_times"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/black_333333"
-                    android:textSize="13sp"
-                    tools:text="12121212312" />
-
-                <TextView
-                    android:id="@+id/tv_lora_power"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/black_333333"
-                    android:textSize="13sp"
-                    tools:text="12121212312" />
+                    android:layout_height="35dp"
+                    android:background="@drawable/shape_radius_blue_btn_bg"
+                    android:gravity="center"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                    android:text="DFU"
+                    android:textColor="@color/whiteFFFFFF"
+                    android:textSize="15sp" />
             </LinearLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_battery_reset"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/whiteFFFFFF"
-                android:padding="10dp">
+                android:background="@drawable/shape_radius_white_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Battery Reset"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Parking HW Version"
                     android:textColor="@color/black_333333"
                     android:textSize="15sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_battery_reset"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_battery_reset" />
+                    android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tv_battery_reset"
+                    android:id="@+id/tvParkingHWVersion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/shape_radius_blue_btn_bg"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:minWidth="70dp"
-                    android:onClick="onBatteryReset"
-                    android:padding="12dp"
-                    android:text="Reset"
-                    android:textColor="@color/whiteFFFFFF"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    tools:text="12" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shape_radius_white_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="6dp"
-                    android:text="@string/battery_reset_tips"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Parking Protocol Version"
                     android:textColor="@color/black_333333"
-                    android:textSize="12sp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_battery_reset" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvParkingProtocolVersion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black_333333"
+                    android:textSize="15sp"
+                    tools:text="12" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shape_radius_white_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp">
+
+                <TextView
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Parking System Logs"
+                    android:textColor="@color/black_333333"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/ivParkLogSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingStart="20dp"
+                    android:gravity="center_vertical"
+                    android:src="@drawable/ic_unchecked"/>
+            </LinearLayout>
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

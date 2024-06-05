@@ -14,6 +14,7 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
+import com.moko.lw009smpro.AppConstants;
 import com.moko.lw009smpro.R;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
 import com.moko.lw009smpro.databinding.ActivityConnSettingBinding;
@@ -35,10 +36,11 @@ import java.util.List;
 public class LoRaConnSettingActivity extends Lw009BaseActivity implements CompoundButton.OnCheckedChangeListener {
     private ActivityConnSettingBinding mBind;
     private final String[] mModeList = {"ABP", "OTAA"};
-    private final String[] mRegionsList = {"AS923", "AU915", "CN470", "CN779", "EU433", "EU868", "KR920", "IN865", "US915", "RU864", "AS923-2", "AS923-3", "AS923-4"};
+    private final String[] mRegionsList = {"AS923", "AU915", "EU868", "KR920", "IN865", "US915", "RU864", "AS923-1", "AS923-2", "AS923-3", "AS923-4"};
     private final String[] mMaxRetransmissionTimesList = {"1", "2"};
     private int mSelectedMode;
     private int mSelectedRegion;
+    private int mSelectedRegionIndex;
     private int mSelectedCh1;
     private int mSelectedCh2;
     private int mSelectedDr;
@@ -129,6 +131,16 @@ public class LoRaConnSettingActivity extends Lw009BaseActivity implements Compou
                                     break;
                                 case KEY_LORA_UPLINK_STRATEGY:
                                     if (result != 1) savedParamsError = true;
+                                    if (savedParamsError) {
+                                        ToastUtils.showToast(this, SAVE_ERROR);
+                                    } else {
+                                        showSyncingProgressDialog();
+                                        MoKoSupport.getInstance().sendOrder(OrderTaskAssembler.restart());
+                                    }
+                                    break;
+
+                                case KEY_REBOOT:
+                                    if (result != 1) savedParamsError = true;
                                     ToastUtils.showToast(this, savedParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
                             }
@@ -195,7 +207,8 @@ public class LoRaConnSettingActivity extends Lw009BaseActivity implements Compou
                                     if (length > 0) {
                                         final int region = value[4] & 0xFF;
                                         mSelectedRegion = region;
-                                        mBind.tvRegion.setText(mRegionsList[region]);
+                                        mSelectedRegionIndex = region > 1 ? region - 3 : region;
+                                        mBind.tvRegion.setText(mRegionsList[mSelectedRegionIndex]);
                                         initCHDRRange();
                                         initDutyCycle();
                                     }
@@ -297,11 +310,13 @@ public class LoRaConnSettingActivity extends Lw009BaseActivity implements Compou
     public void selectRegion(View view) {
         if (isWindowLocked()) return;
         BottomDialog bottomDialog = new BottomDialog();
-        bottomDialog.setDatas(new ArrayList<>(Arrays.asList(mRegionsList)), mSelectedRegion);
+        bottomDialog.setDatas(new ArrayList<>(Arrays.asList(mRegionsList)), mSelectedRegionIndex);
         bottomDialog.setListener(value -> {
-            if (mSelectedRegion != value) {
+            int selectValue = value > 1 ? value + 3 : value;
+            if (mSelectedRegion != selectValue) {
                 mBind.cbAdr.setChecked(true);
-                mSelectedRegion = value;
+                mSelectedRegionIndex = value;
+                mSelectedRegion = selectValue;
                 mBind.tvRegion.setText(mRegionsList[value]);
                 initCHDRRange();
                 updateCHDR();

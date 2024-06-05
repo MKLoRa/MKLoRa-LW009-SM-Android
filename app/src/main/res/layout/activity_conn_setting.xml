@@ -422,7 +422,7 @@
                             android:layout_below="@id/tv_ch_1"
                             android:paddingTop="6dp"
                             android:paddingBottom="6dp"
-                            android:text="*It is only used for US915,AU915,CN470"
+                            android:text="*It is only used for US915,AU915"
                             android:textColor="@color/black_333333"
                             android:textSize="15sp" />
 
@@ -459,7 +459,7 @@
                             android:layout_height="wrap_content"
                             android:paddingTop="6dp"
                             android:paddingBottom="6dp"
-                            android:text="*It is only used for EU868,CN779,EU433 and RU864.\nOff: The uplink report interval will not be limit by region freqency.\nOn:The uplink report interval will be limit by region freqency."
+                            android:text="*It is only used for EU868 and RU864.\nOff: The uplink report interval will not be limit by region freqency.\nOn:The uplink report interval will be limit by region freqency."
                             android:textColor="@color/black_333333"
                             android:textSize="15sp" />
 
@@ -502,7 +502,7 @@
                             android:layout_below="@id/tv_dr"
                             android:paddingTop="6dp"
                             android:paddingBottom="6dp"
-                            android:text="*It is only used for CN470, CN779, EU433, EU868,KR920, IN865, RU864"
+                            android:text="*It is only used for EU868,KR920, IN865, RU864"
                             android:textColor="@color/black_333333"
                             android:textSize="15sp" />
                     </RelativeLayout>

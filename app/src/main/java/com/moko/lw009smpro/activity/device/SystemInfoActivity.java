@@ -37,7 +37,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -163,38 +162,8 @@ public class SystemInfoActivity extends Lw009BaseActivity {
                         }
                         break;
                 }
-            } else if (MokoConstants.ACTION_CURRENT_DATA.equals(action)) {
-                OrderTaskResponse response = event.getResponse();
-                OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
-                byte[] value = response.responseValue;
-                int header = value[0] & 0xFF;
-                int flag = value[1] & 0xFF;
-                int cmd = value[2] & 0xFF;
-                int len = value[3] & 0xFF;
-                if (orderCHAR == OrderCHAR.CHAR_SLAVE_NOTIFY) {
-                    if (header == 0xED && flag == 0x02 && cmd == ParamsKeyEnum.KEY_SLAVE_FIRMWARE_REQUEST.getParamsKey() && len == 2) {
-                        //从机升级固件请求
-                        int packageNum = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 6));
-                        XLog.i("当前包数：" + packageNum);
-                        MoKoSupport.getInstance().sendOrder(OrderTaskAssembler.setSlaveUpdate(getFirmwareBytes(packageNum)));
-                    } else if (header == 0xED && flag == 0x02 && cmd == ParamsKeyEnum.KEY_SLAVE_UPDATE_RESULT.getParamsKey() && len == 1) {
-                        //从机升级结果通知
-                        dismissSyncProgressDialog();
-                        ToastUtils.showToast(this, value[4] == 1 ? "update success" : "update fail");
-                    }
-                }
             }
         });
-    }
-
-    private byte[] getFirmwareBytes(int packageNum) {
-        int length = firmwareBytes.length;
-        int currentIndex = packageNum * 128;
-        if (currentIndex <= length) {
-            return Arrays.copyOfRange(firmwareBytes, currentIndex - 128, currentIndex);
-        } else {
-            return Arrays.copyOfRange(firmwareBytes, currentIndex - 128, length);
-        }
     }
 
     public void onDebuggerMode(View view) {
@@ -238,59 +207,9 @@ public class SystemInfoActivity extends Lw009BaseActivity {
         dialog.setMessage("Please disconnect the load device before DFU, otherwise there may be security risks.");
         dialog.setCancel("Cancel");
         dialog.setConfirm("OK");
-        dialog.setOnAlertConfirmListener(() -> {
-//            launcher.launch("application/zip");
-            slaveLauncher.launch("application/octet-stream");
-        });
+        dialog.setOnAlertConfirmListener(() -> launcher.launch("application/zip"));
         dialog.show(getSupportFragmentManager());
     }
-
-    private byte[] checkCrc(byte[] bytes) {
-        int crc = 0x0000;
-        for (byte aByte : bytes) {
-            crc += aByte & 0xff;
-        }
-        crc ^= 0x1021;
-        return MokoUtils.toByteArray(crc, 4);
-    }
-
-    private byte[] firmwareBytes;
-
-    private final ActivityResultLauncher<String> slaveLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), result -> {
-        if (null == result) return;
-        String path = FileUtils.getPath(this, result);
-        if (TextUtils.isEmpty(path)) return;
-        showSyncingProgressDialog();
-        new Thread() {
-            @Override
-            public void run() {
-                List<Integer> list = new ArrayList<>();
-                try {
-                    FileInputStream inputStream = new FileInputStream(path);
-                    int data;
-                    while ((data = inputStream.read()) != -1) {
-                        list.add(data);
-                    }
-                    inputStream.close();
-                    Integer[] array = list.toArray(new Integer[0]);
-                    byte[] bytes = new byte[array.length];
-                    for (int i = 0; i < array.length; i++) {
-                        bytes[i] = array[i].byteValue();
-                    }
-                    int hardwareVersion = bytes[82] & 0xff;
-                    int softwareVersion = bytes[81] & 0xff;
-                    int deviceMode = bytes[80] & 0xff;
-                    int firmwareLength = bytes.length;
-                    byte[] firmwareCheckCrc = checkCrc(bytes);
-                    firmwareBytes = bytes;
-                    runOnUiThread(() -> MoKoSupport.getInstance().sendOrder(OrderTaskAssembler.setTriggerSlaveUpdate(hardwareVersion, softwareVersion, deviceMode, firmwareLength, firmwareCheckCrc)));
-                } catch (Exception e) {
-                    XLog.e(e);
-                    runOnUiThread(() -> dismissSyncProgressDialog());
-                }
-            }
-        }.start();
-    });
 
     private final ActivityResultLauncher<String> launcher = registerForActivityResult(new ActivityResultContracts.GetContent(), result -> {
         if (null == result) return;
@@ -304,6 +223,7 @@ public class SystemInfoActivity extends Lw009BaseActivity {
         final DfuServiceInitiator starter = new DfuServiceInitiator(mDeviceMac)
                 .setKeepBond(false)
                 .setForeground(false)
+                .disableMtuRequest()
                 .setDisableNotification(true);
         starter.setZip(null, firmwareFilePath);
         starter.start(this, DfuService.class);

@@ -383,7 +383,7 @@ public class ParamsWriteTask extends OrderTask {
         response.responseValue = data;
     }
 
-    public void setAdvTxPower(@IntRange(from = -40, to = 8) int txPower) {
+    public void setAdvTxPower(@IntRange(from = -40, to = 4) int txPower) {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
