@@ -246,9 +246,17 @@ public class SystemInfoActivity extends Lw009BaseActivity {
 
     private void dismissDFUProgressDialog() {
         mDeviceConnectCount = 0;
+        isUpgrade = false;
         if (!isFinishing() && mDFUDialog != null && mDFUDialog.isShowing()) {
             mDFUDialog.dismiss();
         }
+        AlertMessageDialog dialog = new AlertMessageDialog();
+        dialog.setTitle("Update Firmware");
+        dialog.setMessage("Opps !DFU Failed. Please try again!");
+        dialog.setConfirm("OK");
+        dialog.setCancelGone();
+        dialog.setOnAlertConfirmListener(this::finish);
+        dialog.show(getSupportFragmentManager());
     }
 
     private boolean isUpgrade;
@@ -260,7 +268,6 @@ public class SystemInfoActivity extends Lw009BaseActivity {
             XLog.w("onDeviceConnecting...");
             mDeviceConnectCount++;
             if (mDeviceConnectCount > 3) {
-                ToastUtils.showToast(SystemInfoActivity.this, "Error:DFU Failed");
                 dismissDFUProgressDialog();
                 final LocalBroadcastManager manager = LocalBroadcastManager.getInstance(SystemInfoActivity.this);
                 final Intent abortAction = new Intent(DfuService.BROADCAST_ACTION);
@@ -312,7 +319,6 @@ public class SystemInfoActivity extends Lw009BaseActivity {
 
         @Override
         public void onError(@NonNull String deviceAddress, int error, int errorType, String message) {
-            ToastUtils.showToast(SystemInfoActivity.this, "Opps!DFU Failed. Please try again!");
             XLog.i("Error:" + message);
             dismissDFUProgressDialog();
         }

@@ -40,6 +40,7 @@ public class AdvInfoAnalysisImpl implements DeviceInfoParseable<AdvInfo> {
             advInfo.scanTime = currentTime;
             advInfo.verifyEnable = verifyEnable;
             advInfo.lowPower = lowPower;
+            advInfo.txPower = record.getTxPowerLevel();
             advInfo.connectable = result.isConnectable();
         } else {
             advInfo = new AdvInfo();
@@ -49,6 +50,7 @@ public class AdvInfoAnalysisImpl implements DeviceInfoParseable<AdvInfo> {
             advInfo.scanTime = SystemClock.elapsedRealtime();
             advInfo.verifyEnable = verifyEnable;
             advInfo.lowPower = lowPower;
+            advInfo.txPower = record.getTxPowerLevel();
             advInfo.connectable = result.isConnectable();
             advInfoHashMap.put(deviceInfo.mac, advInfo);
         }

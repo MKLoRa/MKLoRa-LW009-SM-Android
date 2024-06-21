@@ -58,7 +58,7 @@ public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.
     private GeneralFragment generalFragment;
     private DeviceFragment deviceFragment;
     private final String[] mUploadMode = {"ABP", "OTAA"};
-    private final String[] mRegions = {"AS923", "AU915", "CN470", "CN779", "EU433", "EU868", "KR920", "IN865", "US915", "RU864", "AS923-2", "AS923-3", "AS923-4"};
+    private final String[] mRegions = {"AS923", "AU915", "EU868", "KR920", "IN865", "US915", "RU864", "AS923-1", "AS923-2", "AS923-3", "AS923-4"};
     private int mSelectedRegion;
     private int mSelectUploadMode;
     private int disConnectType;
@@ -95,7 +95,7 @@ public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.
         });
     }
 
-    private void showPwdDialog(){
+    private void showPwdDialog() {
         View v = LayoutInflater.from(this).inflate(R.layout.dialog_advance, null);
         final EditText etPwd = v.findViewById(R.id.et_order_number);
         new AlertDialog.Builder(this)
@@ -106,8 +106,8 @@ public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.
                         return;
                     }
                     String pwd = etPwd.getText().toString();
-                    if (!"MOKO4567".equals(pwd)){
-                        ToastUtils.showToast(this,"password error");
+                    if (!"MOKO4567".equals(pwd)) {
+                        ToastUtils.showToast(this, "password error");
                         return;
                     }
                     startActivity(new Intent(this, AdvancedSettingActivity.class));
@@ -224,6 +224,7 @@ public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.
                                 case KEY_LORA_REGION:
                                     if (length > 0) {
                                         mSelectedRegion = value[4] & 0xFF;
+                                        if (mSelectedRegion > 1) mSelectedRegion -= 3;
                                     }
                                     break;
                                 case KEY_LORA_MODE:

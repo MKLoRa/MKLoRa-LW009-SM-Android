@@ -222,7 +222,6 @@ public enum ParamsKeyEnum implements Serializable {
 
 
     //从机升级
-    KEY_SLAVE_FIRMWARE_REQUEST(0xD0),
     KEY_SLAVE_UPDATE_RESULT(0xD1),
     KEY_NO_PARKING_CALIBRATION_RESULT(0xD2),
     KEY_PARKING_DETECTION_TIMES(0xD3),

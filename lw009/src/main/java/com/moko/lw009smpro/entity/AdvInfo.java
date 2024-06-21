@@ -8,5 +8,6 @@ public class AdvInfo {
     public long intervalTime;
     public boolean verifyEnable;
     public boolean lowPower;
+    public int txPower;
     public boolean connectable;
 }

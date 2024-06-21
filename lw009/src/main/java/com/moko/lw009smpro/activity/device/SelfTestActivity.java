@@ -46,6 +46,8 @@ public class SelfTestActivity extends Lw009BaseActivity {
     private int firmwareBytesLength;
     private boolean isUpdate;
     private int updateStatus;
+    private byte[] firmwareBytes;
+    private boolean isDialogShowing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +79,6 @@ public class SelfTestActivity extends Lw009BaseActivity {
         }
         return MokoUtils.toByteArray(crc, 4);
     }
-
-    private byte[] firmwareBytes;
 
     private final ActivityResultLauncher<String> slaveLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), result -> {
         if (null == result) return;
@@ -209,6 +209,7 @@ public class SelfTestActivity extends Lw009BaseActivity {
                                         } else {
                                             mDFUDialog.setMessage("DFU is start,this may takes about 3 minutes");
                                             isUpdate = true;
+                                            mBind.tvDfu.postDelayed(()-> MoKoSupport.getInstance().sendOrder(OrderTaskAssembler.getSlaveWorkMode()),3000);
                                         }
                                     } else {
                                         ToastUtils.showToast(this, "Opps!DFU Failed. Please try again!");
@@ -281,15 +282,13 @@ public class SelfTestActivity extends Lw009BaseActivity {
         });
     }
 
-    private boolean isDialogShowing;
-
     private void showDfuResult(int status) {
         AlertMessageDialog dialog = new AlertMessageDialog();
         isDialogShowing = true;
-        dialog.setTitle("Dismiss");
+        dialog.setTitle("Update Firmware");
         dialog.setCancelGone();
         dialog.setConfirm("OK");
-        String msg = status == 1 ? "dfu success\nplease reconnect device" : "Opps!DFU Failed";
+        String msg = status == 1 ? "Update Firmware successfully!\nPlease reconnect the device." : "Opps !DFU Failed. Please try again!";
         dialog.setMessage(msg);
         dialog.setOnAlertConfirmListener(this::finish);
         dialog.show(getSupportFragmentManager());
