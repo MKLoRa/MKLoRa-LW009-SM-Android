@@ -9,11 +9,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.moko.lw009smpro.databinding.FragmentLoraBinding;
+import com.moko.lw009smpro.databinding.Lw009FragmentLoraBinding;
 
 public class LoRaFragment extends Fragment {
     private static final String TAG = LoRaFragment.class.getSimpleName();
-    private FragmentLoraBinding mBind;
+    private Lw009FragmentLoraBinding mBind;
     public LoRaFragment() {
     }
 
@@ -24,7 +24,7 @@ public class LoRaFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView: ");
-        mBind = FragmentLoraBinding.inflate(inflater, container, false);
+        mBind = Lw009FragmentLoraBinding.inflate(inflater, container, false);
         return mBind.getRoot();
     }
 

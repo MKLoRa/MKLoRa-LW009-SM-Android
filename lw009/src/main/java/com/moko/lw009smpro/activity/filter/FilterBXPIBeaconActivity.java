@@ -14,7 +14,7 @@ import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
-import com.moko.lw009smpro.databinding.ActivityFilterBxpIbeaconBinding;
+import com.moko.lw009smpro.databinding.Lw009ActivityFilterBxpIbeaconBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
@@ -30,13 +30,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FilterBXPIBeaconActivity extends Lw009BaseActivity {
-    private ActivityFilterBxpIbeaconBinding mBind;
+    private Lw009ActivityFilterBxpIbeaconBinding mBind;
     private boolean savedParamsError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = ActivityFilterBxpIbeaconBinding.inflate(getLayoutInflater());
+        mBind = Lw009ActivityFilterBxpIbeaconBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
 
         showSyncingProgressDialog();

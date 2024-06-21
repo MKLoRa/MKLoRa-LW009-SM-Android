@@ -17,7 +17,7 @@ import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw009smpro.R;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
-import com.moko.lw009smpro.databinding.ActivityBleSettingsBinding;
+import com.moko.lw009smpro.databinding.Lw009ActivityBleSettingsBinding;
 import com.moko.lw009smpro.dialog.ChangePasswordDialog;
 import com.moko.lw009smpro.entity.TxPowerEnum;
 import com.moko.lw009smpro.utils.ToastUtils;
@@ -38,7 +38,7 @@ import java.util.TimerTask;
 
 public class BleSettingsActivity extends Lw009BaseActivity implements SeekBar.OnSeekBarChangeListener {
     private final String FILTER_ASCII = "[ -~]*";
-    private ActivityBleSettingsBinding mBind;
+    private Lw009ActivityBleSettingsBinding mBind;
     private boolean savedParamsError;
     private boolean mPasswordVerifyEnable;
     private boolean mPasswordVerifyDisable;
@@ -46,7 +46,7 @@ public class BleSettingsActivity extends Lw009BaseActivity implements SeekBar.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = ActivityBleSettingsBinding.inflate(getLayoutInflater());
+        mBind = Lw009ActivityBleSettingsBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         InputFilter inputFilter = (source, start, end, dest, dStart, dEnd) -> {
             if (!(source + "").matches(FILTER_ASCII)) return "";

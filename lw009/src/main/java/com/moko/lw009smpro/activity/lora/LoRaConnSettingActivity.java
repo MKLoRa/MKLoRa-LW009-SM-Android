@@ -16,7 +16,7 @@ import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw009smpro.R;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
-import com.moko.lw009smpro.databinding.ActivityConnSettingBinding;
+import com.moko.lw009smpro.databinding.Lw009ActivityConnSettingBinding;
 import com.moko.lw009smpro.dialog.BottomDialog;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
@@ -33,7 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class LoRaConnSettingActivity extends Lw009BaseActivity implements CompoundButton.OnCheckedChangeListener {
-    private ActivityConnSettingBinding mBind;
+    private Lw009ActivityConnSettingBinding mBind;
     private final String[] mModeList = {"ABP", "OTAA"};
     private final String[] mRegionsList = {"AS923", "AU915", "EU868", "KR920", "IN865", "US915", "RU864", "AS923-1", "AS923-2", "AS923-3", "AS923-4"};
     private final String[] mMaxRetransmissionTimesList = {"1", "2"};
@@ -52,7 +52,7 @@ public class LoRaConnSettingActivity extends Lw009BaseActivity implements Compou
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = ActivityConnSettingBinding.inflate(getLayoutInflater());
+        mBind = Lw009ActivityConnSettingBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         mBind.cbAdvanceSetting.setOnCheckedChangeListener(this);
         mBind.cbAdr.setOnCheckedChangeListener(this);

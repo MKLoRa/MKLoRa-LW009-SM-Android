@@ -115,17 +115,17 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
-        <activity android:name=".activity.lora.MessageTypeSettingsActivity"
+        <activity android:name="com.moko.lw009smpro.activity.lora.MessageTypeSettingsActivity"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".activity.filter.FilterMkPirActivity"
+        <activity android:name="com.moko.lw009smpro.activity.filter.FilterMkPirActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"/>
 
         <activity android:name="com.moko.lw009smpro.activity.setting.AdvancedSettingActivity"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".activity.device.OnOffSettingsActivity"
+        <activity android:name="com.moko.lw009smpro.activity.device.OnOffSettingsActivity"
             android:screenOrientation="portrait"/>
 
         <service android:name="com.moko.lw009smpro.service.DfuService" />

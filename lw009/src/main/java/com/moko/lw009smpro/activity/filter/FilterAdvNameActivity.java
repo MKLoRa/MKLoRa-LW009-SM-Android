@@ -19,7 +19,7 @@ import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw009smpro.R;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
-import com.moko.lw009smpro.databinding.ActivityFilterAdvNameBinding;
+import com.moko.lw009smpro.databinding.Lw009ActivityFilterAdvNameBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
@@ -36,7 +36,7 @@ import java.util.List;
 
 public class FilterAdvNameActivity extends Lw009BaseActivity {
     private final String FILTER_ASCII = "[ -~]*";
-    private ActivityFilterAdvNameBinding mBind;
+    private Lw009ActivityFilterAdvNameBinding mBind;
     private boolean savedParamsError;
     private final List<String> filterAdvName = new ArrayList<>();
     private InputFilter filter;
@@ -44,7 +44,7 @@ public class FilterAdvNameActivity extends Lw009BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = ActivityFilterAdvNameBinding.inflate(getLayoutInflater());
+        mBind = Lw009ActivityFilterAdvNameBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         filter = (source, start, end, dest, dStart, dEnd) -> {
             if (!(source + "").matches(FILTER_ASCII)) return "";
@@ -128,7 +128,7 @@ public class FilterAdvNameActivity extends Lw009BaseActivity {
                                         }
                                         for (int i = 0, l = filterAdvName.size(); i < l; i++) {
                                             String advName = filterAdvName.get(i);
-                                            View v = LayoutInflater.from(FilterAdvNameActivity.this).inflate(R.layout.item_adv_name_filter, mBind.llDavName, false);
+                                            View v = LayoutInflater.from(FilterAdvNameActivity.this).inflate(R.layout.lw009_item_adv_name_filter, mBind.llDavName, false);
                                             TextView title = v.findViewById(R.id.tv_adv_name_title);
                                             EditText etAdvName = v.findViewById(R.id.et_adv_name);
                                             etAdvName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20), filter});
@@ -165,7 +165,7 @@ public class FilterAdvNameActivity extends Lw009BaseActivity {
             ToastUtils.showToast(this, "You can set up to 10 filters!");
             return;
         }
-        View v = LayoutInflater.from(this).inflate(R.layout.item_adv_name_filter, mBind.llDavName, false);
+        View v = LayoutInflater.from(this).inflate(R.layout.lw009_item_adv_name_filter, mBind.llDavName, false);
         TextView title = v.findViewById(R.id.tv_adv_name_title);
         title.setText(String.format("ADV Name%d", count + 1));
         EditText etAdvName = v.findViewById(R.id.et_adv_name);

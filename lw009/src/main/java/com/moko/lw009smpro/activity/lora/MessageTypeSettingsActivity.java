@@ -14,7 +14,7 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
-import com.moko.lw009smpro.databinding.ActivityMsgTypeSettingsBinding;
+import com.moko.lw009smpro.databinding.Lw009ActivityMsgTypeSettingsBinding;
 import com.moko.lw009smpro.dialog.BottomDialog;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
@@ -36,7 +36,7 @@ import java.util.List;
  * @des:
  */
 public class MessageTypeSettingsActivity extends Lw009BaseActivity {
-    private ActivityMsgTypeSettingsBinding mBind;
+    private Lw009ActivityMsgTypeSettingsBinding mBind;
     private static final String unconfirmed = "Unconfirmed";
     private static final String confirmed = "Confirmed";
     private final String[] payloadTypes = {unconfirmed, confirmed};
@@ -46,7 +46,7 @@ public class MessageTypeSettingsActivity extends Lw009BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = ActivityMsgTypeSettingsBinding.inflate(getLayoutInflater());
+        mBind = Lw009ActivityMsgTypeSettingsBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>(8);

@@ -6,10 +6,10 @@ import android.text.TextUtils;
 import android.view.inputmethod.InputMethodManager;
 
 import com.moko.lw009smpro.R;
-import com.moko.lw009smpro.databinding.DialogPasswordBinding;
+import com.moko.lw009smpro.databinding.Lw009DialogPasswordBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
 
-public class PasswordDialog extends BaseDialog<DialogPasswordBinding> {
+public class PasswordDialog extends BaseDialog<Lw009DialogPasswordBinding> {
     public static final String TAG = PasswordDialog.class.getSimpleName();
     private final String FILTER_ASCII = "[ -~]*";
     private String password;
@@ -19,8 +19,8 @@ public class PasswordDialog extends BaseDialog<DialogPasswordBinding> {
     }
 
     @Override
-    protected DialogPasswordBinding getViewBind() {
-        return DialogPasswordBinding.inflate(getLayoutInflater());
+    protected Lw009DialogPasswordBinding getViewBind() {
+        return Lw009DialogPasswordBinding.inflate(getLayoutInflater());
     }
 
     @Override

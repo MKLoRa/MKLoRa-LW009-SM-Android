@@ -13,7 +13,7 @@ import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw009smpro.R;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
-import com.moko.lw009smpro.databinding.ActivityFilterTlmBinding;
+import com.moko.lw009smpro.databinding.Lw009ActivityFilterTlmBinding;
 import com.moko.lw009smpro.dialog.BottomDialog;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
@@ -30,7 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FilterTLMActivity extends Lw009BaseActivity {
-    private ActivityFilterTlmBinding mBind;
+    private Lw009ActivityFilterTlmBinding mBind;
     private final String[] mValues = {"Null", "version 0", "version 1"};
     private int mSelected;
     private boolean mTLMEnable;
@@ -38,7 +38,7 @@ public class FilterTLMActivity extends Lw009BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = ActivityFilterTlmBinding.inflate(getLayoutInflater());
+        mBind = Lw009ActivityFilterTlmBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>(2);

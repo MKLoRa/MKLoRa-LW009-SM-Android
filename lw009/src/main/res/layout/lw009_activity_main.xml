@@ -144,5 +144,5 @@
         android:paddingRight="10dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="2"
-        tools:listitem="@layout/list_item_device" />
+        tools:listitem="@layout/lw009_list_item_device" />
 </LinearLayout>

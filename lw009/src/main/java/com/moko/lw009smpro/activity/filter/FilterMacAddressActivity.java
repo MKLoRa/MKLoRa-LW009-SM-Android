@@ -19,7 +19,7 @@ import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw009smpro.R;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
-import com.moko.lw009smpro.databinding.ActivityFilterMacAddressBinding;
+import com.moko.lw009smpro.databinding.Lw009ActivityFilterMacAddressBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
@@ -35,14 +35,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FilterMacAddressActivity extends Lw009BaseActivity {
-    private ActivityFilterMacAddressBinding mBind;
+    private Lw009ActivityFilterMacAddressBinding mBind;
     private boolean savedParamsError;
     private final List<String> filterMacAddress = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = ActivityFilterMacAddressBinding.inflate(getLayoutInflater());
+        mBind = Lw009ActivityFilterMacAddressBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>(4);
@@ -124,7 +124,7 @@ public class FilterMacAddressActivity extends Lw009BaseActivity {
                                         }
                                         for (int i = 0, l = filterMacAddress.size(); i < l; i++) {
                                             String macAddress = filterMacAddress.get(i);
-                                            View v = LayoutInflater.from(FilterMacAddressActivity.this).inflate(R.layout.item_mac_address_filter, mBind.llMacAddress, false);
+                                            View v = LayoutInflater.from(FilterMacAddressActivity.this).inflate(R.layout.lw009_item_mac_address_filter, mBind.llMacAddress, false);
                                             TextView title = v.findViewById(R.id.tv_mac_address_title);
                                             EditText etMacAddress = v.findViewById(R.id.et_mac_address);
                                             title.setText(String.format("MAC %d", i + 1));
@@ -160,7 +160,7 @@ public class FilterMacAddressActivity extends Lw009BaseActivity {
             ToastUtils.showToast(this, "You can set up to 10 filters!");
             return;
         }
-        View v = LayoutInflater.from(this).inflate(R.layout.item_mac_address_filter, mBind.llMacAddress, false);
+        View v = LayoutInflater.from(this).inflate(R.layout.lw009_item_mac_address_filter, mBind.llMacAddress, false);
         TextView title = v.findViewById(R.id.tv_mac_address_title);
         title.setText(String.format("MAC %d", count + 1));
         mBind.llMacAddress.addView(v);

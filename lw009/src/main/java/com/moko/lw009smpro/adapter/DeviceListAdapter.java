@@ -6,13 +6,12 @@ import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw009smpro.R;
 import com.moko.lw009smpro.entity.AdvInfo;
 
 public class DeviceListAdapter extends BaseQuickAdapter<AdvInfo, BaseViewHolder> {
     public DeviceListAdapter() {
-        super(R.layout.list_item_device);
+        super(R.layout.lw009_list_item_device);
     }
 
     @SuppressLint("DefaultLocale")

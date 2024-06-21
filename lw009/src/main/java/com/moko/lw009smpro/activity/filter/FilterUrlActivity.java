@@ -14,7 +14,7 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
-import com.moko.lw009smpro.databinding.ActivityFilterUrlBinding;
+import com.moko.lw009smpro.databinding.Lw009ActivityFilterUrlBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
@@ -31,13 +31,13 @@ import java.util.List;
 
 public class FilterUrlActivity extends Lw009BaseActivity {
     private final String FILTER_ASCII = "[ -~]*";
-    private ActivityFilterUrlBinding mBind;
+    private Lw009ActivityFilterUrlBinding mBind;
     private boolean savedParamsError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = ActivityFilterUrlBinding.inflate(getLayoutInflater());
+        mBind = Lw009ActivityFilterUrlBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         InputFilter inputFilter = (source, start, end, dest, dStart, dEnd) -> {
             if (!(source + "").matches(FILTER_ASCII)) return "";

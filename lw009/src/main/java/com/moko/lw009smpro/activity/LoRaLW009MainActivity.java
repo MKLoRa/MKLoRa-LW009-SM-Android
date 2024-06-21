@@ -28,7 +28,7 @@ import com.moko.lw009smpro.BuildConfig;
 import com.moko.lw009smpro.R;
 import com.moko.lw009smpro.activity.device.LogDataActivity;
 import com.moko.lw009smpro.adapter.DeviceListAdapter;
-import com.moko.lw009smpro.databinding.ActivityMainBinding;
+import com.moko.lw009smpro.databinding.Lw009ActivityMainBinding;
 import com.moko.lw009smpro.dialog.AlertMessageDialog;
 import com.moko.lw009smpro.dialog.LoadingDialog;
 import com.moko.lw009smpro.dialog.LoadingMessageDialog;
@@ -58,7 +58,7 @@ import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class LoRaLW009MainActivity extends Lw009BaseActivity implements MokoScanDeviceCallback, BaseQuickAdapter.OnItemChildClickListener {
-    private ActivityMainBinding mBind;
+    private Lw009ActivityMainBinding mBind;
     private ConcurrentHashMap<String, AdvInfo> beaconInfoHashMap;
     private ArrayList<AdvInfo> beaconInfo;
     private DeviceListAdapter adapter;
@@ -72,7 +72,7 @@ public class LoRaLW009MainActivity extends Lw009BaseActivity implements MokoScan
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = ActivityMainBinding.inflate(getLayoutInflater());
+        mBind = Lw009ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         // 初始化Xlog
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {

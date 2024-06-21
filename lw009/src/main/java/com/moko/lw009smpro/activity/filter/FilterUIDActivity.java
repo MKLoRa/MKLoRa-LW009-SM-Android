@@ -14,7 +14,7 @@ import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
-import com.moko.lw009smpro.databinding.ActivityFilterUidBinding;
+import com.moko.lw009smpro.databinding.Lw009ActivityFilterUidBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
@@ -30,13 +30,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FilterUIDActivity extends Lw009BaseActivity {
-    private ActivityFilterUidBinding mBind;
+    private Lw009ActivityFilterUidBinding mBind;
     private boolean savedParamsError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = ActivityFilterUidBinding.inflate(getLayoutInflater());
+        mBind = Lw009ActivityFilterUidBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
 
         showSyncingProgressDialog();

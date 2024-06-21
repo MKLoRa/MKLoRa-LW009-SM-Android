@@ -95,6 +95,6 @@
             android:background="@color/whiteFFFFFF"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="4"
-            tools:listitem="@layout/item_log_data" />
+            tools:listitem="@layout/lw009_item_log_data" />
     </RelativeLayout>
 </LinearLayout>

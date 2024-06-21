@@ -22,7 +22,7 @@ import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw009smpro.AppConstants;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
-import com.moko.lw009smpro.databinding.ActivitySystemInfoBinding;
+import com.moko.lw009smpro.databinding.Lw009ActivitySystemInfoBinding;
 import com.moko.lw009smpro.dialog.AlertMessageDialog;
 import com.moko.lw009smpro.service.DfuService;
 import com.moko.lw009smpro.utils.FileUtils;
@@ -47,13 +47,13 @@ import no.nordicsemi.android.dfu.DfuServiceInitiator;
 import no.nordicsemi.android.dfu.DfuServiceListenerHelper;
 
 public class SystemInfoActivity extends Lw009BaseActivity {
-    private ActivitySystemInfoBinding mBind;
+    private Lw009ActivitySystemInfoBinding mBind;
     private String mDeviceMac;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = ActivitySystemInfoBinding.inflate(getLayoutInflater());
+        mBind = Lw009ActivitySystemInfoBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>(8);

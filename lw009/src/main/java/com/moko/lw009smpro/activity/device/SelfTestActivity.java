@@ -21,7 +21,7 @@ import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw009smpro.R;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
-import com.moko.lw009smpro.databinding.ActivitySelftestBinding;
+import com.moko.lw009smpro.databinding.Lw009ActivitySelftestBinding;
 import com.moko.lw009smpro.dialog.AlertMessageDialog;
 import com.moko.lw009smpro.utils.FileUtils;
 import com.moko.lw009smpro.utils.ToastUtils;
@@ -40,7 +40,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SelfTestActivity extends Lw009BaseActivity {
-    private ActivitySelftestBinding mBind;
+    private Lw009ActivitySelftestBinding mBind;
     private boolean isLogSwitch;
     private int currentPackageIndex = 1;
     private int firmwareBytesLength;
@@ -52,7 +52,7 @@ public class SelfTestActivity extends Lw009BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = ActivitySelftestBinding.inflate(getLayoutInflater());
+        mBind = Lw009ActivitySelftestBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>(6);

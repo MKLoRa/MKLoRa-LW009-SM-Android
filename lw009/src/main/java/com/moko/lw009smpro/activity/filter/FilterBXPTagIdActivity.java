@@ -19,7 +19,7 @@ import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw009smpro.R;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
-import com.moko.lw009smpro.databinding.ActivityFilterBxpTagIdBinding;
+import com.moko.lw009smpro.databinding.Lw009ActivityFilterBxpTagIdBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
@@ -35,14 +35,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FilterBXPTagIdActivity extends Lw009BaseActivity {
-    private ActivityFilterBxpTagIdBinding mBind;
+    private Lw009ActivityFilterBxpTagIdBinding mBind;
     private boolean savedParamsError;
     private final List<String> filterTagId = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = ActivityFilterBxpTagIdBinding.inflate(getLayoutInflater());
+        mBind = Lw009ActivityFilterBxpTagIdBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>(4);
@@ -130,7 +130,7 @@ public class FilterBXPTagIdActivity extends Lw009BaseActivity {
                                         }
                                         for (int i = 0, l = filterTagId.size(); i < l; i++) {
                                             String macAddress = filterTagId.get(i);
-                                            View v = LayoutInflater.from(this).inflate(R.layout.item_tag_id_filter, mBind.llTagId, false);
+                                            View v = LayoutInflater.from(this).inflate(R.layout.lw009_item_tag_id_filter, mBind.llTagId, false);
                                             TextView title = v.findViewById(R.id.tv_tag_id_title);
                                             EditText etMacAddress = v.findViewById(R.id.et_tag_id);
                                             title.setText(String.format("Tag ID %d", i + 1));
@@ -166,7 +166,7 @@ public class FilterBXPTagIdActivity extends Lw009BaseActivity {
             ToastUtils.showToast(this, "You can set up to 10 filters!");
             return;
         }
-        View v = LayoutInflater.from(this).inflate(R.layout.item_tag_id_filter, mBind.llTagId, false);
+        View v = LayoutInflater.from(this).inflate(R.layout.lw009_item_tag_id_filter, mBind.llTagId, false);
         TextView title = v.findViewById(R.id.tv_tag_id_title);
         title.setText(String.format("Tag ID %d", count + 1));
         mBind.llTagId.addView(v);

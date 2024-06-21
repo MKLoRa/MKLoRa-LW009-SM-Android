@@ -30,7 +30,7 @@ import com.moko.lw009smpro.R;
 import com.moko.lw009smpro.activity.lora.LoRaAppSettingActivity;
 import com.moko.lw009smpro.activity.lora.LoRaConnSettingActivity;
 import com.moko.lw009smpro.activity.setting.AdvancedSettingActivity;
-import com.moko.lw009smpro.databinding.ActivityDeviceInfoBinding;
+import com.moko.lw009smpro.databinding.Lw009ActivityDeviceInfoBinding;
 import com.moko.lw009smpro.dialog.AlertMessageDialog;
 import com.moko.lw009smpro.fragment.DeviceFragment;
 import com.moko.lw009smpro.fragment.GeneralFragment;
@@ -51,7 +51,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.OnCheckedChangeListener {
-    private ActivityDeviceInfoBinding mBind;
+    private Lw009ActivityDeviceInfoBinding mBind;
     private FragmentManager fragmentManager;
     private LoRaFragment loraFragment;
     private ParkingFragment parkingFragment;
@@ -67,7 +67,7 @@ public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = ActivityDeviceInfoBinding.inflate(getLayoutInflater());
+        mBind = Lw009ActivityDeviceInfoBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         fragmentManager = getSupportFragmentManager();
         initFragment();

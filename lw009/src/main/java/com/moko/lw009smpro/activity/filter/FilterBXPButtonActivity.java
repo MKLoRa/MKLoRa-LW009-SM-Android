@@ -12,7 +12,7 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
-import com.moko.lw009smpro.databinding.ActivityFilterBxpButtonBinding;
+import com.moko.lw009smpro.databinding.Lw009ActivityFilterBxpButtonBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
@@ -27,13 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FilterBXPButtonActivity extends Lw009BaseActivity {
-    private ActivityFilterBxpButtonBinding mBind;
+    private Lw009ActivityFilterBxpButtonBinding mBind;
     private boolean savedParamsError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = ActivityFilterBxpButtonBinding.inflate(getLayoutInflater());
+        mBind = Lw009ActivityFilterBxpButtonBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>(2);

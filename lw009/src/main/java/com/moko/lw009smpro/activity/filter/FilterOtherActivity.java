@@ -18,7 +18,7 @@ import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw009smpro.R;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
-import com.moko.lw009smpro.databinding.ActivityFilterOtherBinding;
+import com.moko.lw009smpro.databinding.Lw009ActivityFilterOtherBinding;
 import com.moko.lw009smpro.dialog.BottomDialog;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
@@ -35,7 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FilterOtherActivity extends Lw009BaseActivity {
-    private ActivityFilterOtherBinding mBind;
+    private Lw009ActivityFilterOtherBinding mBind;
     private boolean savedParamsError;
     private ArrayList<String> filterOther = new ArrayList<>();
     private ArrayList<String> mValues;
@@ -44,7 +44,7 @@ public class FilterOtherActivity extends Lw009BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = ActivityFilterOtherBinding.inflate(getLayoutInflater());
+        mBind = Lw009ActivityFilterOtherBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
 
         showSyncingProgressDialog();
@@ -137,7 +137,7 @@ public class FilterOtherActivity extends Lw009BaseActivity {
                                         }
                                         for (int i = 0, l = filterOther.size(); i < l; i++) {
                                             String other = filterOther.get(i);
-                                            View v = LayoutInflater.from(this).inflate(R.layout.item_other_filter, mBind.llFilterCondition, false);
+                                            View v = LayoutInflater.from(this).inflate(R.layout.lw009_item_other_filter, mBind.llFilterCondition, false);
                                             TextView tvCondition = v.findViewById(R.id.tv_condition);
                                             EditText etDataType = v.findViewById(R.id.et_data_type);
                                             EditText etMin = v.findViewById(R.id.et_min);
@@ -267,7 +267,7 @@ public class FilterOtherActivity extends Lw009BaseActivity {
             ToastUtils.showToast(this, "You can set up to 3 filters!");
             return;
         }
-        View v = LayoutInflater.from(this).inflate(R.layout.item_other_filter, mBind.llFilterCondition, false);
+        View v = LayoutInflater.from(this).inflate(R.layout.lw009_item_other_filter, mBind.llFilterCondition, false);
         TextView tvCondition = v.findViewById(R.id.tv_condition);
         if (count == 0) {
             tvCondition.setText("Condition A");

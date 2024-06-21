@@ -3,16 +3,15 @@ package com.moko.lw009smpro.dialog;
 import android.content.Context;
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.Spanned;
 import android.text.TextWatcher;
 import android.view.inputmethod.InputMethodManager;
 
 import com.moko.lw009smpro.R;
-import com.moko.lw009smpro.databinding.DialogChangePasswordBinding;
+import com.moko.lw009smpro.databinding.Lw009DialogChangePasswordBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
 
 
-public class ChangePasswordDialog extends BaseDialog<DialogChangePasswordBinding> {
+public class ChangePasswordDialog extends BaseDialog<Lw009DialogChangePasswordBinding> {
     private final String FILTER_ASCII = "[ -~]*";
     private boolean passwordEnable;
     private boolean confirmPasswordEnable;
@@ -22,8 +21,8 @@ public class ChangePasswordDialog extends BaseDialog<DialogChangePasswordBinding
     }
 
     @Override
-    protected DialogChangePasswordBinding getViewBind() {
-        return DialogChangePasswordBinding.inflate(getLayoutInflater());
+    protected Lw009DialogChangePasswordBinding getViewBind() {
+        return Lw009DialogChangePasswordBinding.inflate(getLayoutInflater());
     }
 
     @Override

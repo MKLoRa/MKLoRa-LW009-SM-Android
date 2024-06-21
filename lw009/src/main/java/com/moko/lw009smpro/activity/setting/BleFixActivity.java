@@ -20,7 +20,7 @@ import com.moko.lw009smpro.activity.Lw009BaseActivity;
 import com.moko.lw009smpro.activity.filter.FilterAdvNameActivity;
 import com.moko.lw009smpro.activity.filter.FilterMacAddressActivity;
 import com.moko.lw009smpro.activity.filter.FilterRawDataSwitchActivity;
-import com.moko.lw009smpro.databinding.ActivityBleFixBinding;
+import com.moko.lw009smpro.databinding.Lw009ActivityBleFixBinding;
 import com.moko.lw009smpro.dialog.BottomDialog;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class BleFixActivity extends Lw009BaseActivity implements SeekBar.OnSeekBarChangeListener {
-    private ActivityBleFixBinding mBind;
+    private Lw009ActivityBleFixBinding mBind;
     private boolean savedParamsError;
     private final String[] mRelationshipValues = {"Null", "Only MAC", "Only ADV Name", "Only Raw Data", "ADV Name&Raw Data", "MAC&ADV Name&Raw Data", "ADV Name | Raw Data"};
     private int mRelationshipSelected;
@@ -45,7 +45,7 @@ public class BleFixActivity extends Lw009BaseActivity implements SeekBar.OnSeekB
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = ActivityBleFixBinding.inflate(getLayoutInflater());
+        mBind = Lw009ActivityBleFixBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
 
         mBind.sbRssiFilter.setOnSeekBarChangeListener(this);

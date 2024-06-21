@@ -13,7 +13,7 @@ import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw009smpro.R;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
-import com.moko.lw009smpro.databinding.ActivityOnOffSettingsBinding;
+import com.moko.lw009smpro.databinding.Lw009ActivityOnOffSettingsBinding;
 import com.moko.lw009smpro.dialog.AlertMessageDialog;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
@@ -34,13 +34,13 @@ import java.util.List;
  * @des:
  */
 public class OnOffSettingsActivity extends Lw009BaseActivity {
-    private ActivityOnOffSettingsBinding mBind;
+    private Lw009ActivityOnOffSettingsBinding mBind;
     private boolean shutdownPayloadOpen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = ActivityOnOffSettingsBinding.inflate(getLayoutInflater());
+        mBind = Lw009ActivityOnOffSettingsBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         if (!MoKoSupport.getInstance().isBluetoothOpen()) {
             // 蓝牙未打开，开启蓝牙

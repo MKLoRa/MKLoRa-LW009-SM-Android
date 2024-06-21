@@ -13,14 +13,14 @@ import androidx.fragment.app.Fragment;
 
 import com.moko.lw009smpro.activity.DeviceInfoActivity;
 import com.moko.lw009smpro.activity.setting.BleSettingsActivity;
-import com.moko.lw009smpro.databinding.FragmentGeneralBinding;
+import com.moko.lw009smpro.databinding.Lw009FragmentGeneralBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
 
 public class GeneralFragment extends Fragment {
     private static final String TAG = GeneralFragment.class.getSimpleName();
-    private FragmentGeneralBinding mBind;
+    private Lw009FragmentGeneralBinding mBind;
     private DeviceInfoActivity activity;
 
     public GeneralFragment() {
@@ -33,7 +33,7 @@ public class GeneralFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView: ");
-        mBind = FragmentGeneralBinding.inflate(inflater, container, false);
+        mBind = Lw009FragmentGeneralBinding.inflate(inflater, container, false);
         activity = (DeviceInfoActivity) getActivity();
         mBind.tvBleSettings.setOnClickListener(v -> startActivity(new Intent(activity, BleSettingsActivity.class)));
         return mBind.getRoot();

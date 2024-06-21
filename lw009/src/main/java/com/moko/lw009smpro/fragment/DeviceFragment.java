@@ -16,7 +16,7 @@ import com.moko.lw009smpro.R;
 import com.moko.lw009smpro.activity.DeviceInfoActivity;
 import com.moko.lw009smpro.activity.device.OnOffSettingsActivity;
 import com.moko.lw009smpro.activity.device.SystemInfoActivity;
-import com.moko.lw009smpro.databinding.FragmentDeviceBinding;
+import com.moko.lw009smpro.databinding.Lw009FragmentDeviceBinding;
 import com.moko.lw009smpro.dialog.AlertMessageDialog;
 import com.moko.lw009smpro.dialog.BottomDialog;
 import com.moko.support.lw009.MoKoSupport;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 public class DeviceFragment extends Fragment {
     private static final String TAG = DeviceFragment.class.getSimpleName();
-    private FragmentDeviceBinding mBind;
+    private Lw009FragmentDeviceBinding mBind;
     private final ArrayList<String> mTimeZones = new ArrayList<>();
     private int mSelectedTimeZone;
     private boolean mLowPowerPayloadEnable;
@@ -43,7 +43,7 @@ public class DeviceFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView: ");
-        mBind = FragmentDeviceBinding.inflate(inflater, container, false);
+        mBind = Lw009FragmentDeviceBinding.inflate(inflater, container, false);
         activity = (DeviceInfoActivity) getActivity();
         for (int i = -24; i <= 28; i++) {
             if (i < 0) {

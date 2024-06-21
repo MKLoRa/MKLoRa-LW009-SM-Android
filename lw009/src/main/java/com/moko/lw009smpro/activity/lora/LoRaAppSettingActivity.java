@@ -14,7 +14,7 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
-import com.moko.lw009smpro.databinding.ActivityAppSettingBinding;
+import com.moko.lw009smpro.databinding.Lw009ActivityAppSettingBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
@@ -29,13 +29,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LoRaAppSettingActivity extends Lw009BaseActivity {
-    private ActivityAppSettingBinding mBind;
+    private Lw009ActivityAppSettingBinding mBind;
     private boolean savedParamsError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = ActivityAppSettingBinding.inflate(getLayoutInflater());
+        mBind = Lw009ActivityAppSettingBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>(2);
