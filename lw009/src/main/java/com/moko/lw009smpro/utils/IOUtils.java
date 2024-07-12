@@ -34,8 +34,7 @@ public class IOUtils {
      * @return
      */
     public static boolean isSdCardExist() {
-        return Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED);
+        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     }
 
     /**

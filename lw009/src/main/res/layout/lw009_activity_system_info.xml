@@ -58,7 +58,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:gravity="center_vertical"
-                    android:text="Software Version33"
+                    android:text="Software Version"
                     android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold"
