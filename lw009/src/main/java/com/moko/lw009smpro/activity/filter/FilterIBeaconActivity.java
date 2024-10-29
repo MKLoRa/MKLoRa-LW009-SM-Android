@@ -109,6 +109,7 @@ public class FilterIBeaconActivity extends Lw009BaseActivity {
                                     if (length == 4) {
                                         int majorMin = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 6));
                                         int majorMax = MokoUtils.toInt(Arrays.copyOfRange(value, 6, 8));
+                                        if (majorMin == 0 && majorMax == 65535) return;
                                         mBind.etIbeaconMajorMin.setText(String.valueOf(majorMin));
                                         mBind.etIbeaconMajorMax.setText(String.valueOf(majorMax));
                                         mBind.etIbeaconMajorMin.setSelection(mBind.etIbeaconMajorMin.getText().length());
@@ -119,6 +120,7 @@ public class FilterIBeaconActivity extends Lw009BaseActivity {
                                     if (length == 4) {
                                         int minorMin = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 6));
                                         int minorMax = MokoUtils.toInt(Arrays.copyOfRange(value, 6, 8));
+                                        if (minorMin == 0 && minorMax == 65535) return;
                                         mBind.etIbeaconMinorMin.setText(String.valueOf(minorMin));
                                         mBind.etIbeaconMinorMax.setText(String.valueOf(minorMax));
                                         mBind.etIbeaconMinorMin.setSelection(mBind.etIbeaconMinorMin.getText().length());

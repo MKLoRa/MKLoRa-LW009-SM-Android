@@ -26,7 +26,7 @@ public class AdvInfoAnalysisImpl implements DeviceInfoParseable<AdvInfo> {
         ScanRecord record = result.getScanRecord();
         if (null == record) return null;
         byte[] bytes = record.getServiceData(new ParcelUuid(OrderServices.SERVICE_ADV.getUuid()));
-        if (null == bytes || bytes.length != 24) return null;
+        if (null == bytes || (bytes.length != 24 && bytes.length != 23)) return null;
         boolean verifyEnable = ((bytes[9] & 0xff) >> 6 & 0x01) == 1;
         boolean lowPower = ((bytes[9] & 0xff) >> 7 & 0x01) == 1;
         AdvInfo advInfo;

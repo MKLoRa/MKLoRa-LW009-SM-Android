@@ -138,7 +138,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:gravity="center_vertical"
-            android:text="Detection Confirmation Duation"
+            android:text="Detection Confirmation Duration"
             android:textColor="@color/black_333333"
             android:textSize="14sp"
             android:textStyle="bold"

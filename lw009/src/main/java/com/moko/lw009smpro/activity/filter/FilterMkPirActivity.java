@@ -164,6 +164,7 @@ public class FilterMkPirActivity extends Lw009BaseActivity {
                                     if (length == 4) {
                                         int majorMin = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 6));
                                         int majorMax = MokoUtils.toInt(Arrays.copyOfRange(value, 6, 8));
+                                        if (majorMin == 0 && majorMax == 65535) return;
                                         mBind.etMajorMin.setText(String.valueOf(majorMin));
                                         mBind.etMajorMax.setText(String.valueOf(majorMax));
                                         mBind.etMajorMin.setSelection(mBind.etMajorMin.getText().length());
@@ -175,6 +176,7 @@ public class FilterMkPirActivity extends Lw009BaseActivity {
                                     if (length == 4) {
                                         int minorMin = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 6));
                                         int minorMax = MokoUtils.toInt(Arrays.copyOfRange(value, 6, 8));
+                                        if (minorMin == 0 && minorMax == 65535) return;
                                         mBind.etMinorMin.setText(String.valueOf(minorMin));
                                         mBind.etMinorMax.setText(String.valueOf(minorMax));
                                         mBind.etMinorMin.setSelection(mBind.etMinorMin.getText().length());
