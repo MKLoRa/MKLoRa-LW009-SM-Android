@@ -216,6 +216,15 @@ public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.
                                     if (result != 1) savedParamsError = true;
                                     ToastUtils.showToast(this, savedParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
+
+                                case KEY_NO_PARKING_CALIBRATION:
+                                    //无车校准
+                                    if (result != 1) {
+                                        if (null != parkingFragment) {
+                                            parkingFragment.setNoParkingCalibration(0);
+                                        }
+                                    }
+                                    break;
                             }
                         }
                         if (flag == 0x00) {
