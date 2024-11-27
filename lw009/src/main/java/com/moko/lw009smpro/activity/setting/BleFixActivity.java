@@ -158,7 +158,7 @@ public class BleFixActivity extends Lw009BaseActivity implements SeekBar.OnSeekB
         if (posTimeout < 1 || posTimeout > 10) return false;
         if (TextUtils.isEmpty(mBind.etMacNumber.getText())) return false;
         final int number = Integer.parseInt(mBind.etMacNumber.getText().toString());
-        return number >= 1 && number <= 10;
+        return number >= 1 && number <= 15;
     }
 
 

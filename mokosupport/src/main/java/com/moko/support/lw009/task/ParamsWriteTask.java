@@ -181,7 +181,7 @@ public class ParamsWriteTask extends OrderTask {
         };
     }
 
-    public void setBeaconPayloadCount(@IntRange(from = 1, to = 10) int count) {
+    public void setBeaconPayloadCount(@IntRange(from = 1, to = 15) int count) {
         response.responseValue = data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,

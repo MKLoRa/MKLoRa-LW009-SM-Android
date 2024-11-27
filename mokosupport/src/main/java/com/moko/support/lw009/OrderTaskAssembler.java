@@ -1262,7 +1262,7 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask setBeaconPayloadCount(@IntRange(from = 1, to = 10) int count) {
+    public static OrderTask setBeaconPayloadCount(@IntRange(from = 1, to = 15) int count) {
         ParamsWriteTask task = new ParamsWriteTask();
         task.setBeaconPayloadCount(count);
         return task;
