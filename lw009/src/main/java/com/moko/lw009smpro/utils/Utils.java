@@ -56,9 +56,9 @@ public class Utils {
                 } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     Uri uri;
                     if (BuildConfig.IS_LIBRARY) {
-                        uri = FileProvider.getUriForFile(context, "com.moko.mklora.fileprovider", files[0]);
+                        uri = FileProvider.getUriForFile(context, "com.moko.mklora.fileprovider", files[i]);
                     } else {
-                        uri = FileProvider.getUriForFile(context, "com.moko.lw009smpro.fileprovider", files[0]);
+                        uri = FileProvider.getUriForFile(context, "com.moko.lw009smpro.fileprovider", files[i]);
                     }
                     uris.add(uri);
                 } else {

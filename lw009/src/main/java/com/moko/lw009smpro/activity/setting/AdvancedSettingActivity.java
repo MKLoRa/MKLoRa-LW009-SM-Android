@@ -214,13 +214,13 @@ public class AdvancedSettingActivity extends Lw009BaseActivity {
         if (delayTime < 30 || delayTime > 240) return false;
         if (TextUtils.isEmpty(mBind.etThresholdX.getText())) return false;
         int thresholdX = Integer.parseInt(mBind.etThresholdX.getText().toString());
-        if (thresholdX < 5 || thresholdX > 20000) return false;
+        if (thresholdX < 6 || thresholdX > 19999) return false;
         if (TextUtils.isEmpty(mBind.etThresholdY.getText())) return false;
         int thresholdY = Integer.parseInt(mBind.etThresholdY.getText().toString());
-        if (thresholdY < 5 || thresholdY > 20000) return false;
+        if (thresholdY < 6 || thresholdY > 19999) return false;
         if (TextUtils.isEmpty(mBind.etThresholdZ.getText())) return false;
         int thresholdZ = Integer.parseInt(mBind.etThresholdZ.getText().toString());
-        return thresholdZ >= 5 && thresholdZ <= 20000;
+        return thresholdZ >= 6 && thresholdZ <= 19999;
     }
 
     public void onBack(View view) {

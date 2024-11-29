@@ -98,6 +98,10 @@ public class LogDataActivity extends Lw009BaseActivity implements BaseQuickAdapt
         storeString = new StringBuilder();
     }
 
+    @Override
+    protected void onSystemBleTurnOff() {
+    }
+
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 300)
     public void onConnectStatusEvent(ConnectStatusEvent event) {
         final String action = event.getAction();

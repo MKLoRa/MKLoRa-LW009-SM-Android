@@ -1205,9 +1205,9 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask setParkingDetectionThreshold(@IntRange(from = 5, to = 20000) int thresholdX,
-                                                         @IntRange(from = 5, to = 20000) int thresholdY,
-                                                         @IntRange(from = 5, to = 20000) int thresholdZ) {
+    public static OrderTask setParkingDetectionThreshold(@IntRange(from = 6, to = 19999) int thresholdX,
+                                                         @IntRange(from = 6, to = 19999) int thresholdY,
+                                                         @IntRange(from = 6, to = 19999) int thresholdZ) {
         ParamsWriteTask task = new ParamsWriteTask();
         task.setParkingDetectionThreshold(thresholdX, thresholdY, thresholdZ);
         return task;
