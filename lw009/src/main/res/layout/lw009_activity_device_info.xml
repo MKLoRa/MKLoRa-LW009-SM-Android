@@ -19,7 +19,7 @@
             android:gravity="center_vertical"
             android:onClick="onBack"
             android:paddingLeft="16dp"
-            android:textColor="@color/whiteFFFFFF"
+            android:textColor="@color/white_ffffff"
             android:textSize="15sp" />
 
         <TextView
@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textColor="@color/whiteFFFFFF"
+            android:textColor="@color/white_ffffff"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -49,12 +49,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1.0"
-        android:background="@color/whiteFFFFFF" />
+        android:background="@color/white_ffffff" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/whiteFFFFFF"
+        android:background="@color/white_ffffff"
         android:orientation="vertical">
 
         <View style="@style/divider_line" />
@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
                 android:button="@null"
-                android:drawableTop="@drawable/selector_adv"
+                android:drawableTop="@drawable/selector_tab_adv"
                 android:drawablePadding="5dp"
                 android:gravity="center"
                 android:paddingTop="10dp"
@@ -87,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
                 android:button="@null"
-                android:drawableTop="@drawable/selector_pos"
+                android:drawableTop="@drawable/selector_tab_pos"
                 android:drawablePadding="5dp"
                 android:gravity="center"
                 android:paddingTop="10dp"
@@ -102,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
                 android:button="@null"
-                android:drawableTop="@drawable/selector_general"
+                android:drawableTop="@drawable/selector_tab_general"
                 android:drawablePadding="5dp"
                 android:gravity="center"
                 android:paddingTop="10dp"
@@ -117,7 +117,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
                 android:button="@null"
-                android:drawableTop="@drawable/selector_device"
+                android:drawableTop="@drawable/selector_tab_device"
                 android:drawablePadding="5dp"
                 android:gravity="center"
                 android:paddingTop="10dp"

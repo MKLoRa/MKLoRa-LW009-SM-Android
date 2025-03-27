@@ -17,8 +17,8 @@ import com.moko.lw009smpro.activity.DeviceInfoActivity;
 import com.moko.lw009smpro.activity.device.OnOffSettingsActivity;
 import com.moko.lw009smpro.activity.device.SystemInfoActivity;
 import com.moko.lw009smpro.databinding.Lw009FragmentDeviceBinding;
-import com.moko.lw009smpro.dialog.AlertMessageDialog;
-import com.moko.lw009smpro.dialog.BottomDialog;
+import com.moko.lib.loraui.dialog.AlertMessageDialog;
+import com.moko.lib.loraui.dialog.BottomDialog;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
 

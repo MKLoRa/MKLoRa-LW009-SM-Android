@@ -37,7 +37,7 @@
             android:minWidth="70dp"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
-            android:textColor="@color/whiteFFFFFF"
+            android:textColor="@color/white_ffffff"
             android:textSize="15sp"
             tools:text="UTC+8" />
     </LinearLayout>

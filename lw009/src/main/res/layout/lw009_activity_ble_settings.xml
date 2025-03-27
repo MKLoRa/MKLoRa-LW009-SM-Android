@@ -23,7 +23,7 @@
             android:onClick="onBack"
             android:paddingStart="16dp"
             android:paddingEnd="0px"
-            android:textColor="@color/whiteFFFFFF"
+            android:textColor="@color/white_ffffff"
             android:textSize="15sp" />
 
         <TextView
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="Bluetooth Broadcast Settings"
-            android:textColor="@color/whiteFFFFFF"
+            android:textColor="@color/white_ffffff"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -226,7 +226,7 @@
             android:id="@+id/tv_change_password"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@color/whiteFFFFFF"
+            android:background="@color/white_ffffff"
             android:drawableEnd="@drawable/ic_arrow_right"
             android:gravity="center_vertical"
             android:onClick="onChangePassword"
@@ -268,7 +268,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="(-40,-20,-16,-12,-8,-4,0,+3,+4)"
-            android:textColor="@color/ColorB3B3B3"
+            android:textColor="@color/grey_b3b3b3"
             android:textSize="12sp"
             app:layout_constraintTop_toBottomOf="@id/tx_power" />
 

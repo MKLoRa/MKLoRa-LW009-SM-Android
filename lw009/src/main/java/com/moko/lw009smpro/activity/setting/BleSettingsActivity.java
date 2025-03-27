@@ -18,7 +18,7 @@ import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw009smpro.R;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
 import com.moko.lw009smpro.databinding.Lw009ActivityBleSettingsBinding;
-import com.moko.lw009smpro.dialog.ChangePasswordDialog;
+import com.moko.lib.loraui.dialog.ChangePasswordDialog;
 import com.moko.lw009smpro.entity.TxPowerEnum;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;

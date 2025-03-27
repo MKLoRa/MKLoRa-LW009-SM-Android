@@ -31,7 +31,7 @@ import com.moko.lw009smpro.activity.lora.LoRaAppSettingActivity;
 import com.moko.lw009smpro.activity.lora.LoRaConnSettingActivity;
 import com.moko.lw009smpro.activity.setting.AdvancedSettingActivity;
 import com.moko.lw009smpro.databinding.Lw009ActivityDeviceInfoBinding;
-import com.moko.lw009smpro.dialog.AlertMessageDialog;
+import com.moko.lib.loraui.dialog.AlertMessageDialog;
 import com.moko.lw009smpro.fragment.DeviceFragment;
 import com.moko.lw009smpro.fragment.GeneralFragment;
 import com.moko.lw009smpro.fragment.LoRaFragment;
@@ -96,7 +96,7 @@ public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.
     }
 
     private void showPwdDialog() {
-        View v = LayoutInflater.from(this).inflate(R.layout.dialog_advance, null);
+        View v = LayoutInflater.from(this).inflate(R.layout.lw009_dialog_advance, null);
         final EditText etPwd = v.findViewById(R.id.et_order_number);
         new AlertDialog.Builder(this)
                 .setView(v)

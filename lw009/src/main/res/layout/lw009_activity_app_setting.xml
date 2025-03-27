@@ -21,7 +21,7 @@
             android:onClick="onBack"
             android:paddingLeft="16dp"
             android:text=""
-            android:textColor="@color/whiteFFFFFF"
+            android:textColor="@color/white_ffffff"
             android:textSize="15sp" />
 
         <TextView
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/application_setting"
-            android:textColor="@color/whiteFFFFFF"
+            android:textColor="@color/white_ffffff"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -51,7 +51,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        android:background="@color/whiteFFFFFF"
+        android:background="@color/white_ffffff"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingStart="10dp">
@@ -81,7 +81,7 @@
             android:id="@+id/cl_sync_interval"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/whiteFFFFFF"
+            android:background="@color/white_ffffff"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:padding="10dp"
@@ -136,7 +136,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:background="@color/whiteFFFFFF"
+            android:background="@color/white_ffffff"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:padding="10dp"

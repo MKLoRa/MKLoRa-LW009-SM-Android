@@ -23,7 +23,7 @@ import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw009smpro.AppConstants;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
 import com.moko.lw009smpro.databinding.Lw009ActivitySystemInfoBinding;
-import com.moko.lw009smpro.dialog.AlertMessageDialog;
+import com.moko.lib.loraui.dialog.AlertMessageDialog;
 import com.moko.lw009smpro.service.DfuService;
 import com.moko.lw009smpro.utils.FileUtils;
 import com.moko.lw009smpro.utils.ToastUtils;

@@ -13,7 +13,7 @@ import android.os.SystemClock;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import com.moko.lw009smpro.dialog.LoadingMessageDialog;
+import com.moko.lib.loraui.dialog.LoadingMessageDialog;
 
 import org.greenrobot.eventbus.EventBus;
 

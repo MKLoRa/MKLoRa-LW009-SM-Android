@@ -14,7 +14,7 @@ import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw009smpro.R;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
 import com.moko.lw009smpro.databinding.Lw009ActivityFilterTlmBinding;
-import com.moko.lw009smpro.dialog.BottomDialog;
+import com.moko.lib.loraui.dialog.BottomDialog;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;

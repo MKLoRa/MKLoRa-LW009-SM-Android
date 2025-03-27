@@ -14,9 +14,9 @@ import androidx.fragment.app.Fragment;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.lw009smpro.activity.setting.BleFixActivity;
 import com.moko.lw009smpro.activity.DeviceInfoActivity;
-import com.moko.lw009smpro.databinding.FragmentParkingBinding;
-import com.moko.lw009smpro.dialog.AlertMessageDialog;
-import com.moko.lw009smpro.dialog.BottomDialog;
+import com.moko.lib.loraui.dialog.AlertMessageDialog;
+import com.moko.lib.loraui.dialog.BottomDialog;
+import com.moko.lw009smpro.databinding.Lw009FragmentParkingBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
@@ -27,7 +27,7 @@ import java.util.List;
 
 public class ParkingFragment extends Fragment {
     private static final String TAG = ParkingFragment.class.getSimpleName();
-    private FragmentParkingBinding mBind;
+    private Lw009FragmentParkingBinding mBind;
     private DeviceInfoActivity activity;
     private final String[] parkingDetectionModeArray = {"Magnetic Sensor Only", "Radar Only", "Joint Detection(Magnetic&Radar)"};
     private int parkingDetectionModeSelect;
@@ -44,7 +44,7 @@ public class ParkingFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView: ");
-        mBind = FragmentParkingBinding.inflate(inflater, container, false);
+        mBind = Lw009FragmentParkingBinding.inflate(inflater, container, false);
         activity = (DeviceInfoActivity) getActivity();
         setListener();
         return mBind.getRoot();

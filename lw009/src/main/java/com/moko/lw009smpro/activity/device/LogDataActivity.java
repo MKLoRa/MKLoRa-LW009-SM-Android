@@ -17,7 +17,7 @@ import com.moko.lw009smpro.activity.LoRaLW009MainActivity;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
 import com.moko.lw009smpro.adapter.LogDataListAdapter;
 import com.moko.lw009smpro.databinding.Lw009ActivityLogDataBinding;
-import com.moko.lw009smpro.dialog.AlertMessageDialog;
+import com.moko.lib.loraui.dialog.AlertMessageDialog;
 import com.moko.lw009smpro.entity.LogData;
 import com.moko.lw009smpro.utils.Utils;
 import com.moko.support.lw009.MoKoSupport;

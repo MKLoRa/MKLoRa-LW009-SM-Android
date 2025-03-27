@@ -1,8 +1,5 @@
 package com.moko.lw009smpro.activity.setting;
 
-import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
-import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
-
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,9 +10,9 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
+import com.moko.lib.loraui.dialog.BottomDialog;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
-import com.moko.lw009smpro.databinding.ActivityAdvancedSettingBinding;
-import com.moko.lw009smpro.dialog.BottomDialog;
+import com.moko.lw009smpro.databinding.Lw009ActivityAdvancedSettingBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
@@ -30,13 +27,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
+import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
+
 /**
  * @author: jun.liu
  * @date: 2024/4/24 18:12
  * @des:
  */
 public class AdvancedSettingActivity extends Lw009BaseActivity {
-    private ActivityAdvancedSettingBinding mBind;
+    private Lw009ActivityAdvancedSettingBinding mBind;
     private boolean savedParamsError;
     private final String[] slaveWorkStatusArray = {"Sleep", "Normal", "Upgrading"};
     private final String[] parkingSlotTypeArray = {"0", "1"};
@@ -45,7 +45,7 @@ public class AdvancedSettingActivity extends Lw009BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = ActivityAdvancedSettingBinding.inflate(getLayoutInflater());
+        mBind = Lw009ActivityAdvancedSettingBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
 
         showSyncingProgressDialog();

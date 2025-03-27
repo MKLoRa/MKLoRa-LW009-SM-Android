@@ -21,7 +21,7 @@ import com.moko.lw009smpro.activity.filter.FilterAdvNameActivity;
 import com.moko.lw009smpro.activity.filter.FilterMacAddressActivity;
 import com.moko.lw009smpro.activity.filter.FilterRawDataSwitchActivity;
 import com.moko.lw009smpro.databinding.Lw009ActivityBleFixBinding;
-import com.moko.lw009smpro.dialog.BottomDialog;
+import com.moko.lib.loraui.dialog.BottomDialog;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
