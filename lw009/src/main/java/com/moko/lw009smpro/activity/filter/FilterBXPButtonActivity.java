@@ -1,8 +1,5 @@
 package com.moko.lw009smpro.activity.filter;
 
-import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
-import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
-
 import android.os.Bundle;
 import android.view.View;
 
@@ -25,6 +22,9 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
+import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
 
 public class FilterBXPButtonActivity extends Lw009BaseActivity {
     private Lw009ActivityFilterBxpButtonBinding mBind;

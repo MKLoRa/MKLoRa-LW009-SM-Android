@@ -8,14 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import com.moko.ble.lib.task.OrderTask;
-import com.moko.lw009smpro.activity.setting.BleFixActivity;
-import com.moko.lw009smpro.activity.DeviceInfoActivity;
 import com.moko.lib.loraui.dialog.AlertMessageDialog;
 import com.moko.lib.loraui.dialog.BottomDialog;
+import com.moko.lw009smpro.activity.DeviceInfoActivity;
+import com.moko.lw009smpro.activity.setting.BleFixActivity;
 import com.moko.lw009smpro.databinding.Lw009FragmentParkingBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
@@ -24,6 +21,9 @@ import com.moko.support.lw009.OrderTaskAssembler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 public class ParkingFragment extends Fragment {
     private static final String TAG = ParkingFragment.class.getSimpleName();

@@ -1,8 +1,5 @@
 package com.moko.lw009smpro.activity.filter;
 
-import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
-import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -33,6 +30,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
+import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
 
 public class FilterMacAddressActivity extends Lw009BaseActivity {
     private Lw009ActivityFilterMacAddressBinding mBind;

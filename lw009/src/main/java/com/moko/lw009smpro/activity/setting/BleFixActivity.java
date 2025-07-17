@@ -1,8 +1,5 @@
 package com.moko.lw009smpro.activity.setting;
 
-import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
-import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,13 +12,13 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
+import com.moko.lib.loraui.dialog.BottomDialog;
 import com.moko.lw009smpro.R;
 import com.moko.lw009smpro.activity.Lw009BaseActivity;
 import com.moko.lw009smpro.activity.filter.FilterAdvNameActivity;
 import com.moko.lw009smpro.activity.filter.FilterMacAddressActivity;
 import com.moko.lw009smpro.activity.filter.FilterRawDataSwitchActivity;
 import com.moko.lw009smpro.databinding.Lw009ActivityBleFixBinding;
-import com.moko.lib.loraui.dialog.BottomDialog;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
@@ -35,6 +32,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
+import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
 
 public class BleFixActivity extends Lw009BaseActivity implements SeekBar.OnSeekBarChangeListener {
     private Lw009ActivityBleFixBinding mBind;

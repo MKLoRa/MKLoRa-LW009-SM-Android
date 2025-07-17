@@ -1,8 +1,5 @@
 package com.moko.lw009smpro.activity.filter;
 
-import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
-import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
-
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -28,6 +25,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
+import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
 
 public class FilterUrlActivity extends Lw009BaseActivity {
     private final String FILTER_ASCII = "[ -~]*";

@@ -7,15 +7,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.SystemClock;
-
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
+import android.view.DisplayCutout;
 
 import com.moko.lib.loraui.dialog.LoadingMessageDialog;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
+
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 
 public class Lw009BaseActivity extends FragmentActivity {
     private boolean mReceiverTag = false;
@@ -30,6 +34,17 @@ public class Lw009BaseActivity extends FragmentActivity {
             registerReceiver(mReceiver, filter);
             mReceiverTag = true;
         }
+        getWindow().getDecorView().setOnApplyWindowInsetsListener((v, insets) -> {
+            DisplayCutout cutout = insets.getDisplayCutout();
+            if (cutout != null) {
+                List<Rect> rects = cutout.getBoundingRects();
+                if (rects.size() != 0) {
+                    getWindow().getDecorView().setPadding(cutout.getSafeInsetLeft(), cutout.getSafeInsetTop(),
+                            cutout.getSafeInsetRight(), cutout.getSafeInsetBottom());
+                }
+            }
+            return insets;
+        });
     }
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {

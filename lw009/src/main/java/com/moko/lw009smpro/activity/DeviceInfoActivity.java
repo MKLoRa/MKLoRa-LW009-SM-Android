@@ -1,9 +1,6 @@
 package com.moko.lw009smpro.activity;
 
 
-import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
-import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
-
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,24 +11,18 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.IdRes;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
+import com.moko.lib.loraui.dialog.AlertMessageDialog;
 import com.moko.lw009smpro.R;
 import com.moko.lw009smpro.activity.lora.LoRaAppSettingActivity;
 import com.moko.lw009smpro.activity.lora.LoRaConnSettingActivity;
 import com.moko.lw009smpro.activity.setting.AdvancedSettingActivity;
 import com.moko.lw009smpro.databinding.Lw009ActivityDeviceInfoBinding;
-import com.moko.lib.loraui.dialog.AlertMessageDialog;
 import com.moko.lw009smpro.fragment.DeviceFragment;
 import com.moko.lw009smpro.fragment.GeneralFragment;
 import com.moko.lw009smpro.fragment.LoRaFragment;
@@ -49,6 +40,15 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.IdRes;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
+import static com.moko.lw009smpro.AppConstants.SAVE_ERROR;
+import static com.moko.lw009smpro.AppConstants.SAVE_SUCCESS;
 
 public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.OnCheckedChangeListener {
     private Lw009ActivityDeviceInfoBinding mBind;

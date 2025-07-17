@@ -12,28 +12,23 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.DividerItemDecoration;
-
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.elvishew.xlog.XLog;
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTaskResponse;
+import com.moko.lib.loraui.dialog.AlertMessageDialog;
+import com.moko.lib.loraui.dialog.LoadingDialog;
+import com.moko.lib.loraui.dialog.LoadingMessageDialog;
+import com.moko.lib.loraui.dialog.PasswordDialog;
+import com.moko.lib.loraui.dialog.ScanFilterDialog;
 import com.moko.lw009smpro.AppConstants;
 import com.moko.lw009smpro.BuildConfig;
 import com.moko.lw009smpro.R;
 import com.moko.lw009smpro.activity.device.LogDataActivity;
 import com.moko.lw009smpro.adapter.DeviceListAdapter;
 import com.moko.lw009smpro.databinding.Lw009ActivityMainBinding;
-import com.moko.lib.loraui.dialog.AlertMessageDialog;
-import com.moko.lib.loraui.dialog.LoadingDialog;
-import com.moko.lib.loraui.dialog.LoadingMessageDialog;
-import com.moko.lib.loraui.dialog.PasswordDialog;
-import com.moko.lib.loraui.dialog.ScanFilterDialog;
 import com.moko.lw009smpro.entity.AdvInfo;
 import com.moko.lw009smpro.utils.AdvInfoAnalysisImpl;
 import com.moko.lw009smpro.utils.SPUtiles;
@@ -56,6 +51,11 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
 
 public class LoRaLW009MainActivity extends Lw009BaseActivity implements MokoScanDeviceCallback, BaseQuickAdapter.OnItemChildClickListener {
     private Lw009ActivityMainBinding mBind;

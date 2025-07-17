@@ -6,10 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.moko.lw009smpro.databinding.Lw009FragmentLoraBinding;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
-import com.moko.lw009smpro.databinding.Lw009FragmentLoraBinding;
 
 public class LoRaFragment extends Fragment {
     private static final String TAG = LoRaFragment.class.getSimpleName();

@@ -8,21 +8,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import com.moko.ble.lib.task.OrderTask;
+import com.moko.lib.loraui.dialog.AlertMessageDialog;
+import com.moko.lib.loraui.dialog.BottomDialog;
 import com.moko.lw009smpro.R;
 import com.moko.lw009smpro.activity.DeviceInfoActivity;
 import com.moko.lw009smpro.activity.device.OnOffSettingsActivity;
 import com.moko.lw009smpro.activity.device.SystemInfoActivity;
 import com.moko.lw009smpro.databinding.Lw009FragmentDeviceBinding;
-import com.moko.lib.loraui.dialog.AlertMessageDialog;
-import com.moko.lib.loraui.dialog.BottomDialog;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
 
 import java.util.ArrayList;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 public class DeviceFragment extends Fragment {
     private static final String TAG = DeviceFragment.class.getSimpleName();

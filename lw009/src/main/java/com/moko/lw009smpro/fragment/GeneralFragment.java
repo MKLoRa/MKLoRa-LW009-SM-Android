@@ -8,15 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import com.moko.lw009smpro.activity.DeviceInfoActivity;
 import com.moko.lw009smpro.activity.setting.BleSettingsActivity;
 import com.moko.lw009smpro.databinding.Lw009FragmentGeneralBinding;
 import com.moko.lw009smpro.utils.ToastUtils;
 import com.moko.support.lw009.MoKoSupport;
 import com.moko.support.lw009.OrderTaskAssembler;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 public class GeneralFragment extends Fragment {
     private static final String TAG = GeneralFragment.class.getSimpleName();
