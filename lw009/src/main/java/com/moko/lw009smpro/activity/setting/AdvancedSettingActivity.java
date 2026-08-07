@@ -109,10 +109,10 @@ public class AdvancedSettingActivity extends Lw009BaseActivity {
                                 case KEY_AUTO_CALIBRATION_THRESHOLD:
                                 case KEY_AUTO_CALIBRATION_DELAY_SAMPLE_TIME:
                                 case KEY_PARKING_LOT_TYPE:
-                                    if (result != 1) savedParamsError = true;
+                                    savedParamsError |= result != 1;
                                     break;
                                 case KEY_PARKING_DETECTION_THRESHOLD:
-                                    if (result != 1) savedParamsError = true;
+                                    savedParamsError |= result != 1;
                                     ToastUtils.showToast(this, savedParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
                             }

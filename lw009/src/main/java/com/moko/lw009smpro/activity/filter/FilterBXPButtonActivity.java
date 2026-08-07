@@ -78,10 +78,10 @@ public class FilterBXPButtonActivity extends Lw009BaseActivity {
                             int result = value[4] & 0xFF;
                             switch (configKeyEnum) {
                                 case KEY_FILTER_BXP_BUTTON_RULES:
-                                    if (result != 1) savedParamsError = true;
+                                    savedParamsError |= result != 1;
                                     break;
                                 case KEY_FILTER_BXP_BUTTON_ENABLE:
-                                    if (result != 1) savedParamsError = true;
+                                    savedParamsError |= result != 1;
                                     ToastUtils.showToast(this, savedParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
                             }

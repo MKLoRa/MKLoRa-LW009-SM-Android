@@ -92,10 +92,10 @@ public class FilterBXPTagIdActivity extends Lw009BaseActivity {
                                 case KEY_FILTER_BXP_TAG_ENABLE:
                                 case KEY_FILTER_BXP_TAG_PRECISE:
                                 case KEY_FILTER_BXP_TAG_REVERSE:
-                                    if (result != 1) savedParamsError = true;
+                                    savedParamsError |= result != 1;
                                     break;
                                 case KEY_FILTER_BXP_TAG_RULES:
-                                    if (result != 1) savedParamsError = true;
+                                    savedParamsError |= result != 1;
                                     ToastUtils.showToast(this, savedParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
                             }

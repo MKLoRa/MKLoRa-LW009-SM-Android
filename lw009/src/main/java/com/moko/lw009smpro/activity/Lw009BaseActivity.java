@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.DisplayCutout;
 
+import com.moko.lib.loraui.dialog.LoadingDialog;
 import com.moko.lib.loraui.dialog.LoadingMessageDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -122,5 +123,26 @@ public class Lw009BaseActivity extends FragmentActivity {
     public void dismissSyncProgressDialog() {
         if (mLoadingMessageDialog != null && mLoadingMessageDialog.isAdded() && !mLoadingMessageDialog.isDetached())
             mLoadingMessageDialog.dismissAllowingStateLoss();
+    }
+
+
+
+    private LoadingDialog mLoadingDialog;
+
+    protected void showLoadingProgressDialog() {
+        if (null != mLoadingDialog && mLoadingDialog.isAdded() && !mLoadingDialog.isDetached()) {
+            mLoadingDialog.dismissAllowingStateLoss();
+        }
+        mLoadingDialog = null;
+        mLoadingDialog = new LoadingDialog();
+        if (!mLoadingDialog.isAdded())
+            mLoadingDialog.show(getSupportFragmentManager());
+    }
+
+    protected void dismissLoadingProgressDialog() {
+        if (mLoadingDialog != null && mLoadingDialog.isAdded() && !mLoadingDialog.isDetached()) {
+            mLoadingDialog.dismissAllowingStateLoss();
+            mLoadingDialog = null;
+        }
     }
 }

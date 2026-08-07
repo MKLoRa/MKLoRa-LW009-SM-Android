@@ -87,10 +87,10 @@ public class FilterIBeaconActivity extends Lw009BaseActivity {
                                 case KEY_FILTER_I_BEACON_UUID:
                                 case KEY_FILTER_I_BEACON_MAJOR_RANGE:
                                 case KEY_FILTER_I_BEACON_MINOR_RANGE:
-                                    if (result != 1) savedParamsError = true;
+                                    savedParamsError |= result != 1;
                                     break;
                                 case KEY_FILTER_I_BEACON_ENABLE:
-                                    if (result != 1) savedParamsError = true;
+                                    savedParamsError |= result != 1;
                                     ToastUtils.showToast(this, savedParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
                             }

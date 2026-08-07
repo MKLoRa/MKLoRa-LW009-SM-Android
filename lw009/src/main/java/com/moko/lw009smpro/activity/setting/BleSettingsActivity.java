@@ -104,10 +104,10 @@ public class BleSettingsActivity extends Lw009BaseActivity implements SeekBar.On
                                 case KEY_ADV_INTERVAL:
                                 case KEY_ADV_TIMEOUT:
                                 case KEY_ADV_TX_POWER:
-                                    if (result != 1) savedParamsError = true;
+                                    savedParamsError |= result != 1;
                                     break;
                                 case KEY_PASSWORD_VERIFY_ENABLE:
-                                    if (result != 1) savedParamsError = true;
+                                    savedParamsError |= result != 1;
                                     ToastUtils.showToast(this, savedParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
                             }

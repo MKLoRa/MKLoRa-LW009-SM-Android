@@ -97,10 +97,10 @@ public class BleFixActivity extends Lw009BaseActivity implements SeekBar.OnSeekB
                                 case KEY_BLE_SCAN_TIME:
                                 case KEY_PAYLOAD_BEACON_COUNT:
                                 case KEY_FILTER_RSSI:
-                                    if (result != 1) savedParamsError = true;
+                                    savedParamsError |= result != 1;
                                     break;
                                 case KEY_FILTER_RELATIONSHIP:
-                                    if (result != 1) savedParamsError = true;
+                                    savedParamsError |= result != 1;
                                     ToastUtils.showToast(this, savedParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
                             }

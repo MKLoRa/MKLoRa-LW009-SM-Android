@@ -15,6 +15,7 @@ import com.elvishew.xlog.printer.Printer;
 import com.elvishew.xlog.printer.file.FilePrinter;
 import com.elvishew.xlog.printer.file.naming.ChangelessFileNameGenerator;
 import com.moko.ble.lib.log.ClearLogBackStrategy;
+import com.moko.lib.scanneriot.IoTDMSupport;
 import com.moko.lw009smpro.utils.IOUtils;
 
 import java.io.File;
@@ -35,6 +36,7 @@ public class BaseApplication extends Application {
         super.onCreate();
         initXLog();
         Thread.setDefaultUncaughtExceptionHandler(new BTUncaughtExceptionHandler());
+        IoTDMSupport.getInstance().init(this, TAG);
     }
 
     private void initXLog() {

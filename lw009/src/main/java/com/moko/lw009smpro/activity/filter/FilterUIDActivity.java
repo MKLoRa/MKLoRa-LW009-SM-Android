@@ -84,10 +84,10 @@ public class FilterUIDActivity extends Lw009BaseActivity {
                             switch (configKeyEnum) {
                                 case KEY_FILTER_EDDYSTONE_UID_NAMESPACE:
                                 case KEY_FILTER_EDDYSTONE_UID_INSTANCE:
-                                    if (result != 1) savedParamsError = true;
+                                    savedParamsError |= result != 1;
                                     break;
                                 case KEY_FILTER_EDDYSTONE_UID_ENABLE:
-                                    if (result != 1) savedParamsError = true;
+                                    savedParamsError |= result != 1;
                                     ToastUtils.showToast(this, savedParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
                             }

@@ -95,10 +95,10 @@ public class FilterAdvNameActivity extends Lw009BaseActivity {
                             switch (configKeyEnum) {
                                 case KEY_FILTER_NAME_PRECISE:
                                 case KEY_FILTER_NAME_REVERSE:
-                                    if (result != 1) savedParamsError = true;
+                                    savedParamsError |= result != 1;
                                     break;
                                 case KEY_FILTER_NAME_RULES:
-                                    if (result != 1) savedParamsError = true;
+                                    savedParamsError |= result != 1;
                                     ToastUtils.showToast(this, savedParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
                             }

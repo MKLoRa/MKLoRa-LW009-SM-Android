@@ -92,10 +92,10 @@ public class FilterOtherActivity extends Lw009BaseActivity {
                             switch (configKeyEnum) {
                                 case KEY_FILTER_OTHER_RELATIONSHIP:
                                 case KEY_FILTER_OTHER_RULES:
-                                    if (result != 1) savedParamsError = true;
+                                    savedParamsError |= result != 1;
                                     break;
                                 case KEY_FILTER_OTHER_ENABLE:
-                                    if (result != 1) savedParamsError = true;
+                                    savedParamsError |= result != 1;
                                     ToastUtils.showToast(this, savedParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
                             }

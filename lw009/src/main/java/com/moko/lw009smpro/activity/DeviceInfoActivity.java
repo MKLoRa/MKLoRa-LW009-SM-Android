@@ -210,10 +210,10 @@ public class DeviceInfoActivity extends Lw009BaseActivity implements RadioGroup.
                                 case KEY_PARKING_DETECTION_SENSITIVITY:
                                 case KEY_PARKING_DETECTION_DURATION:
                                 case KEY_PARKING_DETECTION_CONFIRM_DURATION:
-                                    if (result != 1) savedParamsError = true;
+                                    savedParamsError |= result != 1;
                                     break;
                                 case KEY_PARKING_DETECTION_PAYLOAD_TYPE:
-                                    if (result != 1) savedParamsError = true;
+                                    savedParamsError |= result != 1;
                                     ToastUtils.showToast(this, savedParamsError ? SAVE_ERROR : SAVE_SUCCESS);
                                     break;
 
