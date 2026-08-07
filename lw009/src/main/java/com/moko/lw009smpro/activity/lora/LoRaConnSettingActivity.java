@@ -697,7 +697,7 @@ public class LoRaConnSettingActivity extends Lw009BaseActivity implements Compou
         if (isWindowLocked()) return;
         mOrderTasks = getOrderTasks();
         if (mOrderTasks == null) {
-            com.moko.lib.loraui.utils.ToastUtils.showToast(this, "Para error!");
+            ToastUtils.showToast(this, "Para error!");
             return;
         }
         if (mSelectedPlatform == 1) {
@@ -723,7 +723,7 @@ public class LoRaConnSettingActivity extends Lw009BaseActivity implements Compou
         mGatewayId = mBind.etGatewayId.getText().toString();
         if (!TextUtils.isEmpty(mGatewayId)) {
             if (mGatewayId.length() != 16) {
-                com.moko.lib.loraui.utils.ToastUtils.showToast(this, "length must be 8 bytes!");
+                ToastUtils.showToast(this, "length must be 8 bytes!");
                 return;
             }
         }
@@ -890,7 +890,7 @@ public class LoRaConnSettingActivity extends Lw009BaseActivity implements Compou
                 }.getType();
                 CommonResp<JsonObject> commonResp = new Gson().fromJson(response.body(), type);
                 if (commonResp.code != 200) {
-                    com.moko.lib.loraui.utils.ToastUtils.showToast(LoRaConnSettingActivity.this, commonResp.msg);
+                    ToastUtils.showToast(LoRaConnSettingActivity.this, commonResp.msg);
                     LoginDialog dialog = new LoginDialog();
                     dialog.setOnLoginClicked((account1, password1, env) -> login(account1, password1, env));
                     dialog.show(getSupportFragmentManager());
@@ -924,7 +924,7 @@ public class LoRaConnSettingActivity extends Lw009BaseActivity implements Compou
 
             @Override
             public void onError(Response<String> response) {
-                com.moko.lib.loraui.utils.ToastUtils.showToast(LoRaConnSettingActivity.this, R.string.request_error);
+                ToastUtils.showToast(LoRaConnSettingActivity.this, R.string.request_error);
                 LoginDialog dialog = new LoginDialog();
                 dialog.setOnLoginClicked((account12, password12, env) -> login(account12, password12, env));
                 dialog.show(getSupportFragmentManager());
@@ -971,7 +971,7 @@ public class LoRaConnSettingActivity extends Lw009BaseActivity implements Compou
                         int code = object.get("code").getAsInt();
                         String msg = object.get("msg").getAsString();
                         if (code != 200) {
-                            com.moko.lib.loraui.utils.ToastUtils.showToast(LoRaConnSettingActivity.this, msg);
+                            ToastUtils.showToast(LoRaConnSettingActivity.this, msg);
                             return;
                         }
 //                        ToastUtils.showToast(LoRaConnSettingActivity.this, "Sync Success");
@@ -981,7 +981,7 @@ public class LoRaConnSettingActivity extends Lw009BaseActivity implements Compou
 
                     @Override
                     public void onError(Response<String> response) {
-                        com.moko.lib.loraui.utils.ToastUtils.showToast(LoRaConnSettingActivity.this, R.string.request_error);
+                        ToastUtils.showToast(LoRaConnSettingActivity.this, R.string.request_error);
                     }
 
                     @Override
